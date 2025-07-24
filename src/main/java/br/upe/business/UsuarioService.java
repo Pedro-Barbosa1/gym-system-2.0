@@ -1,7 +1,7 @@
 package br.upe.business;
 
-import br.upe.data.beans.Usuario;
 import br.upe.data.TipoUsuario;
+import br.upe.data.beans.Usuario;
 import br.upe.data.repository.IUsuarioRepository;
 import br.upe.data.repository.impl.UsuarioRepositoryImpl;
 

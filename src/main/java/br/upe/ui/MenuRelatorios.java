@@ -1,5 +1,11 @@
 package br.upe.ui;
 
+import br.upe.business.IndicadorBiomedicoService;
+import br.upe.business.RelatorioDiferencaIndicadores;
+
+import java.time.LocalDate;
+import java.util.Scanner;
+
 public class MenuRelatorios {
     private Scanner sc;
     private int idUsuario;

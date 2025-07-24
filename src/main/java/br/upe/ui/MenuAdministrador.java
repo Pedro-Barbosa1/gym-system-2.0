@@ -3,10 +3,8 @@ package br.upe.ui;
 import br.upe.business.IUsuarioService;
 import br.upe.business.UsuarioService;
 import br.upe.data.beans.Usuario;
-import br.upe.data.TipoUsuario;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class MenuAdministrador {

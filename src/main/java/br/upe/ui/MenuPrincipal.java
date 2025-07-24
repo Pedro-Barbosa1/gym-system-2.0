@@ -107,7 +107,7 @@ public class MenuPrincipal {
                     MenuExercicios menuExercicios = new MenuExercicios(sc, usuarioLogado.getId());
                     menuExercicios.exibirMenu();
                     break;
-               case 5:
+                case 5:
                     MenuRelatorios menuRelatorios = new MenuRelatorios(sc, usuarioLogado.getId());
                     menuRelatorios.exibirMenu();
                     break;

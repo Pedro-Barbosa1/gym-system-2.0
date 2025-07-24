@@ -3,12 +3,9 @@ package br.upe.business;
 import br.upe.data.beans.IndicadorBiomedico;
 import br.upe.data.repository.IIndicadorBiomedicoRepository;
 import br.upe.data.repository.impl.IndicadorBiomedicoRepositoryImpl;
-import br.upe.business.util.CalculadoraIMC;
+import br.upe.business.CalculadoraIMC;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Comparator;
@@ -131,28 +128,28 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
     }
 
     public void exportarRelatorioPorDataParaCsv(int idUsuario, LocalDate dataInicio, LocalDate dataFim, String caminhoArquivo) {
-    List<IndicadorBiomedico> relatorio = gerarRelatorioPorData(idUsuario, dataInicio, dataFim);
+        List<IndicadorBiomedico> relatorio = gerarRelatorioPorData(idUsuario, dataInicio, dataFim);
 
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo))) {
-        writer.write("Data;Peso (Kg);Altura (cm);Gordura (%);Massa Magra (%);IMC");
-        writer.newLine();
-
-        for (IndicadorBiomedico i : relatorio) {
-            writer.write(
-                i.getData() + ";" +
-                i.getPesoKg() + ";" +
-                i.getAlturaCm() + ";" +
-                i.getPercentualGordura() + ";" +
-                i.getPercentualMassaMagra() + ";" +
-                String.format("%.2f", i.getImc())
-            );
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo))) {
+            writer.write("Data;Peso (Kg);Altura (cm);Gordura (%);Massa Magra (%);IMC");
             writer.newLine();
-        }
 
-        System.out.println("Relatório exportado com sucesso para: " + caminhoArquivo);
-    } catch (IOException e) {
-        System.err.println("Erro ao exportar relatório: " + e.getMessage());
+            for (IndicadorBiomedico i : relatorio) {
+                writer.write(
+                        i.getData() + ";" +
+                                i.getPesoKg() + ";" +
+                                i.getAlturaCm() + ";" +
+                                i.getPercentualGordura() + ";" +
+                                i.getPercentualMassaMagra() + ";" +
+                                String.format("%.2f", i.getImc())
+                );
+                writer.newLine();
+            }
+
+            System.out.println("Relatório exportado com sucesso para: " + caminhoArquivo);
+        } catch (IOException e) {
+            System.err.println("Erro ao exportar relatório: " + e.getMessage());
+        }
     }
-}
 
 }

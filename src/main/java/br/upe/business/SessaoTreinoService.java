@@ -1,10 +1,6 @@
 package br.upe.business;
 
-import br.upe.data.beans.Exercicio;
-import br.upe.data.beans.ItemPlanoTreino;
-import br.upe.data.beans.ItemSessaoTreino;
-import br.upe.data.beans.PlanoTreino;
-import br.upe.data.beans.SessaoTreino;
+import br.upe.data.beans.*;
 import br.upe.data.repository.IExercicioRepository;
 import br.upe.data.repository.IPlanoTreinoRepository;
 import br.upe.data.repository.ISessaoTreinoRepository;
@@ -12,11 +8,9 @@ import br.upe.data.repository.impl.ExercicioRepositoryImpl;
 import br.upe.data.repository.impl.PlanoTreinoRepositoryImpl;
 import br.upe.data.repository.impl.SessaoTreinoRepositoryImpl;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class SessaoTreinoService {
 

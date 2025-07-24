@@ -1,7 +1,5 @@
 package br.upe.business;
 
-import br.upe.data.beans.Exercicio;
-import br.upe.data.beans.ItemPlanoTreino;
 import br.upe.data.beans.PlanoTreino;
 
 import java.util.List;

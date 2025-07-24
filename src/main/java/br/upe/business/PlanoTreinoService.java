@@ -10,7 +10,6 @@ import br.upe.data.repository.impl.PlanoTreinoRepositoryImpl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class PlanoTreinoService implements IPlanoTreinoService {
 

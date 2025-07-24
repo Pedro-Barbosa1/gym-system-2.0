@@ -1,4 +1,4 @@
-package br.upe.business.util;
+package br.upe.business;
 
 public class CalculadoraIMC {
 

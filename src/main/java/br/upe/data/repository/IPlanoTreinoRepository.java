@@ -1,6 +1,7 @@
 package br.upe.data.repository;
 
 import br.upe.data.beans.PlanoTreino;
+
 import java.util.List;
 import java.util.Optional;
 
