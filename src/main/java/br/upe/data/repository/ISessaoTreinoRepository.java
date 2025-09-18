@@ -14,4 +14,5 @@ public interface ISessaoTreinoRepository {
     void editar(SessaoTreino sessao);
     void deletar(int idSessao);
     int proximoId();
+    String getArquivoCsv();
 }

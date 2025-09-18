@@ -1,3 +1,5 @@
+package br.upe;
+
 import br.upe.business.RelatorioDiferencaIndicadores;
 import br.upe.data.beans.IndicadorBiomedico;
 import org.junit.jupiter.api.*;
@@ -13,6 +15,7 @@ public class RelatorioDiferencaIndicadoresTest {
     private RelatorioDiferencaIndicadores relatorio;
     private IndicadorBiomedico inicial;
     private IndicadorBiomedico finalObj;
+    IndicadorBiomedico indicadorBiomedico = new IndicadorBiomedico(0, null, 0, 0, 0, 0, 0);
 
     @BeforeEach
     public void setup() {
@@ -22,13 +25,13 @@ public class RelatorioDiferencaIndicadoresTest {
         relatorio.dataFim = LocalDate.of(2025, 1, 31);
 
         // Criar Indicadores de exemplo
-        inicial = new IndicadorBiomedico();
+        inicial = indicadorBiomedico;
         inicial.setPesoKg(70.0);
         inicial.setPercentualGordura(20.0);
         inicial.setPercentualMassaMagra(75.0);
         inicial.setImc(22.0);
 
-        finalObj = new IndicadorBiomedico();
+        finalObj = indicadorBiomedico;
         finalObj.setPesoKg(68.0);
         finalObj.setPercentualGordura(18.0);
         finalObj.setPercentualMassaMagra(77.0);

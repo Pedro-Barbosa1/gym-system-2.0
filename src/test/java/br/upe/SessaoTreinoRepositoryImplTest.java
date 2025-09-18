@@ -1,7 +1,9 @@
-package br.upe.data.repository.impl;
+package br.upe;
 
 import br.upe.data.beans.ItemSessaoTreino;
 import br.upe.data.beans.SessaoTreino;
+import br.upe.data.repository.impl.SessaoTreinoRepositoryImpl;
+
 import org.junit.jupiter.api.*;
 import java.io.File;
 import java.time.LocalDate;
@@ -21,7 +23,7 @@ class SessaoTreinoRepositoryImplTest {
         // Criar repositório para teste
         repository = new SessaoTreinoRepositoryImpl() {
             @Override
-            protected String getArquivoCsv() {
+            public String getArquivoCsv() {
                 return arquivoTeste;
             }
         };

@@ -193,4 +193,24 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
     public int proximoId() {
         return proximoId.get();
     }
+
+    public String getArquivoCsv() {
+        return ARQUIVO_CSV;
+    }
+
+    public List<SessaoTreino> getSessoes() {
+        return sessoes;
+    }
+
+    public void setSessoes(List<SessaoTreino> sessoes) {
+        this.sessoes = sessoes;
+    }
+
+    public AtomicInteger getProximoId() {
+        return proximoId;
+    }
+
+    public void setProximoId(AtomicInteger proximoId) {
+        this.proximoId = proximoId;
+    }
 }
