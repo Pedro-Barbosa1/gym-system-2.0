@@ -1,13 +1,13 @@
 package br.upe;
 
-import br.upe.business.RelatorioDiferencaIndicadores;
-import br.upe.data.beans.IndicadorBiomedico;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Optional;
+
+import br.upe.business.RelatorioDiferencaIndicadores;
+import br.upe.data.beans.IndicadorBiomedico;
 
 public class DebugRelatorio {
     public static void main(String[] args) throws IOException {
