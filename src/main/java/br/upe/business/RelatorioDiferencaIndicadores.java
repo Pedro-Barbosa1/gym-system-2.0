@@ -2,10 +2,14 @@ package br.upe.business;
 
 import br.upe.data.beans.IndicadorBiomedico;
 
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Optional;
 
 public class RelatorioDiferencaIndicadores {
@@ -45,8 +49,8 @@ public class RelatorioDiferencaIndicadores {
         IndicadorBiomedico inicial = indicadorInicial.get();
         IndicadorBiomedico finalObj = indicadorFinal.get();
 
-        return String.format(
-            "--- Relatório de Evolução: %s a %s ---\n" +
+        return String.format(Locale.US,
+                "--- Relatório de Evolução: %s a %s ---\n" +
             "| Indicador              | %-15s | %-15s | %-17s |\n" + // Increased width
             "|------------------------|-----------------|-----------------|-------------------|\n" +
             "| Peso (kg)              | %-15.1f | %-15.1f | %+-17.1f |\n" + // Increased width
@@ -65,29 +69,30 @@ public class RelatorioDiferencaIndicadores {
 
 public void exportarParaCsv(String caminhoArquivo) throws IOException {
     if (indicadorInicial.isEmpty() || indicadorFinal.isEmpty()) {
-        throw new IllegalStateException("Indicadores inicial ou final não estão presentes para exportar.");
+    throw new IllegalStateException("Indicadores inicial ou final não estão presentes para exportar.");
     }
-    try (FileWriter writer = new FileWriter(caminhoArquivo)) {
-        writer.append("Indicador,Inicial,Final,Diferença\n");
-        writer.append(String.format("Peso (kg),%.1f,%.1f,%+.1f\n",
-                indicadorInicial.get().getPesoKg(),
-                indicadorFinal.get().getPesoKg(),
-                diferencaPeso));
+    Path path = Paths.get(caminhoArquivo);
+    try (var writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+    writer.append("Indicador,Inicial,Final,Diferença\n");
+                writer.append(String.format(Locale.US, "Peso (kg),%.1f,%.1f,%+.1f\n",
+        indicadorInicial.get().getPesoKg(),
+        indicadorFinal.get().getPesoKg(),
+        diferencaPeso));
 
-        writer.append(String.format("Gordura (%%),%.1f,%.1f,%+.1f\n",
-                indicadorInicial.get().getPercentualGordura(),
-                indicadorFinal.get().getPercentualGordura(),
-                diferencaPercentualGordura));
+                writer.append(String.format(Locale.US, "Gordura (%%),%.1f,%.1f,%+.1f\n",
+        indicadorInicial.get().getPercentualGordura(),
+        indicadorFinal.get().getPercentualGordura(),
+        diferencaPercentualGordura));
 
-        writer.append(String.format("Massa Magra (%%),%.1f,%.1f,%+.1f\n",
-                indicadorInicial.get().getPercentualMassaMagra(),
-                indicadorFinal.get().getPercentualMassaMagra(),
-                diferencaPercentualMassaMagra));
+                writer.append(String.format(Locale.US, "Massa Magra (%%),%.1f,%.1f,%+.1f\n",
+        indicadorInicial.get().getPercentualMassaMagra(),
+        indicadorFinal.get().getPercentualMassaMagra(),
+        diferencaPercentualMassaMagra));
 
-        writer.append(String.format("IMC,%.2f,%.2f,%+.2f\n",
-                indicadorInicial.get().getImc(),
-                indicadorFinal.get().getImc(),
-                diferencaImc));
+                writer.append(String.format(Locale.US, "IMC,%.2f,%.2f,%+.2f\n",
+        indicadorInicial.get().getImc(),
+        indicadorFinal.get().getImc(),
+        diferencaImc));
     }
 }
 
