@@ -1,1 +1,8 @@
-1;2;Supino reto;Supino reto com a barra; gym-system/src/main/resources/gif/supino_reto_barra.gif;
+1;2;Supino reto;Supino reto com a barra; gym-system/src/main/resources/gif/supino_reto_barra.gif
+2;1;Exercicio1;Descricao1;caminho1.gif
+3;1;Exercicio2;Descricao2;caminho2.gif
+4;1;ExercicioListar;Descricao;caminho.gif
+5;1;ExercicioId;Descricao;caminho.gif
+6;1;ExercicioA;Desc;caminho.gif
+7;1;ExercicioB;Desc;caminho.gif
+8;1;ExercicioNovo;DescNova;gifNovo.gif
