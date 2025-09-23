@@ -13,6 +13,7 @@ public class ExercicioServiceTest {
     @BeforeEach
     public void setUp() {
         exercicioService = new ExercicioService();
+        exercicioService.limparDados();
     }
 
     @Test
@@ -22,17 +23,16 @@ public class ExercicioServiceTest {
         });
         assertEquals("Nome do exercício não pode ser vazio.", exception.getMessage());
     }
-/* 
+ 
     @Test
     public void testCadastrarExercicioComNomeDuplicado() {
-        // Usa nomes únicos para evitar conflito com outros testes
-        exercicioService.cadastrarExercicio(1, "ExercicioTestando", "DescricaoExercicioTestando", "caminhoExercicioTestando.gif");
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            exercicioService.cadastrarExercicio(1, "ExercicioDuplicado", "Descricao2", "caminho2.gif");
+    exercicioService.cadastrarExercicio(1, "ExercicioDuplicado", "Descricao1", "caminho1.gif");
+    Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+    exercicioService.cadastrarExercicio(1, "ExercicioDuplicado", "Descricao2", "caminho2.gif");
         });
-        assertEquals("Você já possui um exercício com o nome 'ExercicioDuplicado'.", exception.getMessage());
+    assertEquals("Você já possui um exercício com o nome 'ExercicioDuplicado'.", exception.getMessage());
     }
-*/
+
     @Test
     public void testBuscarExercicioComNomeVazio() {
         assertTrue(exercicioService.buscarExercicioDoUsuarioPorNome(1, "  ").isEmpty());
@@ -49,7 +49,7 @@ public class ExercicioServiceTest {
         exercicioService.cadastrarExercicio(1, "ExercicioBuscar1", "Descricao", "caminho.gif");
         assertTrue(exercicioService.buscarExercicioDoUsuarioPorNome(1, "ExercicioBuscar1").isPresent());
     }
-/* 
+ 
     @Test
     public void testListarExerciciosDoUsuario() {
         // Cadastra exercícios usando IDs de usuário diferentes ou nomes únicos
@@ -58,7 +58,7 @@ public class ExercicioServiceTest {
         // Verifica se a contagem corresponde apenas aos exercícios deste teste
         assertEquals(2, exercicioService.listarExerciciosDoUsuario(2).size());
     }
-*/
+
     @Test
     public void testBuscarExercicioPorIdGlobal() {
         // Cadastra um exercício com nome e ID de usuário únicos

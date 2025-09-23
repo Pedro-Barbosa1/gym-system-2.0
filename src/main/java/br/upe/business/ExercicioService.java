@@ -119,4 +119,11 @@ public class ExercicioService implements IExercicioService {
             throw new IllegalArgumentException("Erro: Exercício '" + nomeAtualExercicio + "' não encontrado entre os seus exercícios para atualização.");
         }
     }
+
+    public void limparDados() {
+    if (exercicioRepository instanceof ExercicioRepositoryImpl) {
+        ((ExercicioRepositoryImpl) exercicioRepository).limpar();
+        }
+    }
+
 }

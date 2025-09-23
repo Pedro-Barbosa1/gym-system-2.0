@@ -166,4 +166,9 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
     public int proximoId() {
         return proximoId.get();
     }
+
+    public void limpar() {
+    this.exercicios.clear(); // ou o nome correto da sua lista/mapa
+    }
+
 }
