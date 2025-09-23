@@ -132,4 +132,11 @@ public class PlanoTreinoService implements IPlanoTreinoService {
     public Optional<PlanoTreino> buscarPlanoPorId(int idPlanoEscolhido) {
         return Optional.empty();
     }
+
+    public void limparDados() {
+        if (planoTreinoRepository instanceof PlanoTreinoRepositoryImpl) {
+            ((PlanoTreinoRepositoryImpl) planoTreinoRepository).limpar();
+        }
+    }
+    
 }

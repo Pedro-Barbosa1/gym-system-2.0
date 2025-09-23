@@ -194,4 +194,9 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
     public int proximoId() {
         return proximoId.get();
     }
+
+    public void limpar() {
+        this.planos.clear();
+    }
+
 }
