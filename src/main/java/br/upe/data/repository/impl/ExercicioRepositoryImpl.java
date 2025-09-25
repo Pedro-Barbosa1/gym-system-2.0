@@ -24,7 +24,7 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
     }
 
     // Listar usuario do arquivo csv
-    private void carregarDoCsv() {
+    public void carregarDoCsv() {
         try {
             Files.createDirectories(Paths.get("src/main/resources/data"));
         } catch (IOException e) {
