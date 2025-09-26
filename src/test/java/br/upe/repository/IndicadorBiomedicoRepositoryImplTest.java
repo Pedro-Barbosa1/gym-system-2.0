@@ -2,119 +2,107 @@ package br.upe.repository;
 
 import br.upe.model.IndicadorBiomedico;
 import br.upe.repository.impl.IndicadorBiomedicoRepositoryImpl;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class IndicadorBiomedicoRepositoryImplTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class IndicadorBiomedicoRepositoryImplTest {
 
-    private IIndicadorBiomedicoRepository repository;
-    private static final String TEST_CSV_PATH = "src/test/resources/data/indicadores_test.csv";
+    private IndicadorBiomedicoRepositoryImpl repository;
 
     @BeforeEach
-    void setUp() throws IOException {
-        // Garante que o diretório de teste exista
-        Files.createDirectories(Paths.get("src/test/resources/data"));
-        // Apaga o arquivo de teste antes de cada execução para garantir um ambiente limpo
-        Files.deleteIfExists(Paths.get(TEST_CSV_PATH));
-
-        // Forçar o repositório a usar o nosso arquivo de teste
-        // Isso requer uma pequena refatoração no repositório para aceitar o caminho do arquivo no construtor
-        // Por enquanto, vamos assumir que ele usa o caminho padrão e vamos lidar com o arquivo nesse caminho
-        repository = new IndicadorBiomedicoRepositoryImpl(); // Este usará o caminho de produção, o que não é ideal
-
-        // A melhor abordagem seria ter um construtor como: new IndicadorBiomedicoRepositoryImpl(TEST_CSV_PATH)
-        // Vamos adaptar o teste para lidar com o arquivo de produção por enquanto, mas isso não é uma boa prática.
-        // O ideal é refatorar o repositório para permitir injeção do caminho do arquivo.
-    }
-
-    @AfterEach
-    void tearDown() throws IOException {
-        // Limpa o arquivo de produção após os testes para não deixar lixo
-        Files.deleteIfExists(Paths.get("src/main/resources/data/indicadores.csv"));
-    }
-
-    private IndicadorBiomedico criarIndicador(int idUsuario, LocalDate data) {
-        return new IndicadorBiomedico(0, idUsuario, data, 80.0, 175.0, 20.0, 70.0, 26.1);
+    void setup() {
+        repository = new IndicadorBiomedicoRepositoryImpl(false); // evita CSV real
     }
 
     @Test
-    void testSalvarEBuscarPorId() {
-        IndicadorBiomedico indicador = criarIndicador(1, LocalDate.now());
-        IndicadorBiomedico salvo = repository.salvar(indicador);
+    void testSalvarIndicador() {
+        IndicadorBiomedico i = new IndicadorBiomedico(0, 1, LocalDate.now(), 70, 170, 15, 55, 24.2);
+        IndicadorBiomedico salvo = repository.salvar(i);
 
-        assertNotEquals(0, salvo.getId());
+        assertNotNull(salvo);
+        assertEquals(1, salvo.getId());
+        assertEquals(1, repository.listarTodos().size());
+    }
 
-        Optional<IndicadorBiomedico> buscado = repository.buscarPorId(salvo.getId());
-        assertTrue(buscado.isPresent());
-        assertEquals(salvo.getId(), buscado.get().getId());
-        assertEquals(1, buscado.get().getIdUsuario());
+    @Test
+    void testBuscarPorId() {
+        IndicadorBiomedico i = repository.salvar(new IndicadorBiomedico(0, 1, LocalDate.now(), 70, 170, 15, 55, 24.2));
+        Optional<IndicadorBiomedico> encontrado = repository.buscarPorId(i.getId());
+
+        assertTrue(encontrado.isPresent());
+        assertEquals(1, encontrado.get().getIdUsuario());
+    }
+
+    @Test
+    void testListarTodos() {
+        repository.salvar(new IndicadorBiomedico(0, 1, LocalDate.now(), 70, 170, 15, 55, 24.2));
+        repository.salvar(new IndicadorBiomedico(0, 2, LocalDate.now(), 80, 180, 20, 60, 24.7));
+
+        List<IndicadorBiomedico> todos = repository.listarTodos();
+        assertEquals(2, todos.size());
     }
 
     @Test
     void testListarPorUsuario() {
-        repository.salvar(criarIndicador(1, LocalDate.now().minusDays(1)));
-        repository.salvar(criarIndicador(1, LocalDate.now()));
-        repository.salvar(criarIndicador(2, LocalDate.now())); // Outro usuário
+        repository.salvar(new IndicadorBiomedico(0, 1, LocalDate.now(), 70, 170, 15, 55, 24.2));
+        repository.salvar(new IndicadorBiomedico(0, 1, LocalDate.now(), 72, 170, 16, 56, 24.9));
+        repository.salvar(new IndicadorBiomedico(0, 2, LocalDate.now(), 80, 180, 20, 60, 24.7));
 
-        List<IndicadorBiomedico> indicadoresUsuario1 = repository.listarPorUsuario(1);
-        assertEquals(2, indicadoresUsuario1.size());
+        List<IndicadorBiomedico> usuario1 = repository.listarPorUsuario(1);
+        List<IndicadorBiomedico> usuario2 = repository.listarPorUsuario(2);
 
-        List<IndicadorBiomedico> indicadoresUsuario2 = repository.listarPorUsuario(2);
-        assertEquals(1, indicadoresUsuario2.size());
-
-        List<IndicadorBiomedico> indicadoresUsuario3 = repository.listarPorUsuario(3);
-        assertTrue(indicadoresUsuario3.isEmpty());
+        assertEquals(2, usuario1.size());
+        assertEquals(1, usuario2.size());
     }
 
     @Test
     void testBuscarPorPeriodo() {
         LocalDate hoje = LocalDate.now();
-        repository.salvar(criarIndicador(1, hoje.minusDays(10)));
-        repository.salvar(criarIndicador(1, hoje.minusDays(5)));
-        repository.salvar(criarIndicador(1, hoje));
-        repository.salvar(criarIndicador(1, hoje.plusDays(5)));
+        repository.salvar(new IndicadorBiomedico(0, 1, hoje.minusDays(5), 70, 170, 15, 55, 24.2));
+        repository.salvar(new IndicadorBiomedico(0, 1, hoje.minusDays(2), 72, 170, 16, 56, 24.9));
+        repository.salvar(new IndicadorBiomedico(0, 1, hoje.plusDays(1), 73, 170, 16, 56, 25.0));
 
-        List<IndicadorBiomedico> resultado = repository.buscarPorPeriodo(1, hoje.minusDays(6), hoje.plusDays(1));
-        assertEquals(2, resultado.size());
-        assertTrue(resultado.stream().anyMatch(i -> i.getData().equals(hoje.minusDays(5))));
-        assertTrue(resultado.stream().anyMatch(i -> i.getData().equals(hoje)));
+        List<IndicadorBiomedico> periodo = repository.buscarPorPeriodo(1, hoje.minusDays(3), hoje);
+
+        assertEquals(1, periodo.size());
+        assertEquals(72, periodo.get(0).getPesoKg());
     }
 
     @Test
-    void testDeletar() {
-        IndicadorBiomedico salvo = repository.salvar(criarIndicador(1, LocalDate.now()));
-        int idSalvo = salvo.getId();
+    void testEditarIndicador() {
+        IndicadorBiomedico i = repository.salvar(new IndicadorBiomedico(0, 1, LocalDate.now(), 70, 170, 15, 55, 24.2));
+        i.setPesoKg(75);
+        repository.editar(i);
 
-        Optional<IndicadorBiomedico> antesDeDeletar = repository.buscarPorId(idSalvo);
-        assertTrue(antesDeDeletar.isPresent());
-
-        repository.deletar(idSalvo);
-
-        Optional<IndicadorBiomedico> depoisDeDeletar = repository.buscarPorId(idSalvo);
-        assertFalse(depoisDeDeletar.isPresent());
+        Optional<IndicadorBiomedico> editado = repository.buscarPorId(i.getId());
+        assertTrue(editado.isPresent());
+        assertEquals(75, editado.get().getPesoKg());
     }
 
     @Test
-    void testCarregamentoCsv() {
-        // Salva alguns dados
-        repository.salvar(criarIndicador(1, LocalDate.now()));
-        repository.salvar(criarIndicador(2, LocalDate.now()));
+    void testDeletarIndicador() {
+        IndicadorBiomedico i = repository.salvar(new IndicadorBiomedico(0, 1, LocalDate.now(), 70, 170, 15, 55, 24.2));
+        repository.deletar(i.getId());
 
-        // Cria uma nova instância do repositório para forçar o carregamento do CSV
-        IIndicadorBiomedicoRepository novoRepositorio = new IndicadorBiomedicoRepositoryImpl();
-        List<IndicadorBiomedico> todos = novoRepositorio.listarTodos();
+        Optional<IndicadorBiomedico> deletado = repository.buscarPorId(i.getId());
+        assertFalse(deletado.isPresent());
+    }
 
-        assertFalse(todos.isEmpty());
-        assertEquals(2, todos.size());
+    @Test
+    void testGerarProximoId() {
+        // Inicialmente, o próximo ID é 1
+        assertEquals(1, repository.gerarProximoId());
+
+        // Salvar um indicador (incrementa o ID internamente)
+        repository.salvar(new IndicadorBiomedico(0, 1, LocalDate.now(), 70, 170, 15, 55, 24.2));
+
+        // Agora o próximo ID será 3, porque gerarProximoId() é chamado internamente ao salvar
+        assertEquals(3, repository.gerarProximoId());
     }
 }

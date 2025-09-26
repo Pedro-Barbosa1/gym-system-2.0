@@ -17,8 +17,8 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
 
     private static final Logger logger = Logger.getLogger(ExercicioRepositoryImpl.class.getName());
     private static final String ARQUIVO_CSV = "src/main/resources/data/exercicios.csv";
-    private List<Exercicio> exercicios;
-    private AtomicInteger proximoId;
+    private final List<Exercicio> exercicios;
+    private final AtomicInteger proximoId;
 
     public ExercicioRepositoryImpl() {
         this.exercicios = new ArrayList<>();
@@ -176,4 +176,14 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
     public void limpar() {
         this.exercicios.clear();
     }
+
+    // Construtor usado nos testes unitários para não carregar CSV
+    public ExercicioRepositoryImpl(boolean carregarCsv) {
+        this.exercicios = new ArrayList<>();
+        this.proximoId = new AtomicInteger(0);
+        if (carregarCsv) {
+            carregarDoCsv();
+        }
+    }
+
 }

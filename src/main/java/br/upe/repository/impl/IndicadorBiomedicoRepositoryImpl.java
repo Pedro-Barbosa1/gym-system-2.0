@@ -189,4 +189,14 @@ public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepo
     public int gerarProximoId() {
         return proximoId.getAndIncrement();
     }
+
+    // Construtor usado apenas para testes, não carrega CSV
+    public IndicadorBiomedicoRepositoryImpl(boolean carregarCsv) {
+        this.indicadores = new ArrayList<>();
+        this.proximoId = new AtomicInteger(1);
+        if (carregarCsv) {
+            carregarDoCsv();
+        }
+    }
+
 }
