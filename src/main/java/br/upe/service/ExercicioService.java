@@ -1,11 +1,11 @@
 package br.upe.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import br.upe.model.Exercicio;
 import br.upe.repository.IExercicioRepository;
 import br.upe.repository.impl.ExercicioRepositoryImpl;
-
-import java.util.List;
-import java.util.Optional;
 
 public class ExercicioService implements IExercicioService {
 
@@ -84,7 +84,13 @@ public class ExercicioService implements IExercicioService {
     }
 
     // Alterar exercicios
-    @Override
+    
+    private boolean verificarNomeDuplicado(int idUsuario, String novoNome) {
+        List<Exercicio> exerciciosDoUsuario = exercicioRepository.buscarTodosDoUsuario(idUsuario);
+        return exerciciosDoUsuario.stream()
+            .anyMatch(e -> e.getNome().equalsIgnoreCase(novoNome.trim()));
+    }
+
     public void atualizarExercicio(int idUsuario, String nomeAtualExercicio, String novoNome, String novaDescricao, String novoCaminhoGif) {
         if (nomeAtualExercicio == null || nomeAtualExercicio.trim().isEmpty()) {
             throw new IllegalArgumentException("O nome atual do exercício não pode ser vazio.");
@@ -96,10 +102,7 @@ public class ExercicioService implements IExercicioService {
             Exercicio exercicio = exercicioOpt.get();
 
             if (novoNome != null && !novoNome.trim().isEmpty() && !novoNome.trim().equalsIgnoreCase(exercicio.getNome())) {
-                List<Exercicio> exerciciosDoUsuario = exercicioRepository.buscarTodosDoUsuario(idUsuario);
-                boolean nomeJaExiste = exerciciosDoUsuario.stream()
-                        .anyMatch(e -> e.getNome().equalsIgnoreCase(novoNome.trim()));
-                if (nomeJaExiste) {
+                if (verificarNomeDuplicado(idUsuario, novoNome)) {
                     throw new IllegalArgumentException("Você já possui um exercício com o novo nome '" + novoNome + "'.");
                 }
             }
@@ -121,9 +124,8 @@ public class ExercicioService implements IExercicioService {
     }
 
     public void limparDados() {
-    if (exercicioRepository instanceof ExercicioRepositoryImpl) {
-        ((ExercicioRepositoryImpl) exercicioRepository).limpar();
+        if(exercicioRepository instanceof ExercicioRepositoryImpl) {
+            ((ExercicioRepositoryImpl) exercicioRepository).limpar();
         }
     }
-
 }
