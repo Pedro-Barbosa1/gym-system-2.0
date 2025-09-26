@@ -1,6 +1,6 @@
 package br.upe.ui;
 
-import br.upe.data.beans.Exercicio;
+import br.upe.model.Exercicio;
 
 import javax.swing.*;
 import java.awt.*;

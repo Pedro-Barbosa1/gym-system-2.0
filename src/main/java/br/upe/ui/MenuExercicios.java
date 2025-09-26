@@ -1,8 +1,8 @@
 package br.upe.ui;
 
-import br.upe.business.ExercicioService;
-import br.upe.data.beans.Exercicio;
-import br.upe.business.IExercicioService;
+import br.upe.service.ExercicioService;
+import br.upe.model.Exercicio;
+import br.upe.service.IExercicioService;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,9 +1,9 @@
 package br.upe.ui;
 
-import br.upe.business.IIndicadorBiomedicoService;
-import br.upe.business.IndicadorBiomedicoService;
-import br.upe.data.beans.IndicadorBiomedico;
-import br.upe.business.RelatorioDiferencaIndicadores;
+import br.upe.service.IIndicadorBiomedicoService;
+import br.upe.service.IndicadorBiomedicoService;
+import br.upe.model.IndicadorBiomedico;
+import br.upe.service.RelatorioDiferencaIndicadores;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
