@@ -1,14 +1,14 @@
 package br.upe.ui;
 
-import br.upe.business.IExercicioService;
-import br.upe.business.ExercicioService;
-import br.upe.business.IPlanoTreinoService;
-import br.upe.business.PlanoTreinoService;
-import br.upe.business.SessaoTreinoService;
-import br.upe.data.beans.Exercicio;
-import br.upe.data.beans.ItemPlanoTreino;
-import br.upe.data.beans.PlanoTreino;
-import br.upe.data.beans.SessaoTreino;
+import br.upe.service.IExercicioService;
+import br.upe.service.ExercicioService;
+import br.upe.service.IPlanoTreinoService;
+import br.upe.service.PlanoTreinoService;
+import br.upe.service.SessaoTreinoService;
+import br.upe.model.Exercicio;
+import br.upe.model.ItemPlanoTreino;
+import br.upe.model.PlanoTreino;
+import br.upe.model.SessaoTreino;
 
 import java.util.List;
 import java.util.Optional;

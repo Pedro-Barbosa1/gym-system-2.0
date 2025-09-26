@@ -6,8 +6,8 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import br.upe.business.RelatorioDiferencaIndicadores;
-import br.upe.data.beans.IndicadorBiomedico;
+import br.upe.service.RelatorioDiferencaIndicadores;
+import br.upe.model.IndicadorBiomedico;
 
 public class DebugRelatorio {
     public static void main(String[] args) throws IOException {

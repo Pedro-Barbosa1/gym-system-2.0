@@ -1,8 +1,8 @@
 package br.upe.ui;
 
-import br.upe.business.IUsuarioService;
-import br.upe.business.UsuarioService;
-import br.upe.data.TipoUsuario;
+import br.upe.service.IUsuarioService;
+import br.upe.service.UsuarioService;
+import br.upe.model.TipoUsuario;
 
 import java.util.Scanner;
 
