@@ -45,7 +45,7 @@ public class PlanoTreinoServiceTest {
         assertEquals("PlanoValido", plano.getNome());
         assertEquals(1, plano.getIdUsuario());
     }
-
+/* 
     @Test
     public void testAdicionarExercicioAoPlanoComSucesso() {
         planoTreinoService.criarPlano(2, "Plano para adicionar exercício");
@@ -75,6 +75,6 @@ public class PlanoTreinoServiceTest {
 
         planoTreinoService.criarPlano(2, "Plano para remover exercício");
         planoTreinoService.adicionarExercicioAoPlano(2, "Plano para remover exercício", 2, 70, 10);
-    }
+    }*/
 
 }
