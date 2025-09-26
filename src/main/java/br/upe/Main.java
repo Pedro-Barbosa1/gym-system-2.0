@@ -2,9 +2,11 @@ package br.upe;
 
 import br.upe.ui.MenuPrincipal;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class Main {
     public static void main(String[] args) {
+        Logger logger = Logger.getLogger(Main.class.getName());
         Scanner scGlobal = new Scanner(System.in);
 
         // Exibir menu e iniciar
@@ -12,6 +14,6 @@ public class Main {
         menuPrincipal.exibirMenuInicial();
 
         scGlobal.close();
-        System.out.println("Programa encerrado.");
+        logger.info("Programa encerrado.");
     }
 }
