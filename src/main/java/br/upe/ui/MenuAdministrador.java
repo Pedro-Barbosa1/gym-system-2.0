@@ -1,15 +1,17 @@
 package br.upe.ui;
 
-import br.upe.service.IUsuarioService;
-import br.upe.service.UsuarioService;
-import br.upe.model.Usuario;
-
 import java.util.List;
 import java.util.Scanner;
+
+import br.upe.model.Usuario;
+import br.upe.service.IUsuarioService;
+import br.upe.service.UsuarioService;
 
 public class MenuAdministrador {
     private final IUsuarioService usuarioService;
     private final Scanner scanner;
+    private final String ID_request = "ID inválido. Por favor, digite um número.";
+    private final String error_msg = "Erro: ";
 
     public MenuAdministrador(Scanner scanner) {
         this.usuarioService = new UsuarioService();
@@ -77,7 +79,7 @@ public class MenuAdministrador {
         } catch (NumberFormatException e) {
             System.err.println("ID inválido. Por favor, digite um número.");
         } catch (IllegalArgumentException e) {
-            System.err.println("Erro: " + e.getMessage());
+            System.err.println(error_msg + e.getMessage());
         }
     }
 
@@ -89,10 +91,10 @@ public class MenuAdministrador {
             id = Integer.parseInt(scanner.nextLine());
             usuarioService.rebaixarUsuarioAComum(id);
         } catch (NumberFormatException e) {
-            System.err.println("ID inválido. Por favor, digite um número.");
+            System.err.println(ID_request);
         }
         catch (IllegalArgumentException e) {
-            System.err.println("Erro: " + e.getMessage());
+            System.err.println(error_msg + e.getMessage());
         }
     }
 
@@ -105,9 +107,9 @@ public class MenuAdministrador {
             usuarioService.removerUsuario(id);
             System.out.println("Usuário removido com sucesso!");
         } catch (NumberFormatException e) {
-            System.err.println("ID inválido. Por favor, digite um número.");
+            System.err.println(ID_request);
         } catch (IllegalArgumentException e) {
-            System.err.println("Erro: " + e.getMessage());
+            System.err.println(error_msg + e.getMessage());
         }
     }
 }

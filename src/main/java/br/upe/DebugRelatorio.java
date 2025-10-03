@@ -2,18 +2,22 @@ package br.upe;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import br.upe.service.RelatorioDiferencaIndicadores;
 import br.upe.model.IndicadorBiomedico;
 
 public class DebugRelatorio {
+    private static final Logger logger = Logger.getLogger(DebugRelatorio.class.getName());
     public static void main(String[] args) throws IOException {
         RelatorioDiferencaIndicadores relatorio = new RelatorioDiferencaIndicadores();
-        relatorio.dataInicio = LocalDate.of(2025,1,1);
-        relatorio.dataFim = LocalDate.of(2025,1,31);
+        relatorio.dataInicio = LocalDate.of(2025, 1, 1);
+        relatorio.dataFim = LocalDate.of(2025, 1, 31);
 
         IndicadorBiomedico inicial = new IndicadorBiomedico(0, null, 0, 0, 0, 0, 0);
         inicial.setPesoKg(70.0);
@@ -32,13 +36,16 @@ public class DebugRelatorio {
         relatorio.calcularDiferencas();
 
         String s = relatorio.toString();
-        System.out.println("---- toString output ----");
-        System.out.println(s);
-        System.out.println("---- end ----");
+        logger.info("---- toString output ----");
+        logger.info(s);
+        logger.info("---- end ----");
 
         String caminho = "test-relatorio.csv";
         relatorio.exportarParaCsv(caminho);
-        System.out.println("Wrote CSV to: " + Paths.get(caminho).toAbsolutePath());
-        System.out.println("Exists? " + Files.exists(Paths.get(caminho)));
+
+        Path path = Paths.get(caminho);
+        logger.log(Level.INFO, "Wrote CSV to: {0}", path.toAbsolutePath());
+        logger.log(Level.INFO, "Exists? {0}", Files.exists(path));
+
     }
 }

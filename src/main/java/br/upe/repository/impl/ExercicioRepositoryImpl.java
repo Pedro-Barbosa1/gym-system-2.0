@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ExercicioRepositoryImpl implements IExercicioRepository {
 
+    private static final Logger logger = Logger.getLogger(ExercicioRepositoryImpl.class.getName());
     private static final String ARQUIVO_CSV = "src/main/resources/data/exercicios.csv";
-    private List<Exercicio> exercicios;
-    private AtomicInteger proximoId;
+    private final List<Exercicio> exercicios;
+    private final AtomicInteger proximoId;
 
     public ExercicioRepositoryImpl() {
         this.exercicios = new ArrayList<>();
@@ -28,17 +31,20 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
         try {
             Files.createDirectories(Paths.get("src/main/resources/data"));
         } catch (IOException e) {
-            System.err.println("Erro ao criar diretório para CSV: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao criar diretório para CSV: {0}", e.getMessage());
             return;
         }
 
         File file = new File(ARQUIVO_CSV);
         if (!file.exists()) {
-            System.out.println("Arquivo CSV não encontrado. Será criado vazio no primeiro salvamento.");
+            logger.warning("Arquivo CSV não encontrado. Será criado vazio no primeiro salvamento.");
             try {
-                file.createNewFile();
+                boolean created = file.createNewFile();
+                if (!created) {
+                    logger.warning("Arquivo CSV não foi criado, mas não houve exceção.");
+                }
             } catch (IOException e) {
-                System.err.println("Erro ao criar o arquivo CSV vazio: " + e.getMessage());
+                logger.log(Level.SEVERE, "Erro ao criar o arquivo CSV vazio: {0}", e.getMessage());
             }
             return;
         }
@@ -57,7 +63,7 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
             }
             proximoId.set(maxId + 1);
         } catch (IOException e) {
-            System.err.println("Erro ao ler o arquivo CSV de exercícios: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao ler o arquivo CSV de exercícios: {0}", e.getMessage());
         }
     }
 
@@ -69,7 +75,7 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
                 bw.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Erro ao escrever no arquivo CSV de exercícios: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao escrever no arquivo CSV de exercícios: {0}", e.getMessage());
         }
     }
 
@@ -85,11 +91,11 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
                 String caminhoGif = partes[4];
                 return new Exercicio(id, idUsuario, nome, descricao, caminhoGif);
             } catch (NumberFormatException e) {
-                System.err.println("Erro ao converter número em linha CSV: " + linha);
+                logger.log(Level.WARNING, "Erro ao converter número em linha CSV: {0}", linha);
                 return null;
             }
         }
-        System.err.println("Formato inválido de linha CSV: " + linha);
+        logger.log(Level.WARNING, "Formato inválido de linha CSV: {0}", linha);
         return null;
     }
 
@@ -119,7 +125,7 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
     public List<Exercicio> buscarTodosDoUsuario(int idUsuario) {
         return exercicios.stream()
                 .filter(e -> e.getIdUsuario() == idUsuario)
-                .collect(java.util.stream.Collectors.toList());
+                .toList();
     }
 
     // Editar o exercicio no arquivo CSV
@@ -131,7 +137,7 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
             exercicios.add(exercicio);
             escreverParaCsv();
         } else {
-            System.err.println("Erro: Exercício com ID " + exercicio.getIdExercicio() + " não encontrado para edição.");
+            logger.log(Level.WARNING, "Erro: Exercício com ID {0} não encontrado para edição.", exercicio.getIdExercicio());
         }
     }
 
@@ -142,7 +148,7 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
         if (removido) {
             escreverParaCsv();
         } else {
-            System.err.println("Erro: Exercício com ID " + idExercicio + " não encontrado para remoção.");
+            logger.log(Level.WARNING, "Erro: Exercício com ID {0} não encontrado para remoção.", idExercicio);
         }
     }
 
@@ -168,7 +174,16 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
     }
 
     public void limpar() {
-    this.exercicios.clear(); // ou o nome correto da sua lista/mapa
+        this.exercicios.clear();
+    }
+
+    // Construtor usado nos testes unitários para não carregar CSV
+    public ExercicioRepositoryImpl(boolean carregarCsv) {
+        this.exercicios = new ArrayList<>();
+        this.proximoId = new AtomicInteger(0);
+        if (carregarCsv) {
+            carregarDoCsv();
+        }
     }
 
 }

@@ -4,22 +4,22 @@ import br.upe.model.IndicadorBiomedico;
 import br.upe.repository.IIndicadorBiomedicoRepository;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepository {
 
-    private static final String CAMINHO_ARQUIVO = "src/main/resources/data/indicadores.csv";
+    private static final Logger logger = Logger.getLogger(IndicadorBiomedicoRepositoryImpl.class.getName());
+    private static final Path CAMINHO_ARQUIVO = Paths.get("src/main/resources/data/indicadores.csv");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
-    private List<IndicadorBiomedico> indicadores;
-    private AtomicInteger proximoId;
+
+    private final List<IndicadorBiomedico> indicadores;
+    private final AtomicInteger proximoId;
 
     public IndicadorBiomedicoRepositoryImpl() {
         this.indicadores = new ArrayList<>();
@@ -27,74 +27,87 @@ public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepo
         carregarDoCsv();
     }
 
-    // Busca o usuario pelo arquivo CSV
+    // Busca os indicadores no arquivo CSV
     private void carregarDoCsv() {
         try {
-            Files.createDirectories(Paths.get("src/main/resources/data"));
+            Files.createDirectories(CAMINHO_ARQUIVO.getParent());
         } catch (IOException e) {
-            System.err.println("Erro ao criar diretório para CSV: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao criar diretório para CSV", e);
             return;
         }
 
-        File file = new File(CAMINHO_ARQUIVO);
-        if (!file.exists()) {
-            System.out.println("Arquivo CSV de indicadores não encontrado. Será criado um novo na primeira inserção.");
+        if (!Files.exists(CAMINHO_ARQUIVO)) {
+            logger.info("Arquivo CSV de indicadores não encontrado. Será criado um novo na primeira inserção.");
             return;
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String linha;
-            reader.readLine(); // Pular cabeçalho
+        try (BufferedReader reader = Files.newBufferedReader(CAMINHO_ARQUIVO)) {
+            String cabecalho = reader.readLine(); // Lê o cabeçalho
+            if (cabecalho == null) {
+                // Arquivo vazio
+                return;
+            }
             int maxId = 0;
+
+            String linha;
             while ((linha = reader.readLine()) != null) {
                 IndicadorBiomedico indicador = parseLinhaCsv(linha);
                 if (indicador != null) {
                     indicadores.add(indicador);
-                    if (indicador.getId() > maxId) {
-                        maxId = indicador.getId();
-                    }
+                    maxId = Math.max(maxId, indicador.getId());
                 }
             }
             proximoId.set(maxId + 1);
         } catch (IOException e) {
-            System.err.println("Erro ao ler indicadores do arquivo CSV: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao ler indicadores do arquivo CSV", e);
         }
     }
 
     // Grava os indicadores no arquivo CSV
     private void escreverParaCsv() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ARQUIVO))) {
+        Path arquivoTemp = CAMINHO_ARQUIVO.resolveSibling("indicadores_temp.csv");
+
+        try (BufferedWriter writer = Files.newBufferedWriter(arquivoTemp)) {
             writer.write("id;idUsuario;data;pesoKg;alturaCm;percentualGordura;percentualMassaMagra;imc\n");
             for (IndicadorBiomedico indicador : indicadores) {
                 writer.write(formatarLinhaCsv(indicador));
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Erro ao escrever indicadores no arquivo CSV: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao escrever indicadores no arquivo CSV", e);
+            return;
+        }
+
+        try {
+            Files.move(arquivoTemp, CAMINHO_ARQUIVO, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Erro ao substituir arquivo CSV original", e);
         }
     }
 
     // Lê uma linha do arquivo CSV
     private IndicadorBiomedico parseLinhaCsv(String linha) {
         String[] partes = linha.split(";");
-        if (partes.length == 8) {
-            try {
-                int id = Integer.parseInt(partes[0]);
-                int idUsuario = Integer.parseInt(partes[1]);
-                LocalDate data = LocalDate.parse(partes[2], DATE_FORMATTER);
-                double pesoKg = Double.parseDouble(partes[3]);
-                double alturaCm = Double.parseDouble(partes[4]);
-                double percentualGordura = Double.parseDouble(partes[5]);
-                double percentualMassaMagra = Double.parseDouble(partes[6]);
-                double imc = Double.parseDouble(partes[7]);
-                return new IndicadorBiomedico(id, idUsuario, data, pesoKg, alturaCm, percentualGordura, percentualMassaMagra, imc);
-            } catch (Exception e) {
-                System.err.println("Erro ao parsear linha CSV de indicador: " + linha + " - " + e.getMessage());
-                return null;
-            }
+        if (partes.length != 8) {
+            logger.log(Level.WARNING, "Formato inválido de linha CSV de indicador: {0}", linha);
+            return null;
         }
-        System.err.println("Formato inválido de linha CSV de indicador: " + linha);
-        return null;
+
+        try {
+            int id = Integer.parseInt(partes[0]);
+            int idUsuario = Integer.parseInt(partes[1]);
+            LocalDate data = LocalDate.parse(partes[2], DATE_FORMATTER);
+            double pesoKg = Double.parseDouble(partes[3]);
+            double alturaCm = Double.parseDouble(partes[4]);
+            double percentualGordura = Double.parseDouble(partes[5]);
+            double percentualMassaMagra = Double.parseDouble(partes[6]);
+            double imc = Double.parseDouble(partes[7]);
+            return new IndicadorBiomedico(id, idUsuario, data, pesoKg, alturaCm, percentualGordura, percentualMassaMagra, imc);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Erro ao parsear linha CSV de indicador: {0}", linha);
+            logger.log(Level.WARNING, "Detalhes da exceção:", e);
+            return null;
+        }
     }
 
     // Formata uma linha no arquivo CSV
@@ -111,21 +124,18 @@ public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepo
         );
     }
 
-    // Salva os indicadores no arquivo CSV
     @Override
     public IndicadorBiomedico salvar(IndicadorBiomedico indicador) {
         if (indicador.getId() == 0) {
             indicador.setId(gerarProximoId());
-            indicadores.add(indicador);
         } else {
             indicadores.removeIf(i -> i.getId() == indicador.getId());
-            indicadores.add(indicador);
         }
+        indicadores.add(indicador);
         escreverParaCsv();
         return indicador;
     }
 
-    // Buscar indicadores por id
     @Override
     public Optional<IndicadorBiomedico> buscarPorId(int id) {
         return indicadores.stream()
@@ -133,7 +143,6 @@ public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepo
                 .findFirst();
     }
 
-    // Buscar todos os indicadores de um usuario
     @Override
     public List<IndicadorBiomedico> listarTodos() {
         return new ArrayList<>(indicadores);
@@ -143,42 +152,35 @@ public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepo
     public List<IndicadorBiomedico> listarPorUsuario(int idUsuario) {
         return indicadores.stream()
                 .filter(i -> i.getIdUsuario() == idUsuario)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    // Listar indicadores de um usuario pelo periodo
     @Override
     public List<IndicadorBiomedico> buscarPorPeriodo(int idUsuario, LocalDate dataInicio, LocalDate dataFim) {
         return indicadores.stream()
                 .filter(i -> i.getIdUsuario() == idUsuario &&
-                              !i.getData().isBefore(dataInicio) &&
-                              !i.getData().isAfter(dataFim))
-                .collect(Collectors.toList());
+                        !i.getData().isBefore(dataInicio) &&
+                        !i.getData().isAfter(dataFim))
+                .toList();
     }
 
-    // Verifica condições e altera indicadores
     @Override
-
     public void editar(IndicadorBiomedico indicador) {
-        Optional<IndicadorBiomedico> existenteOpt = buscarPorId(indicador.getId());
-        if (existenteOpt.isPresent()) {
+        if (buscarPorId(indicador.getId()).isPresent()) {
             indicadores.removeIf(i -> i.getId() == indicador.getId());
             indicadores.add(indicador);
             escreverParaCsv();
         } else {
-            System.err.println("Erro: Indicador com ID " + indicador.getId() + " não encontrado para edição.");
+            logger.warning("Indicador com ID " + indicador.getId() + " não encontrado para edição.");
         }
     }
 
-    // Verifica condições e deleta indicadores pelo id
     @Override
-
     public void deletar(int id) {
-        boolean removido = indicadores.removeIf(i -> i.getId() == id);
-        if (removido) {
+        if (indicadores.removeIf(i -> i.getId() == id)) {
             escreverParaCsv();
         } else {
-            System.err.println("Erro: Indicador com ID " + id + " não encontrado para remoção.");
+            logger.log(Level.WARNING, "Indicador com ID {0} não encontrado para remoção.", id);
         }
     }
 
@@ -187,4 +189,14 @@ public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepo
     public int gerarProximoId() {
         return proximoId.getAndIncrement();
     }
+
+    // Construtor usado apenas para testes, não carrega CSV
+    public IndicadorBiomedicoRepositoryImpl(boolean carregarCsv) {
+        this.indicadores = new ArrayList<>();
+        this.proximoId = new AtomicInteger(1);
+        if (carregarCsv) {
+            carregarDoCsv();
+        }
+    }
+
 }
