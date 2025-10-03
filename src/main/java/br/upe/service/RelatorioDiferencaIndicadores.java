@@ -96,4 +96,35 @@ public void exportarParaCsv(String caminhoArquivo) throws IOException {
     }
 }
 
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public void setDataFim(LocalDate dataFim) {
+        this.dataFim = dataFim;
+    }
+
+    public void setIndicadorInicial(Optional<IndicadorBiomedico> indicadorInicial) {
+        this.indicadorInicial = indicadorInicial;
+    }
+
+    public void setIndicadorFinal(Optional<IndicadorBiomedico> indicadorFinal) {
+        this.indicadorFinal = indicadorFinal;
+    }
+
+    public double getDiferencaPeso() {
+        return diferencaPeso;
+    }
+
+    public double getDiferencaPercentualMassaMagra() {
+        return diferencaPercentualMassaMagra;
+    }
+
+    public double getDiferencaImc() {
+        return diferencaImc;
+    }
+
+    public double getDiferencaPercentualGordura() {
+        return diferencaPercentualGordura;
+    }
 }

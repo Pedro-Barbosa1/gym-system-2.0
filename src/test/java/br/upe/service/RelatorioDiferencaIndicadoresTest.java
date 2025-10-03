@@ -24,8 +24,8 @@ public class RelatorioDiferencaIndicadoresTest {
     public void setup() {
         relatorio = new RelatorioDiferencaIndicadores();
 
-        relatorio.dataInicio = LocalDate.of(2025, 1, 1);
-        relatorio.dataFim = LocalDate.of(2025, 1, 31);
+        relatorio.setDataInicio(LocalDate.of(2025, 1, 1));
+        relatorio.setDataFim(LocalDate.of(2025, 1, 31));
 
         // Criar Indicadores de exemplo
         inicial = new IndicadorBiomedico(0, null, 0, 0, 0, 0, 0);
@@ -40,18 +40,18 @@ public class RelatorioDiferencaIndicadoresTest {
         finalObj.setPercentualMassaMagra(77.0);
         finalObj.setImc(21.5);
 
-        relatorio.indicadorInicial = Optional.of(inicial);
-        relatorio.indicadorFinal = Optional.of(finalObj);
+        relatorio.setIndicadorInicial(Optional.of(inicial));
+        relatorio.setIndicadorFinal(Optional.of(finalObj));
 
         relatorio.calcularDiferencas();
     }
 
      @Test
      public void testCalcularDiferencasCorretamente() {
-         assertEquals(-2.0, relatorio.diferencaPeso, 0.01);
-         assertEquals(-2.0, relatorio.diferencaPercentualGordura, 0.01);
-         assertEquals(2.0, relatorio.diferencaPercentualMassaMagra, 0.01);
-         assertEquals(-0.5, relatorio.diferencaImc, 0.01);
+         assertEquals(-2.0, relatorio.getDiferencaPeso(), 0.01);
+         assertEquals(-2.0, relatorio.getDiferencaPercentualGordura(), 0.01);
+         assertEquals(2.0, relatorio.getDiferencaPercentualMassaMagra(), 0.01);
+         assertEquals(-0.5, relatorio.getDiferencaImc(), 0.01);
      }
 
      @Test
