@@ -1,18 +1,18 @@
 package br.upe.ui;
 
-import br.upe.service.IExercicioService;
-import br.upe.service.ExercicioService;
-import br.upe.service.IPlanoTreinoService;
-import br.upe.service.PlanoTreinoService;
-import br.upe.service.SessaoTreinoService;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
+
 import br.upe.model.Exercicio;
 import br.upe.model.ItemPlanoTreino;
 import br.upe.model.PlanoTreino;
 import br.upe.model.SessaoTreino;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import br.upe.service.ExercicioService;
+import br.upe.service.IExercicioService;
+import br.upe.service.IPlanoTreinoService;
+import br.upe.service.PlanoTreinoService;
+import br.upe.service.SessaoTreinoService;
 
 public class MenuTreinos {
 
@@ -70,21 +70,12 @@ public class MenuTreinos {
             return;
         }
 
-        System.out.println("\n--- Seus Planos de Treino Disponíveis ---");
-        meusPlanos.forEach(p -> System.out.println("ID: " + p.getIdPlano() + ", Nome: " + p.getNome()));
-
-        System.out.print("Digite o ID do plano de treino para esta sessão: ");
-        int idPlanoEscolhido;
-        try {
-            idPlanoEscolhido = Integer.parseInt(sc.nextLine());
-        } catch (NumberFormatException e) {
-            System.err.println("ID de plano inválido. Por favor, digite um número.");
-            return;
-        }
+        exibirPlanos(meusPlanos);
+        int idPlanoEscolhido = solicitarPlanoId();
 
         Optional<PlanoTreino> planoOpt = planoTreinoService.buscarPlanoPorId(idPlanoEscolhido);
-        if (!planoOpt.isPresent() || planoOpt.get().getIdUsuario() != idUsuarioLogado) {
-            System.out.println("Plano com ID " + idPlanoEscolhido + " não encontrado ou não pertence a você.");
+
+        if (!validacaoPlano(planoOpt, idUsuarioLogado, idPlanoEscolhido)) {
             return;
         }
         PlanoTreino planoBase = planoOpt.get();
@@ -98,45 +89,13 @@ public class MenuTreinos {
             SessaoTreino sessaoAtual = sessaoTreinoService.iniciarSessao(idUsuarioLogado, idPlanoEscolhido);
             System.out.println("Sessão iniciada para o plano: " + planoBase.getNome() + " em " + sessaoAtual.getDataSessao() + ".");
 
-            System.out.println("\n--- Registrando Exercícios ---");
-            for (ItemPlanoTreino itemPlanejado : planoBase.getItensTreino()) {
-                Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(itemPlanejado.getIdExercicio());
-                String nomeExercicio = exercicioOpt.isPresent() ? exercicioOpt.get().getNome() : "Exercício Desconhecido";
-
-                System.out.println("\n--- Exercício: " + nomeExercicio + " ---");
-                System.out.println("Planejado: Carga " + itemPlanejado.getCargaKg() + "kg, Repetições " + itemPlanejado.getRepeticoes());
-
-                System.out.print("Repetições realizadas (deixe em branco para planejado: " + itemPlanejado.getRepeticoes() + "): ");
-                String repInput = sc.nextLine();
-                int repRealizadas = repInput.isEmpty() ? itemPlanejado.getRepeticoes() : Integer.parseInt(repInput);
-
-                System.out.print("Carga utilizada (kg, deixe em branco para planejado: " + itemPlanejado.getCargaKg() + "): ");
-                String cargaInput = sc.nextLine();
-                double cargaRealizada = cargaInput.isEmpty() ? (double)itemPlanejado.getCargaKg() : Double.parseDouble(cargaInput);
-
-                sessaoTreinoService.registrarExecucao(sessaoAtual, itemPlanejado.getIdExercicio(), repRealizadas, cargaRealizada);
-            }
+            registrarExercicios(sessaoAtual, planoBase);
 
             System.out.println("\n===== FIM DA SESSÃO =====");
             sessaoTreinoService.salvarSessao(sessaoAtual);
 
             List<SessaoTreinoService.SugestaoAtualizacaoPlano> sugestoes = sessaoTreinoService.verificarAlteracoesEGerarSugestoes(sessaoAtual);
-            if (!sugestoes.isEmpty()) {
-                System.out.println("\n--- Sugestões de Atualização do Plano ---");
-                for (SessaoTreinoService.SugestaoAtualizacaoPlano sugestao : sugestoes) {
-                    System.out.printf("O exercício '%s' (ID: %d) teve alterações.\n", sugestao.nomeExercicio, sugestao.idExercicio);
-                    System.out.printf("  Repetições: Planejado %d -> Realizado %d\n", sugestao.repPlanejadas, sugestao.repRealizadas);
-                    System.out.printf("  Carga: Planejado %.0fkg -> Realizado %.0fkg\n", sugestao.cargaPlanejada, sugestao.cargaRealizada);
-                    System.out.print("Deseja atualizar o plano com os novos valores? (s/n): ");
-                    String resposta = sc.nextLine();
-                    if (resposta.equalsIgnoreCase("s")) {
-                        sessaoTreinoService.aplicarAtualizacoesNoPlano(planoBase.getIdPlano(), sugestao.idExercicio, sugestao.repRealizadas, sugestao.cargaRealizada);
-                        System.out.println("Plano atualizado para " + sugestao.nomeExercicio + ".");
-                    }
-                }
-            } else {
-                System.out.println("Nenhuma alteração significativa nos exercícios para sugerir atualização do plano.");
-            }
+            tratarSugestoes(sugestoes, planoBase);
 
         } catch (NumberFormatException e) {
             System.err.println("Entrada inválida para repetições ou carga. Por favor, digite um número.");
@@ -144,4 +103,75 @@ public class MenuTreinos {
             System.err.println("Erro ao iniciar ou registrar sessão: " + e.getMessage());
         }
     }
+
+    private void exibirPlanos(List<PlanoTreino> meusPlanos) {
+        System.out.println("\n--- Seus Planos de Treino Disponíveis ---");
+        meusPlanos.forEach(p -> System.out.println("ID: " + p.getIdPlano() + ", Nome: " + p.getNome()));
+    }
+
+    private int solicitarPlanoId() {
+        System.out.print("Digite o ID do plano de treino para esta sessão: ");
+        try {
+            return Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.err.println("ID de plano inválido. Por favor, digite um número.");
+            throw e;
+        }
+    }
+
+    private boolean validacaoPlano(Optional<PlanoTreino> planoOpt, int idUsuarioLogado, int idPlanoEscolhido) {
+        if (!planoOpt.isPresent() || planoOpt.get().getIdUsuario() != idUsuarioLogado) {
+            System.out.println("Plano com ID " + idPlanoEscolhido + " não encontrado ou não pertence a você.");
+            return false;
+        }
+        return true;
+    }
+
+    private void registrarExercicios(SessaoTreino sessaoAtual, PlanoTreino planoBase) {
+        System.out.println("\n--- Registrando Exercícios ---");
+        for (ItemPlanoTreino itemPlanejado : planoBase.getItensTreino()) {
+            Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(itemPlanejado.getIdExercicio());
+            String nomeExercicio = exercicioOpt.isPresent() ? exercicioOpt.get().getNome() : "Exercício Desconhecido";
+
+            System.out.println("\n--- Exercício: " + nomeExercicio + " ---");
+            System.out.println("Planejado: Carga " + itemPlanejado.getCargaKg() + "kg, Repetições " + itemPlanejado.getRepeticoes());
+
+            int repRealizadas = lerInteiroOpcional("Repetições realizadas (deixe em branco para planejado: " + itemPlanejado.getRepeticoes() + "): ", itemPlanejado.getRepeticoes());
+            double cargaRealizada = lerDoubleOpcional("Carga utilizada (kg, deixe em branco para planejado: " + itemPlanejado.getCargaKg() + "): ", (double) itemPlanejado.getCargaKg());
+
+            sessaoTreinoService.registrarExecucao(sessaoAtual, itemPlanejado.getIdExercicio(), repRealizadas, cargaRealizada);
+        }
+    }
+
+    private int lerInteiroOpcional(String mensagem, int valorPadrao) {
+        System.out.print(mensagem);
+        String input = sc.nextLine();
+        return input.isEmpty() ? valorPadrao : Integer.parseInt(input);
+    }
+
+    private double lerDoubleOpcional(String mensagem, double valorPadrao) {
+        System.out.print(mensagem);
+        String input = sc.nextLine();
+        return input.isEmpty() ? valorPadrao : Double.parseDouble(input);
+    }
+
+    private void tratarSugestoes(List<SessaoTreinoService.SugestaoAtualizacaoPlano> sugestoes, PlanoTreino planoBase) {
+        if (!sugestoes.isEmpty()) {
+            System.out.println("\n--- Sugestões de Atualização do Plano ---");
+            for (SessaoTreinoService.SugestaoAtualizacaoPlano sugestao : sugestoes) {
+                System.out.printf("O exercício '%s' (ID: %d) teve alterações.\n", sugestao.nomeExercicio, sugestao.idExercicio);
+                System.out.printf("  Repetições: Planejado %d -> Realizado %d\n", sugestao.repPlanejadas, sugestao.repRealizadas);
+                System.out.printf("  Carga: Planejado %.0fkg -> Realizado %.0fkg\n", sugestao.cargaPlanejada, sugestao.cargaRealizada);
+                System.out.print("Deseja atualizar o plano com os novos valores? (s/n): ");
+                String resposta = sc.nextLine();
+                if (resposta.equalsIgnoreCase("s")) {
+                    sessaoTreinoService.aplicarAtualizacoesNoPlano(planoBase.getIdPlano(), sugestao.idExercicio, sugestao.repRealizadas, sugestao.cargaRealizada);
+                    System.out.println("Plano atualizado para " + sugestao.nomeExercicio + ".");
+                }
+            }
+        } else {
+            System.out.println("Nenhuma alteração significativa nos exercícios para sugerir atualização do plano.");
+        }
+    }
+
 }

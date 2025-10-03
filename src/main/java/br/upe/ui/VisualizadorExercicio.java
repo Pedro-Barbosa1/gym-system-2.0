@@ -1,10 +1,16 @@
 package br.upe.ui;
 
-import br.upe.model.Exercicio;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.util.Objects;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+
+import br.upe.model.Exercicio;
 
 public class VisualizadorExercicio {
 
@@ -12,8 +18,8 @@ public class VisualizadorExercicio {
     public static void mostrarExercicio(String gifPath, String descricao) {
 
         // Cria uma janela com o gif
-        JFrame frame = new JFrame("Detalhes do Exercício");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    JFrame frame = new JFrame("Detalhes do Exercício");
+    frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         frame.setSize(400, 500);
         frame.setLocationRelativeTo(null);
 
