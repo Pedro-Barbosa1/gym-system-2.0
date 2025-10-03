@@ -21,8 +21,8 @@ public class MenuPlanoTreino {
     private IExercicioRepository exercicioRepository;
     private Scanner sc;
     private int idUsuarioLogado;
-    private final String planoString = "Plano ";
-    private final String planoNaoEncontrado = " não encontrado ou não pertence a você.";
+    private final static String planoString = "Plano ";
+    private final static String planoNaoEncontrado = " não encontrado ou não pertence a você.";
 
     public MenuPlanoTreino(int idUsuarioLogado) {
         this.planoTreinoService = new PlanoTreinoService();

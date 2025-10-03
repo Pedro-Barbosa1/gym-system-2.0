@@ -137,7 +137,7 @@ public class MenuTreinos {
             System.out.println("Planejado: Carga " + itemPlanejado.getCargaKg() + "kg, Repetições " + itemPlanejado.getRepeticoes());
 
             int repRealizadas = lerInteiroOpcional("Repetições realizadas (deixe em branco para planejado: " + itemPlanejado.getRepeticoes() + "): ", itemPlanejado.getRepeticoes());
-            double cargaRealizada = lerDoubleOpcional("Carga utilizada (kg, deixe em branco para planejado: " + itemPlanejado.getCargaKg() + "): ", (double) itemPlanejado.getCargaKg());
+            double cargaRealizada = lerDoubleOpcional("Carga utilizada (kg, deixe em branco para planejado: " + itemPlanejado.getCargaKg() + "): ", itemPlanejado.getCargaKg());
 
             sessaoTreinoService.registrarExecucao(sessaoAtual, itemPlanejado.getIdExercicio(), repRealizadas, cargaRealizada);
         }

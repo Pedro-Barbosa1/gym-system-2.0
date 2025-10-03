@@ -14,15 +14,15 @@ import br.upe.model.IndicadorBiomedico;
 
 public class RelatorioDiferencaIndicadores {
 
-    public LocalDate dataInicio;
-    public LocalDate dataFim;
-    public Optional<IndicadorBiomedico> indicadorInicial = Optional.empty();
-    public Optional<IndicadorBiomedico> indicadorFinal = Optional.empty();
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
+    private Optional<IndicadorBiomedico> indicadorInicial = Optional.empty();
+    private Optional<IndicadorBiomedico> indicadorFinal = Optional.empty();
 
-    public double diferencaPeso;
-    public double diferencaPercentualGordura;
-    public double diferencaPercentualMassaMagra;
-    public double diferencaImc;
+    private double diferencaPeso;
+    private double diferencaPercentualGordura;
+    private double diferencaPercentualMassaMagra;
+    private double diferencaImc;
 
     // Define the formatter here
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
