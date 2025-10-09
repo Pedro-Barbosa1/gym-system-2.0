@@ -41,7 +41,17 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
 
         double imc = CalculadoraIMC.calcular(pesoKg, alturaCm);
 
-        IndicadorBiomedico novoIndicador = new IndicadorBiomedico(idUsuario, data, pesoKg, alturaCm, percentualGordura, percentualMassaMagra, imc);
+        IndicadorBiomedico novoIndicador = new IndicadorBiomedico.Builder()
+        .id(0) // ID será atribuído pelo repositório
+        .idUsuario(idUsuario)
+        .data(data)
+        .pesoKg(pesoKg)
+        .alturaCm(alturaCm)
+        .percentualGordura(percentualGordura)
+        .percentualMassaMagra(percentualMassaMagra)
+        .imc(imc)
+        .build();
+
         return indicadorRepository.salvar(novoIndicador);
     }
 
