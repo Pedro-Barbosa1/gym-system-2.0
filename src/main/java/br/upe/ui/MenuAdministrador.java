@@ -7,11 +7,11 @@ import br.upe.model.Usuario;
 import br.upe.service.IUsuarioService;
 import br.upe.service.UsuarioService;
 
-public class MenuAdministrador {
+public class    MenuAdministrador {
     private final IUsuarioService usuarioService;
     private final Scanner scanner;
-    private final String ID_request = "ID inválido. Por favor, digite um número.";
-    private final String error_msg = "Erro: ";
+    private final static String idRequest = "ID inválido. Por favor, digite um número.";
+    private final static String errorMsg = "Erro: ";
 
     public MenuAdministrador(Scanner scanner) {
         this.usuarioService = new UsuarioService();
@@ -79,7 +79,7 @@ public class MenuAdministrador {
         } catch (NumberFormatException e) {
             System.err.println("ID inválido. Por favor, digite um número.");
         } catch (IllegalArgumentException e) {
-            System.err.println(error_msg + e.getMessage());
+            System.err.println(errorMsg + e.getMessage());
         }
     }
 
@@ -91,10 +91,10 @@ public class MenuAdministrador {
             id = Integer.parseInt(scanner.nextLine());
             usuarioService.rebaixarUsuarioAComum(id);
         } catch (NumberFormatException e) {
-            System.err.println(ID_request);
+            System.err.println(idRequest);
         }
         catch (IllegalArgumentException e) {
-            System.err.println(error_msg + e.getMessage());
+            System.err.println(errorMsg + e.getMessage());
         }
     }
 
@@ -107,9 +107,9 @@ public class MenuAdministrador {
             usuarioService.removerUsuario(id);
             System.out.println("Usuário removido com sucesso!");
         } catch (NumberFormatException e) {
-            System.err.println(ID_request);
+            System.err.println(idRequest);
         } catch (IllegalArgumentException e) {
-            System.err.println(error_msg + e.getMessage());
+            System.err.println(errorMsg + e.getMessage());
         }
     }
 }

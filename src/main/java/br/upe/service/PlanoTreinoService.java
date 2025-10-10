@@ -134,8 +134,8 @@ public class PlanoTreinoService implements IPlanoTreinoService {
     }
 
     public void limparDados() {
-        if (planoTreinoRepository instanceof PlanoTreinoRepositoryImpl) {
-            ((PlanoTreinoRepositoryImpl) planoTreinoRepository).limpar();
+        if (planoTreinoRepository instanceof PlanoTreinoRepositoryImpl planoTreinoRepositoryImpl) {
+            planoTreinoRepositoryImpl.limpar();
         }
     }
     

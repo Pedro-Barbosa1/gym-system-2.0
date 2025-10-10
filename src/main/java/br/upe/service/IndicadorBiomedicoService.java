@@ -120,12 +120,12 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         indicadoresNoPeriodo.sort(Comparator.comparing(IndicadorBiomedico::getData));
 
         RelatorioDiferencaIndicadores relatorio = new RelatorioDiferencaIndicadores();
-        relatorio.dataInicio = dataInicio;
-        relatorio.dataFim = dataFim;
+        relatorio.setDataInicio(dataInicio);
+        relatorio.setDataFim(dataFim);
 
         if (!indicadoresNoPeriodo.isEmpty()) {
-            relatorio.indicadorInicial = Optional.of(indicadoresNoPeriodo.get(0));
-            relatorio.indicadorFinal = Optional.of(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1));
+            relatorio.setIndicadorInicial(Optional.of(indicadoresNoPeriodo.get(0)));
+            relatorio.setIndicadorFinal(Optional.of(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1)));
 
             relatorio.calcularDiferencas();
         }
