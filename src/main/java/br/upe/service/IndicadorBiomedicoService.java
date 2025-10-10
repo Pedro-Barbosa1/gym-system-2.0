@@ -5,16 +5,18 @@ import br.upe.repository.IIndicadorBiomedicoRepository;
 import br.upe.repository.impl.IndicadorBiomedicoRepositoryImpl;
 import br.upe.util.CalculadoraIMC;
 
-
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
+
+    private static final Logger logger = Logger.getLogger(IndicadorBiomedicoService.class.getName());
 
     private final IIndicadorBiomedicoRepository indicadorRepository;
 
@@ -28,7 +30,8 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
 
     // Verifica condições e cadastra os indicadores
     @Override
-    public IndicadorBiomedico cadastrarIndicador(int idUsuario, LocalDate data, double pesoKg, double alturaCm, double percentualGordura, double percentualMassaMagra) {
+    public IndicadorBiomedico cadastrarIndicador(int idUsuario, LocalDate data, double pesoKg, double alturaCm,
+                                                 double percentualGordura, double percentualMassaMagra) {
         if (pesoKg <= 0 || alturaCm <= 0) {
             throw new IllegalArgumentException("Peso e altura devem ser maiores que zero.");
         }
@@ -41,7 +44,8 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
 
         double imc = CalculadoraIMC.calcular(pesoKg, alturaCm);
 
-        IndicadorBiomedico novoIndicador = new IndicadorBiomedico(idUsuario, data, pesoKg, alturaCm, percentualGordura, percentualMassaMagra, imc);
+        IndicadorBiomedico novoIndicador =
+                new IndicadorBiomedico(idUsuario, data, pesoKg, alturaCm, percentualGordura, percentualMassaMagra, imc);
         return indicadorRepository.salvar(novoIndicador);
     }
 
@@ -66,19 +70,25 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
 
                         cadastrarIndicador(idUsuario, data, pesoKg, alturaCm, percentualGordura, percentualMassaMagra);
                     } catch (NumberFormatException | DateTimeParseException e) {
-                        System.err.println("Erro de formato na linha " + linhaNum + " do CSV: " + linha + " - " + e.getMessage());
+                        logger.log(Level.WARNING,
+                                "Erro de formato na linha {0} do CSV: {1}", new Object[]{linhaNum, linha});
+                        logger.log(Level.WARNING, "Detalhes: ", e);
                     } catch (IllegalArgumentException e) {
-                        System.err.println("Erro de validação na linha " + linhaNum + " do CSV: " + linha + " - " + e.getMessage());
+                        logger.log(Level.WARNING,
+                                "Erro de validação na linha {0} do CSV: {1}", new Object[]{linhaNum, linha});
+                        logger.log(Level.WARNING, "Detalhes: ", e);
                     }
                 } else {
-                    System.err.println("Formato inválido na linha " + linhaNum + " do CSV (esperado 5 colunas): " + linha);
+                    logger.log(Level.WARNING,
+                            "Formato inválido na linha {0} do CSV (esperado 5 colunas): {1}",
+                            new Object[]{linhaNum, linha});
                 }
             }
-            System.out.println("Importação de indicadores concluída (verifique mensagens no console).");
+            logger.info("Importação de indicadores concluída (verifique mensagens no log).");
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("Arquivo CSV não encontrado: " + caminhoArquivoCsv);
         } catch (IOException e) {
-            System.err.println("Erro ao ler o arquivo CSV para importação: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao ler o arquivo CSV para importação: {0}", e.getMessage());
         }
     }
 
@@ -96,7 +106,7 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         return resultados;
     }
 
-    // Verificas as condicoes e gera um relatorio da diferenca entre duas datas
+    // Verifica as condições e gera um relatorio da diferenca entre duas datas
     @Override
     public RelatorioDiferencaIndicadores gerarRelatorioDiferenca(int idUsuario, LocalDate dataInicio, LocalDate dataFim) {
         if (dataInicio == null || dataFim == null) {
@@ -116,7 +126,6 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         if (!indicadoresNoPeriodo.isEmpty()) {
             relatorio.indicadorInicial = Optional.of(indicadoresNoPeriodo.get(0));
             relatorio.indicadorFinal = Optional.of(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1));
-
             relatorio.calcularDiferencas();
         }
         return relatorio;
@@ -147,10 +156,9 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
                 writer.newLine();
             }
 
-            System.out.println("Relatório exportado com sucesso para: " + caminhoArquivo);
+            logger.log(Level.INFO, "Relatório exportado com sucesso para: {0}", caminhoArquivo);
         } catch (IOException e) {
-            System.err.println("Erro ao exportar relatório: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao exportar relatório: {0}", e.getMessage());
         }
     }
-
 }
