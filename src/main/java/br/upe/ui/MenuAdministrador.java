@@ -7,11 +7,11 @@ import br.upe.model.Usuario;
 import br.upe.service.IUsuarioService;
 import br.upe.service.UsuarioService;
 
-public class    MenuAdministrador {
+public class MenuAdministrador {
     private final IUsuarioService usuarioService;
     private final Scanner scanner;
-    private final static String idRequest = "ID inválido. Por favor, digite um número.";
-    private final static String errorMsg = "Erro: ";
+    private final static String ID_REQUEST = "ID inválido. Por favor, digite um número.";
+    private final static String ERROR_MSG = "Erro: ";
 
     public MenuAdministrador(Scanner scanner) {
         this.usuarioService = new UsuarioService();
@@ -77,9 +77,9 @@ public class    MenuAdministrador {
             id = Integer.parseInt(scanner.nextLine());
             usuarioService.promoverUsuarioAAdmin(id);
         } catch (NumberFormatException e) {
-            System.err.println("ID inválido. Por favor, digite um número.");
+            System.err.println(ID_REQUEST);
         } catch (IllegalArgumentException e) {
-            System.err.println(errorMsg + e.getMessage());
+            System.err.println(ERROR_MSG + e.getMessage());
         }
     }
 
@@ -91,10 +91,10 @@ public class    MenuAdministrador {
             id = Integer.parseInt(scanner.nextLine());
             usuarioService.rebaixarUsuarioAComum(id);
         } catch (NumberFormatException e) {
-            System.err.println(idRequest);
+            System.err.println(ID_REQUEST);
         }
         catch (IllegalArgumentException e) {
-            System.err.println(errorMsg + e.getMessage());
+            System.err.println(ERROR_MSG + e.getMessage());
         }
     }
 
@@ -107,9 +107,9 @@ public class    MenuAdministrador {
             usuarioService.removerUsuario(id);
             System.out.println("Usuário removido com sucesso!");
         } catch (NumberFormatException e) {
-            System.err.println(idRequest);
+            System.err.println(ID_REQUEST);
         } catch (IllegalArgumentException e) {
-            System.err.println(errorMsg + e.getMessage());
+            System.err.println(ERROR_MSG + e.getMessage());
         }
     }
 }
