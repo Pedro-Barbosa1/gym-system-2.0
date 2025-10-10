@@ -9,9 +9,7 @@ public interface IPlanoTreinoRepository {
     PlanoTreino salvar(PlanoTreino plano);
     List<PlanoTreino> buscarTodosDoUsuario(int idUsuario);
     void editar(PlanoTreino plano);
-    void atualizar(PlanoTreino plano);
     void deletar(int idPlano);
     Optional<PlanoTreino> buscarPorNomeEUsuario(int idUsuario, String nomePlano);
     Optional<PlanoTreino> buscarPorId(int idPlano);
-    int proximoId();
 }

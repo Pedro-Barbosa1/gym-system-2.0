@@ -167,12 +167,6 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
         }
     }
 
-    // Atualiza o plano de treino de acordo com as alterações
-    @Override
-    public void atualizar(PlanoTreino plano) {
-        editar(plano);
-    }
-
     // Verifica as condições e deleta o plano de treino
     @Override
     public void deletar(int idPlano) {
@@ -200,10 +194,6 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
                 .findFirst();
     }
 
-    @Override
-    public int proximoId() {
-        return proximoId.get();
-    }
 
     public void limpar() {
         this.planos.clear();
