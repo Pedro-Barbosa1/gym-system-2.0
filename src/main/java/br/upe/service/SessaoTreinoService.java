@@ -22,12 +22,6 @@ public class SessaoTreinoService {
     private final IPlanoTreinoRepository planoRepo;
     private final IExercicioRepository exercicioRepo;
 
-    public SessaoTreinoService(ISessaoTreinoRepository sessaoRepo, IPlanoTreinoRepository planoRepo, IExercicioRepository exercicioRepo) {
-        this.sessaoRepo = sessaoRepo;
-        this.planoRepo = planoRepo;
-        this.exercicioRepo = exercicioRepo;
-    }
-
     public SessaoTreinoService() {
         this.sessaoRepo = new SessaoTreinoRepositoryImpl();
         this.planoRepo = new PlanoTreinoRepositoryImpl();
@@ -78,7 +72,7 @@ public class SessaoTreinoService {
             if (planejadoOpt.isPresent()) {
                 ItemPlanoTreino planejado = planejadoOpt.get();
                 boolean mudouRepeticoes = executado.getRepeticoesRealizadas() != planejado.getRepeticoes();
-                boolean mudouCarga = executado.getCargaRealizada() != (double) planejado.getCargaKg();
+                boolean mudouCarga = executado.getCargaRealizada() != planejado.getCargaKg();
 
                 if (mudouRepeticoes || mudouCarga) {
                     Optional<Exercicio> exercicioDetalhesOpt = exercicioRepo.buscarPorId(executado.getIdExercicio());
@@ -122,21 +116,13 @@ public class SessaoTreinoService {
         }
     }
 
-    public static class SugestaoAtualizacaoPlano {
-        public final int idExercicio;
-        public final String nomeExercicio;
-        public final int repPlanejadas;
-        public final int repRealizadas;
-        public final double cargaPlanejada;
-        public final double cargaRealizada;
+    public record SugestaoAtualizacaoPlano(
+            int idExercicio,
+            String nomeExercicio,
+            int repPlanejadas,
+            int repRealizadas,
+            double cargaPlanejada,
+            double cargaRealizada
+    ) {}
 
-        public SugestaoAtualizacaoPlano(int idExercicio, String nomeExercicio, int repPlanejadas, int repRealizadas, double cargaPlanejada, double cargaRealizada) {
-            this.idExercicio = idExercicio;
-            this.nomeExercicio = nomeExercicio;
-            this.repPlanejadas = repPlanejadas;
-            this.repRealizadas = repRealizadas;
-            this.cargaPlanejada = cargaPlanejada;
-            this.cargaRealizada = cargaRealizada;
-        }
-    }
 }

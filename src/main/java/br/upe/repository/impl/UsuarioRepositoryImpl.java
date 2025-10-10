@@ -45,9 +45,12 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String linha;
-            reader.readLine();
+            int linhaNum = 0;
             int maxId = 0;
             while ((linha = reader.readLine()) != null) {
+                linhaNum++;
+                if (linhaNum == 1) continue; // pula cabeçalho
+
                 Usuario usuario = parseLinhaCsv(linha);
                 if (usuario != null) {
                     usuarios.add(usuario);
@@ -109,7 +112,7 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
     @Override
     public Usuario salvar(Usuario usuario) {
         Optional<Usuario> existenteOpt = buscarPorId(usuario.getId());
-        if (!existenteOpt.isPresent() || usuario.getId() == 0) {
+        if (existenteOpt.isEmpty() || usuario.getId() == 0) {
             usuario.setId(gerarProximoId());
             usuarios.add(usuario);
         } else {
