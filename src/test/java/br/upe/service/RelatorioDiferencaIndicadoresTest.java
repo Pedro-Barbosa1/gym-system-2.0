@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import br.upe.model.IndicadorBiomedico;
 
-public class RelatorioDiferencaIndicadoresTest {
+class RelatorioDiferencaIndicadoresTest {
 
     private RelatorioDiferencaIndicadores relatorio;
     private IndicadorBiomedico inicial;
@@ -21,7 +21,7 @@ public class RelatorioDiferencaIndicadoresTest {
     // Criar instâncias separadas será feito no setup para evitar referenciar o mesmo objeto
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         relatorio = new RelatorioDiferencaIndicadores();
 
         relatorio.setDataInicio(LocalDate.of(2025, 1, 1));
@@ -65,7 +65,7 @@ public class RelatorioDiferencaIndicadoresTest {
     }
 
      @Test
-     public void testCalcularDiferencasCorretamente() {
+     void testCalcularDiferencasCorretamente() {
          assertEquals(-2.0, relatorio.getDiferencaPeso(), 0.01);
          assertEquals(-2.0, relatorio.getDiferencaPercentualGordura(), 0.01);
          assertEquals(2.0, relatorio.getDiferencaPercentualMassaMagra(), 0.01);
@@ -73,7 +73,7 @@ public class RelatorioDiferencaIndicadoresTest {
      }
 
      @Test
-     public void testToStringConteudoFormatado() {
+     void testToStringConteudoFormatado() {
          String relatorioStr = relatorio.toString();
          assertTrue(relatorioStr.contains("Relatório de Evolução"));
          assertTrue(relatorioStr.contains("Peso (kg)"));
@@ -83,7 +83,7 @@ public class RelatorioDiferencaIndicadoresTest {
      }
  
      @Test
-     public void testExportarParaCsvCriaArquivo() throws IOException {
+     void testExportarParaCsvCriaArquivo() throws IOException {
          String caminho = "test-relatorio.csv";
 
          // Garante que o arquivo não exista antes
