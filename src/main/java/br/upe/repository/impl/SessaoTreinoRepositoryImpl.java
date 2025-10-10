@@ -20,8 +20,8 @@ import java.util.logging.Level;
 public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
 
     private static final String ARQUIVO_CSV = "src/main/resources/data/sessoes_treino.csv";
-    private List<SessaoTreino> sessoes;
-    private AtomicInteger proximoId;
+    private final List<SessaoTreino> sessoes;
+    private final AtomicInteger proximoId;
     private static final Logger logger = Logger.getLogger(SessaoTreinoRepositoryImpl.class.getName());
 
     public SessaoTreinoRepositoryImpl() {
@@ -155,24 +155,6 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
                 .findFirst();
     }
 
-    // Lista todas as sessoes de treino de um usuario
-    @Override
-    public List<SessaoTreino> buscarTodosDoUsuario(int idUsuario) {
-        return sessoes.stream()
-                .filter(s -> s.getIdUsuario() == idUsuario)
-                .toList();
-    }
-
-    // Lista a sessao de treino de um usuario pelo periodo
-    @Override
-    public List<SessaoTreino> buscarPorPeriodo(int idUsuario, LocalDate dataInicio, LocalDate dataFim) {
-        return sessoes.stream()
-                .filter(s -> s.getIdUsuario() == idUsuario &&
-                        !s.getDataSessao().isBefore(dataInicio) &&
-                        !s.getDataSessao().isAfter(dataFim))
-                .toList();
-    }
-
     // Verifica as condições e altera a sessao de treino
     @Override
     public void editar(SessaoTreino sessao) {
@@ -197,28 +179,4 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
         }
     }
 
-    @Override
-    public int proximoId() {
-        return proximoId.get();
-    }
-
-    public String getArquivoCsv() {
-        return ARQUIVO_CSV;
-    }
-
-    public List<SessaoTreino> getSessoes() {
-        return sessoes;
-    }
-
-    public void setSessoes(List<SessaoTreino> sessoes) {
-        this.sessoes = sessoes;
-    }
-
-    public AtomicInteger getProximoId() {
-        return proximoId;
-    }
-
-    public void setProximoId(AtomicInteger proximoId) {
-        this.proximoId = proximoId;
-    }
 }
