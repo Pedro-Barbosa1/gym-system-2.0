@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import br.upe.service.RelatorioDiferencaIndicadores;
@@ -48,8 +47,8 @@ public class DebugRelatorio {
         finalObj.setPercentualMassaMagra(77.0);
         finalObj.setImc(21.5);
 
-        relatorio.setIndicadorInicial(Optional.of(inicial));
-        relatorio.setIndicadorFinal(Optional.of(finalObj));
+        relatorio.setIndicadorInicial(inicial);
+        relatorio.setIndicadorFinal(finalObj);
         relatorio.calcularDiferencas();
 
         String s = relatorio.toString();

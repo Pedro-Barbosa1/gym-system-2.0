@@ -9,7 +9,6 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,8 +84,8 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         relatorio.setDataFim(dataFim);
 
         if (!indicadoresNoPeriodo.isEmpty()) {
-            relatorio.setIndicadorInicial(Optional.of(indicadoresNoPeriodo.get(0)));
-            relatorio.setIndicadorFinal(Optional.of(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1)));
+            relatorio.setIndicadorInicial(indicadoresNoPeriodo.get(0));
+            relatorio.setIndicadorFinal(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1));
             relatorio.calcularDiferencas();
         }
         return relatorio;

@@ -2,9 +2,9 @@ package br.upe.service;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Optional;
  
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,12 +13,9 @@ import org.junit.jupiter.api.Test;
 
 import br.upe.model.IndicadorBiomedico;
 
-public class RelatorioDiferencaIndicadoresTest {
+class RelatorioDiferencaIndicadoresTest {
 
     private RelatorioDiferencaIndicadores relatorio;
-    private IndicadorBiomedico inicial;
-    private IndicadorBiomedico finalObj;
-    // Criar instâncias separadas será feito no setup para evitar referenciar o mesmo objeto
 
     @BeforeEach
     public void setup() {
@@ -27,45 +24,37 @@ public class RelatorioDiferencaIndicadoresTest {
         relatorio.setDataInicio(LocalDate.of(2025, 1, 1));
         relatorio.setDataFim(LocalDate.of(2025, 1, 31));
 
-        // Criar Indicadores de exemplo
-        inicial = new IndicadorBiomedico.Builder()
-        .id(0)
-        .idUsuario(0)
-        .data(null)
-        .pesoKg(0)
-        .alturaCm(0)
-        .percentualGordura(0)
-        .percentualMassaMagra(0)
-        .imc(0)
-        .build();
-        inicial.setPesoKg(70.0);
-        inicial.setPercentualGordura(20.0);
-        inicial.setPercentualMassaMagra(75.0);
-        inicial.setImc(22.0);
+        // Indicadores podem ser variáveis locais
+        IndicadorBiomedico inicial = new IndicadorBiomedico.Builder()
+                .id(0)
+                .idUsuario(0)
+                .data(null)
+                .pesoKg(70)
+                .alturaCm(0)
+                .percentualGordura(20)
+                .percentualMassaMagra(75)
+                .imc(22)
+                .build();
 
-        finalObj = new IndicadorBiomedico.Builder()
-        .id(0)
-        .idUsuario(0)
-        .data(null)
-        .pesoKg(0)
-        .alturaCm(0)
-        .percentualGordura(0)
-        .percentualMassaMagra(0)
-        .imc(0)
-        .build();
-        finalObj.setPesoKg(68.0);
-        finalObj.setPercentualGordura(18.0);
-        finalObj.setPercentualMassaMagra(77.0);
-        finalObj.setImc(21.5);
+        IndicadorBiomedico finalObj = new IndicadorBiomedico.Builder()
+                .id(0)
+                .idUsuario(0)
+                .data(null)
+                .pesoKg(68)
+                .alturaCm(0)
+                .percentualGordura(18)
+                .percentualMassaMagra(77)
+                .imc(21.5)
+                .build();
 
-        relatorio.setIndicadorInicial(Optional.of(inicial));
-        relatorio.setIndicadorFinal(Optional.of(finalObj));
+        relatorio.setIndicadorInicial(inicial);
+        relatorio.setIndicadorFinal(finalObj);
 
         relatorio.calcularDiferencas();
     }
 
      @Test
-     public void testCalcularDiferencasCorretamente() {
+     void testCalcularDiferencasCorretamente() {
          assertEquals(-2.0, relatorio.getDiferencaPeso(), 0.01);
          assertEquals(-2.0, relatorio.getDiferencaPercentualGordura(), 0.01);
          assertEquals(2.0, relatorio.getDiferencaPercentualMassaMagra(), 0.01);
@@ -73,7 +62,7 @@ public class RelatorioDiferencaIndicadoresTest {
      }
 
      @Test
-     public void testToStringConteudoFormatado() {
+     void testToStringConteudoFormatado() {
          String relatorioStr = relatorio.toString();
          assertTrue(relatorioStr.contains("Relatório de Evolução"));
          assertTrue(relatorioStr.contains("Peso (kg)"));
@@ -81,24 +70,25 @@ public class RelatorioDiferencaIndicadoresTest {
          assertTrue(relatorioStr.contains("Final"));
          assertTrue(relatorioStr.contains("-2.0")); // diferença peso negativa
      }
- 
-     @Test
-     public void testExportarParaCsvCriaArquivo() throws IOException {
-         String caminho = "test-relatorio.csv";
 
-         // Garante que o arquivo não exista antes
-         Files.deleteIfExists(Paths.get(caminho));
+    @Test
+    void testExportarParaCsvCriaArquivo() throws IOException {
+        String caminho = "test-relatorio.csv";
+        Path path = Paths.get(caminho);
 
-         relatorio.exportarParaCsv(caminho);
+        // Garante que o arquivo não exista antes
+        Files.deleteIfExists(path);
 
-         assertTrue(Files.exists(Paths.get(caminho)));
+        relatorio.exportarParaCsv(caminho);
 
-         // Ler conteúdo e verificar algumas linhas
-         String conteudo = Files.readString(Paths.get(caminho));
-         assertTrue(conteudo.contains("Peso (kg)"));
-         assertTrue(conteudo.contains("-2.0"));
+        assertTrue(Files.exists(path));
 
-         Files.deleteIfExists(Paths.get(caminho));
-     }
+        // Ler conteúdo e verificar algumas linhas
+        String conteudo = Files.readString(path);
+        assertTrue(conteudo.contains("Peso (kg)"));
+        assertTrue(conteudo.contains("-2.0"));
+
+        Files.deleteIfExists(path);
+    }
 
 }
