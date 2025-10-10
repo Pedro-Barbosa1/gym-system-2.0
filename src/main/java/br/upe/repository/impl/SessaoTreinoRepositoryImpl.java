@@ -14,12 +14,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
 
     private static final String ARQUIVO_CSV = "src/main/resources/data/sessoes_treino.csv";
     private List<SessaoTreino> sessoes;
     private AtomicInteger proximoId;
+    private static final Logger logger = Logger.getLogger(SessaoTreinoRepositoryImpl.class.getName());
 
     public SessaoTreinoRepositoryImpl() {
         this.sessoes = new ArrayList<>();
@@ -32,19 +35,22 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
         try {
             Files.createDirectories(Paths.get("src/main/resources/data"));
         } catch (IOException e) {
-            System.err.println("Erro ao criar diretório para CSV: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao criar diretório para CSV: {0}", e.getMessage());
             return;
         }
 
         File file = new File(ARQUIVO_CSV);
         if (!file.exists()) {
-            System.out.println("Arquivo " + ARQUIVO_CSV + " não encontrado. Será criado vazio no primeiro salvamento.");
+            logger.log(Level.INFO, "Arquivo {0} não encontrado. Será criado vazio no primeiro salvamento.", ARQUIVO_CSV);
             try {
-                if(!file.createNewFile()){
-                    throw new IOException();
+                boolean criado = file.createNewFile();
+                if (criado){
+                    logger.log(Level.INFO, "Arquivo {0} criado com sucesso.", ARQUIVO_CSV);
+                } else{
+                    logger.log(Level.WARNING, "Falha ao criar o arquivo {0}.", ARQUIVO_CSV);
                 }
             } catch (IOException e) {
-                System.err.println("Erro ao criar o arquivo CSV vazio: " + e.getMessage());
+                logger.log(Level.SEVERE, "Erro ao criar o arquivo CSV vazio: {0}", e.getMessage());
             }
             return;
         }
@@ -63,7 +69,7 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
             }
             proximoId.set(maxId + 1);
         } catch (IOException e) {
-            System.err.println("Erro ao ler o arquivo CSV de sessões de treino: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao ler o arquivo CSV de sessões de treino: {0}", e.getMessage());
         }
     }
 
@@ -75,7 +81,7 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
                 bw.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Erro ao escrever no arquivo CSV de sessões de treino: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao escrever no arquivo CSV de sessões de treino: {0}", e.getMessage());
         }
     }
 
@@ -101,17 +107,17 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
                             double cargaRealizada = Double.parseDouble(itemPartes[2]);
                             itensExecutados.add(new ItemSessaoTreino(idExercicio, repeticoesRealizadas, cargaRealizada));
                         } else {
-                            System.err.println("Formato inválido de item de sessão de treino: " + itemStr);
+                            logger.log(Level.SEVERE, "Formato inválido de item de sessão de treino: {0}", itemStr);
                         }
                     }
                 }
                 return new SessaoTreino(idSessao, idUsuario, idPlanoTreino, dataSessao, itensExecutados);
             } catch (NumberFormatException | DateTimeParseException e) {
-                System.err.println("Erro ao converter número ou data em linha CSV de sessão: " + linha + " - " + e.getMessage());
+                logger.log(Level.SEVERE, "Erro ao converter número ou data em linha CSV de sessão: {0} - {1}", new Object[]{linha, e.getMessage()});
                 return null;
             }
         }
-        System.err.println("Formato inválido de linha CSV de sessão: " + linha);
+        logger.log(Level.SEVERE, "Formato inválido de linha CSV de sessão: {0}", linha);
         return null;
     }
 
@@ -154,7 +160,7 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
     public List<SessaoTreino> buscarTodosDoUsuario(int idUsuario) {
         return sessoes.stream()
                 .filter(s -> s.getIdUsuario() == idUsuario)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // Lista a sessao de treino de um usuario pelo periodo
@@ -164,7 +170,7 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
                 .filter(s -> s.getIdUsuario() == idUsuario &&
                         !s.getDataSessao().isBefore(dataInicio) &&
                         !s.getDataSessao().isAfter(dataFim))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // Verifica as condições e altera a sessao de treino
@@ -176,7 +182,7 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
             sessoes.add(sessao);
             escreverParaCsv();
         } else {
-            System.err.println("Erro: Sessão de treino com ID " + sessao.getIdSessao() + " não encontrado para edição.");
+            logger.log(Level.SEVERE, "Erro: Sessão de treino com ID {0} não encontrado para edição.", sessao.getIdSessao());
         }
     }
 
@@ -187,7 +193,7 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
         if (removido) {
             escreverParaCsv();
         } else {
-            System.err.println("Erro: Sessão de treino com ID " + idSessao + " não encontrada para remoção.");
+            logger.log(Level.SEVERE, "Erro: Sessão de treino com ID {0} não encontrada para remoção.", idSessao);
         }
     }
 
