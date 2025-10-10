@@ -7,7 +7,6 @@ import br.upe.util.CalculadoraIMC;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -53,58 +52,6 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         return indicadorRepository.salvar(novoIndicador);
     }
 
-    // Importa os indicadores do arquivo CSV
-    @Override
-    public void importarIndicadoresCsv(int idUsuario, String caminhoArquivoCsv) {
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoCsv))) {
-            String linha;
-            int linhaNum = 0;
-
-            while ((linha = br.readLine()) != null) {
-                linhaNum++;
-                if (linhaNum == 1) continue;
-
-                processarLinhaCsv(idUsuario, linha, linhaNum);
-            }
-
-            logger.info("Importação de indicadores concluída (verifique mensagens no log).");
-
-        } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException("Arquivo CSV não encontrado: " + caminhoArquivoCsv, e);
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao ler o arquivo CSV para importação: {0}", e.getMessage());
-        }
-    }
-
-    // Processa uma linha do arquivo CSV, tratando individualmente erros de formato e validação
-    private void processarLinhaCsv(int idUsuario, String linha, int linhaNum) {
-        String[] partes = linha.split(";");
-        if (partes.length != 5) {
-            logger.log(Level.WARNING,
-                    "Formato inválido na linha {0} do CSV (esperado 5 colunas): {1}",
-                    new Object[]{linhaNum, linha});
-            return;
-        }
-
-        try {
-            LocalDate data = LocalDate.parse(partes[0].trim());
-            double pesoKg = Double.parseDouble(partes[1].trim());
-            double alturaCm = Double.parseDouble(partes[2].trim());
-            double percentualGordura = Double.parseDouble(partes[3].trim());
-            double percentualMassaMagra = Double.parseDouble(partes[4].trim());
-
-            cadastrarIndicador(idUsuario, data, pesoKg, alturaCm, percentualGordura, percentualMassaMagra);
-
-        } catch (NumberFormatException | DateTimeParseException e) {
-            logger.log(Level.WARNING,
-                    "Erro de formato na linha {0} do CSV: {1}", new Object[]{linhaNum, linha});
-            logger.log(Level.WARNING, "Detalhes: ", e);
-        } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING,
-                    "Erro de validação na linha {0} do CSV: {1}", new Object[]{linhaNum, linha});
-            logger.log(Level.WARNING, "Detalhes: ", e);
-        }
-    }
 
     // Verifica as condições e gera o relatorio pela data
     @Override
@@ -134,12 +81,12 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         indicadoresNoPeriodo.sort(Comparator.comparing(IndicadorBiomedico::getData));
 
         RelatorioDiferencaIndicadores relatorio = new RelatorioDiferencaIndicadores();
-        relatorio.dataInicio = dataInicio;
-        relatorio.dataFim = dataFim;
+        relatorio.setDataInicio(dataInicio);
+        relatorio.setDataFim(dataFim);
 
         if (!indicadoresNoPeriodo.isEmpty()) {
-            relatorio.indicadorInicial = Optional.of(indicadoresNoPeriodo.get(0));
-            relatorio.indicadorFinal = Optional.of(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1));
+            relatorio.setIndicadorInicial(Optional.of(indicadoresNoPeriodo.get(0)));
+            relatorio.setIndicadorFinal(Optional.of(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1)));
             relatorio.calcularDiferencas();
         }
         return relatorio;
