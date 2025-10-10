@@ -120,7 +120,7 @@ public class MenuTreinos {
     }
 
     private boolean validacaoPlano(Optional<PlanoTreino> planoOpt, int idUsuarioLogado, int idPlanoEscolhido) {
-        if (!planoOpt.isPresent() || planoOpt.get().getIdUsuario() != idUsuarioLogado) {
+        if (planoOpt.isEmpty() || planoOpt.get().getIdUsuario() != idUsuarioLogado) {
             System.out.println("Plano com ID " + idPlanoEscolhido + " não encontrado ou não pertence a você.");
             return false;
         }
@@ -159,14 +159,14 @@ public class MenuTreinos {
         if (!sugestoes.isEmpty()) {
             System.out.println("\n--- Sugestões de Atualização do Plano ---");
             for (SessaoTreinoService.SugestaoAtualizacaoPlano sugestao : sugestoes) {
-                System.out.printf("O exercício '%s' (ID: %d) teve alterações.\n", sugestao.nomeExercicio, sugestao.idExercicio);
-                System.out.printf("  Repetições: Planejado %d -> Realizado %d\n", sugestao.repPlanejadas, sugestao.repRealizadas);
-                System.out.printf("  Carga: Planejado %.0fkg -> Realizado %.0fkg\n", sugestao.cargaPlanejada, sugestao.cargaRealizada);
+                System.out.printf("O exercício '%s' (ID: %d) teve alterações.\n", sugestao.nomeExercicio(), sugestao.idExercicio());
+                System.out.printf("  Repetições: Planejado %d -> Realizado %d\n", sugestao.repPlanejadas(), sugestao.repRealizadas());
+                System.out.printf("  Carga: Planejado %.0fkg -> Realizado %.0fkg\n", sugestao.cargaPlanejada(), sugestao.cargaRealizada());
                 System.out.print("Deseja atualizar o plano com os novos valores? (s/n): ");
                 String resposta = sc.nextLine();
                 if (resposta.equalsIgnoreCase("s")) {
-                    sessaoTreinoService.aplicarAtualizacoesNoPlano(planoBase.getIdPlano(), sugestao.idExercicio, sugestao.repRealizadas, sugestao.cargaRealizada);
-                    System.out.println("Plano atualizado para " + sugestao.nomeExercicio + ".");
+                    sessaoTreinoService.aplicarAtualizacoesNoPlano(planoBase.getIdPlano(), sugestao.idExercicio(), sugestao.repRealizadas(), sugestao.cargaRealizada());
+                    System.out.println("Plano atualizado para " + sugestao.nomeExercicio() + ".");
                 }
             }
         } else {
