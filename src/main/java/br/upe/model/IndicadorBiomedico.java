@@ -13,7 +13,7 @@ public class IndicadorBiomedico {
     private double percentualMassaMagra;
     private double imc;
 
-    private IndicadorBiomedico(Builder builder) {
+    public IndicadorBiomedico(Builder builder) {
         this.id = builder.id;
         this.idUsuario = builder.idUsuario;
         this.data = builder.data;
