@@ -28,3 +28,4 @@ target/
 *.iws
 *.iml
 *.ipr
+misc.xml
