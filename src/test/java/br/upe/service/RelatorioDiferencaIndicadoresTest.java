@@ -18,7 +18,7 @@ class RelatorioDiferencaIndicadoresTest {
     private RelatorioDiferencaIndicadores relatorio;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         relatorio = new RelatorioDiferencaIndicadores();
 
         relatorio.setDataInicio(LocalDate.of(2025, 1, 1));
@@ -70,6 +70,10 @@ class RelatorioDiferencaIndicadoresTest {
          assertTrue(relatorioStr.contains("Final"));
          assertTrue(relatorioStr.contains("-2.0")); // diferença peso negativa
      }
+ 
+     @Test
+     void testExportarParaCsvCriaArquivo() throws IOException {
+         String caminho = "test-relatorio.csv";
 
     @Test
     void testExportarParaCsvCriaArquivo() throws IOException {

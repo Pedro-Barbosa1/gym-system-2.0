@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 import br.upe.model.PlanoTreino;
 import br.upe.repository.impl.ExercicioRepositoryImpl;
 
-public class PlanoTreinoServiceTest {
+class PlanoTreinoServiceTest {
 
     PlanoTreinoService planoTreinoService = new PlanoTreinoService();
     ExercicioRepositoryImpl exercicioRepository = new ExercicioRepositoryImpl();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         exercicioRepository = new ExercicioRepositoryImpl();
         planoTreinoService = new PlanoTreinoService();
         planoTreinoService.limparDados();
@@ -21,7 +21,7 @@ public class PlanoTreinoServiceTest {
     }
 
     @Test
-    public void testCriarPlanoComNomeDuplicado() {
+    void testCriarPlanoComNomeDuplicado() {
         planoTreinoService.criarPlano(1, "PlanoDuplicado");
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             planoTreinoService.criarPlano(1, "PlanoDuplicado");
@@ -30,7 +30,7 @@ public class PlanoTreinoServiceTest {
     }
 
     @Test
-    public void testCriarPlanoComNomeVazio() {
+    void testCriarPlanoComNomeVazio() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             planoTreinoService.criarPlano(1, "   ");
         });
@@ -38,7 +38,7 @@ public class PlanoTreinoServiceTest {
     }
 
     @Test
-    public void testCriarPlanoComNomeValido() {
+    void testCriarPlanoComNomeValido() {
         PlanoTreino plano = planoTreinoService.criarPlano(1, "PlanoValido");
         assertNotNull(plano);
         assertEquals("PlanoValido", plano.getNome());
