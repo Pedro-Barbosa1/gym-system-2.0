@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
 
     private static final String ARQUIVO_CSV = "src/main/resources/data/planos_treino.csv";
-    private final List<PlanoTreino> planos;
-    private final AtomicInteger proximoId;
+    private List<PlanoTreino> planos;
+    private AtomicInteger proximoId;
     private static final Logger logger = Logger.getLogger(PlanoTreinoRepositoryImpl.class.getName());
 
     public PlanoTreinoRepositoryImpl() {
@@ -33,20 +33,24 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
         try {
             Files.createDirectories(Paths.get("src/main/resources/data"));
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao criar diretório para CSV", e);
+            logger.severe("Erro ao criar diretório para CSV: " + e.getMessage());
             return;
         }
 
         File file = new File(ARQUIVO_CSV);
         if (!file.exists()) {
-            logger.warning("Arquivo " + ARQUIVO_CSV + " não encontrado. Será criado vazio no primeiro salvamento.");
+            logger.severe("Arquivo " + ARQUIVO_CSV + " não encontrado. Será criado vazio no primeiro salvamento.");
             try {
-                file.createNewFile();
+                boolean criado = file.createNewFile();
+                if (criado) {
+                    logger.info("Arquivo CSV criado: " + ARQUIVO_CSV);
+                } else {
+                    logger.warning("Arquivo CSV já existia: " + ARQUIVO_CSV);
+                }
+            } catch (IOException e) {
+                logger.severe("Erro ao criar o arquivo CSV vazio: " + e.getMessage());
+                return;
             }
-            catch (IOException e) {
-                logger.log(Level.SEVERE, "Erro ao criar o arquivo CSV vazio", e);
-            }
-            return;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -63,7 +67,7 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
             }
             proximoId.set(maxId + 1);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao ler o arquivo CSV de planos de treino", e);
+            logger.severe("Erro ao ler o arquivo CSV de planos de treino: " + e.getMessage());
         }
     }
 
@@ -75,7 +79,7 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
                 bw.newLine();
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao escrever no arquivo CSV de planos de treino", e);
+            logger.severe("Erro ao escrever no arquivo CSV de planos de treino: " + e.getMessage());
         }
     }
 
@@ -100,18 +104,17 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
                             int repeticoes = Integer.parseInt(itemPartes[2]);
                             itensTreino.add(new ItemPlanoTreino(idExercicio, cargaKg, repeticoes));
                         } else {
-                            logger.log(Level.WARNING, "Formato inválido de item de treino: {0}", itemStr);
+                            logger.log(Level.SEVERE, "Formato inválido de item de treino: {0}", itemStr);
                         }
                     }
                 }
                 return new PlanoTreino(idPlano, idUsuario, nome, itensTreino);
             } catch (NumberFormatException e) {
-                logger.log(Level.WARNING, "Erro ao converter número em linha CSV de plano: {0}", new Object[]{linha});
-                logger.log(Level.WARNING, "Detalhes da exceção:", e);
+                logger.severe("Erro ao converter número em linha CSV de plano: " + linha);
                 return null;
             }
         }
-        logger.log(Level.WARNING, "Formato inválido de linha CSV de plano: {0}", linha);
+        logger.log(Level.SEVERE, "Formato inválido de linha CSV de plano: {0}", linha);
         return null;
     }
 
@@ -145,7 +148,7 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
     public List<PlanoTreino> buscarTodosDoUsuario(int idUsuario) {
         return planos.stream()
                 .filter(p -> p.getIdUsuario() == idUsuario)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // Verifica condições e altera o plano de treino
@@ -157,7 +160,7 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
             planos.add(plano);
             escreverParaCsv();
         } else {
-            logger.log(Level.WARNING, "Plano de treino com ID {0} não encontrado para edição.", plano.getIdPlano());
+            logger.severe("Erro: Plano de treino com ID " + plano.getIdPlano() + " não encontrado para edição.");
         }
     }
 
@@ -174,7 +177,7 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
         if (removido) {
             escreverParaCsv();
         } else {
-            logger.log(Level.WARNING, "Plano de treino com ID {0} não encontrado para remoção.", idPlano);
+            logger.log(Level.SEVERE, "Erro: Plano de treino com ID {0} não encontrado para remoção.", idPlano);
         }
     }
 
@@ -202,5 +205,4 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
     public void limpar() {
         this.planos.clear();
     }
-
 }
