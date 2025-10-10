@@ -13,10 +13,10 @@ import java.util.Optional;
 
 public class PlanoTreinoService implements IPlanoTreinoService {
 
-    private IPlanoTreinoRepository planoTreinoRepository;
-    private IExercicioRepository exercicioRepository;
+    private final IPlanoTreinoRepository planoTreinoRepository;
+    private final IExercicioRepository exercicioRepository;
 
-    public PlanoTreinoService(IPlanoTreinoRepository planoTreinoRepository, IExercicioService exercicioService, IExercicioRepository exercicioRepository) {
+    public PlanoTreinoService(IPlanoTreinoRepository planoTreinoRepository, IExercicioRepository exercicioRepository) {
         this.planoTreinoRepository = planoTreinoRepository;
         this.exercicioRepository = exercicioRepository;
     }
@@ -44,13 +44,13 @@ public class PlanoTreinoService implements IPlanoTreinoService {
     @Override
     public void adicionarExercicioAoPlano(int idUsuario, String nomePlano, int idExercicio, int cargaKg, int repeticoes) {
         Optional<PlanoTreino> planoOpt = buscarPlanoPorNomeEUsuario(idUsuario, nomePlano);
-        if (!planoOpt.isPresent()) {
+        if (planoOpt.isEmpty()) {
             throw new IllegalArgumentException("Plano '" + nomePlano + "' não encontrado ou não pertence a você.");
         }
         PlanoTreino plano = planoOpt.get();
 
         Optional<Exercicio> exercicioOpt = exercicioRepository.buscarPorId(idExercicio);
-        if (!exercicioOpt.isPresent() || exercicioOpt.get().getIdUsuario() != idUsuario) {
+        if (exercicioOpt.isEmpty() || exercicioOpt.get().getIdUsuario() != idUsuario) {
             throw new IllegalArgumentException("Exercício com ID " + idExercicio + " não encontrado ou não pertence a você.");
         }
 
@@ -69,7 +69,7 @@ public class PlanoTreinoService implements IPlanoTreinoService {
     @Override
     public void removerExercicioDoPlano(int idUsuario, String nomePlano, int idExercicio) {
         Optional<PlanoTreino> planoOpt = buscarPlanoPorNomeEUsuario(idUsuario, nomePlano);
-        if (!planoOpt.isPresent()) {
+        if (planoOpt.isEmpty()) {
             throw new IllegalArgumentException("Plano '" + nomePlano + "' não encontrado ou não pertence a você.");
         }
         PlanoTreino plano = planoOpt.get();
@@ -100,7 +100,7 @@ public class PlanoTreinoService implements IPlanoTreinoService {
     @Override
     public void editarPlano(int idUsuario, String nomeAtualPlano, String novoNome) {
         Optional<PlanoTreino> planoOpt = buscarPlanoPorNomeEUsuario(idUsuario, nomeAtualPlano);
-        if (!planoOpt.isPresent()) {
+        if (planoOpt.isEmpty()) {
             throw new IllegalArgumentException("Plano '" + nomeAtualPlano + "' não encontrado ou não pertence a você.");
         }
         PlanoTreino plano = planoOpt.get();
@@ -120,7 +120,7 @@ public class PlanoTreinoService implements IPlanoTreinoService {
     @Override
     public boolean deletarPlano(int idUsuario, String nomePlano) {
         Optional<PlanoTreino> planoOpt = buscarPlanoPorNomeEUsuario(idUsuario, nomePlano);
-        if (!planoOpt.isPresent()) {
+        if (planoOpt.isEmpty()) {
             return false;
         }
         planoTreinoRepository.deletar(planoOpt.get().getIdPlano());
