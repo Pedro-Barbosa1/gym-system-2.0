@@ -13,8 +13,8 @@ public class MenuExercicios {
     private IExercicioService exercicioService;
     private Scanner sc;
     private int idUsuarioLogado;
-    private final String exercicioString = "Exercício ";
-    private final String exerciciNaoEncontrado = "não encontrado entre seus exercícios.";
+    private final static String exercicioString = "Exercício ";
+    private final static String exerciciNaoEncontrado = "não encontrado entre seus exercícios.";
 
     public MenuExercicios(Scanner sc, int idUsuarioLogado) {
         this.sc = sc;
