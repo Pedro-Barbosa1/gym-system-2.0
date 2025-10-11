@@ -70,12 +70,8 @@ class RelatorioDiferencaIndicadoresTest {
          assertTrue(relatorioStr.contains("Final"));
          assertTrue(relatorioStr.contains("-2.0")); // diferença peso negativa
      }
- 
-     @Test
-     void testExportarParaCsvCriaArquivo() throws IOException {
-         String caminho = "test-relatorio.csv";
 
-    @Test
+     @Test
     void testExportarParaCsvCriaArquivo() throws IOException {
         String caminho = "test-relatorio.csv";
         Path path = Paths.get(caminho);
