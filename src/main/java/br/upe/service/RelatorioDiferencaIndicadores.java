@@ -27,8 +27,9 @@ public class RelatorioDiferencaIndicadores {
 
     private static final Logger logger = Logger.getLogger(RelatorioDiferencaIndicadores.class.getName());
 
-    // Define o formato
+    // Constantes
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final String MSG_INDICADORES_NAO_DEFINIDOS = "Indicadores inicial ou final não estão definidos.";
 
     public void calcularDiferencas() {
         if (indicadorInicial != null && indicadorFinal != null) {
@@ -39,15 +40,15 @@ public class RelatorioDiferencaIndicadores {
             this.diferencaPercentualGordura = finalObj.getPercentualGordura() - inicial.getPercentualGordura();
             this.diferencaPercentualMassaMagra = finalObj.getPercentualMassaMagra() - inicial.getPercentualMassaMagra();
             this.diferencaImc = finalObj.getImc() - inicial.getImc();
-        }else{
-            logger.warning("Indicadores inicial ou final não estão definidos.");
+        } else {
+            logger.warning(MSG_INDICADORES_NAO_DEFINIDOS);
         }
     }
 
     @Override
     public String toString() {
         if (indicadorInicial == null || indicadorFinal == null) {
-            logger.warning("Indicadores inicial ou final não estão definidos.");
+            logger.warning(MSG_INDICADORES_NAO_DEFINIDOS);
             return String.format("Relatório de Evolução (%s a %s)%nNenhum dado encontrado no período.",
                     dataInicio != null ? dataInicio.format(DATE_FORMATTER) : "N/A",
                     dataFim != null ? dataFim.format(DATE_FORMATTER) : "N/A");
@@ -79,34 +80,37 @@ public class RelatorioDiferencaIndicadores {
 
     public void exportarParaCsv(String caminhoArquivo) throws IOException {
         if (indicadorInicial == null || indicadorFinal == null) {
-            logger.warning("Indicadores inicial ou final não estão definidos.");
+            logger.warning(MSG_INDICADORES_NAO_DEFINIDOS);
             throw new IllegalStateException("Indicadores inicial ou final não estão presentes para exportar.");
         }
+
         Path path = Paths.get(caminhoArquivo);
-    try (var writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-    writer.append("Indicador,Inicial,Final,Diferença\n");
-                writer.append(String.format(Locale.US, "Peso (kg),%.1f,%.1f,%+.1f%n",
-        indicadorInicial.getPesoKg(),
-        indicadorFinal.getPesoKg(),
-        diferencaPeso));
+        try (var writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+            writer.append("Indicador,Inicial,Final,Diferença\n");
 
-                writer.append(String.format(Locale.US, "Gordura (%%),%.1f,%.1f,%+.1f%n",
-        indicadorInicial.getPercentualGordura(),
-        indicadorFinal.getPercentualGordura(),
-        diferencaPercentualGordura));
+            writer.append(String.format(Locale.US, "Peso (kg),%.1f,%.1f,%+.1f%n",
+                    indicadorInicial.getPesoKg(),
+                    indicadorFinal.getPesoKg(),
+                    diferencaPeso));
 
-                writer.append(String.format(Locale.US, "Massa Magra (%%),%.1f,%.1f,%+.1f%n",
-        indicadorInicial.getPercentualMassaMagra(),
-        indicadorFinal.getPercentualMassaMagra(),
-        diferencaPercentualMassaMagra));
+            writer.append(String.format(Locale.US, "Gordura (%%),%.1f,%.1f,%+.1f%n",
+                    indicadorInicial.getPercentualGordura(),
+                    indicadorFinal.getPercentualGordura(),
+                    diferencaPercentualGordura));
 
-                writer.append(String.format(Locale.US, "IMC,%.2f,%.2f,%+.2f%n",
-        indicadorInicial.getImc(),
-        indicadorFinal.getImc(),
-        diferencaImc));
+            writer.append(String.format(Locale.US, "Massa Magra (%%),%.1f,%.1f,%+.1f%n",
+                    indicadorInicial.getPercentualMassaMagra(),
+                    indicadorFinal.getPercentualMassaMagra(),
+                    diferencaPercentualMassaMagra));
+
+            writer.append(String.format(Locale.US, "IMC,%.2f,%.2f,%+.2f%n",
+                    indicadorInicial.getImc(),
+                    indicadorFinal.getImc(),
+                    diferencaImc));
+        }
     }
-}
 
+    // Getters e Setters
     public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
     }
