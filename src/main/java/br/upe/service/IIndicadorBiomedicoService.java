@@ -9,8 +9,6 @@ public interface IIndicadorBiomedicoService {
 
     IndicadorBiomedico cadastrarIndicador(int idUsuario, LocalDate data, double pesoKg, double alturaCm, double percentualGordura, double percentualMassaMagra);
 
-    void importarIndicadoresCsv(int idUsuario, String caminhoArquivoCsv);
-
     List<IndicadorBiomedico> gerarRelatorioPorData(int idUsuario, LocalDate dataInicio, LocalDate dataFim);
 
     RelatorioDiferencaIndicadores gerarRelatorioDiferenca(int idUsuario, LocalDate dataInicio, LocalDate dataFim);

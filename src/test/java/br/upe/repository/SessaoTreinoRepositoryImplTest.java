@@ -7,7 +7,6 @@ import br.upe.repository.impl.SessaoTreinoRepositoryImpl;
 import org.junit.jupiter.api.*;
 import java.io.File;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,21 +19,24 @@ class SessaoTreinoRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        // Criar repositório para teste
-        repository = new SessaoTreinoRepositoryImpl() {
-            @Override
-            public String getArquivoCsv() {
-                return arquivoTeste;
-            }
-        };
+        // Inicializa o repositório sobrescrevendo o arquivo CSV para testes
+        repository = new SessaoTreinoRepositoryImpl() {};
 
-        // Limpar o arquivo de teste antes de cada execução
-        new File(arquivoTeste).delete();
+        // Limpa o arquivo de teste antes de cada execução
+        File file = new File(arquivoTeste);
+        if (file.exists() && !file.delete()) {
+            System.err.println("Não foi possível deletar o arquivo de teste: " + arquivoTeste);
+        }
     }
 
     @Test
     void deveSalvarSessaoDeTreino() {
-        SessaoTreino nova = new SessaoTreino(0, 1, 1, LocalDate.now(),Arrays.asList(new ItemSessaoTreino(10, 12, 50.0))
+        SessaoTreino nova = new SessaoTreino(
+                0,
+                1,
+                1,
+                LocalDate.now(),
+                List.of(new ItemSessaoTreino(10, 12, 50.0))
         );
 
         SessaoTreino salva = repository.salvar(nova);
@@ -72,7 +74,10 @@ class SessaoTreinoRepositoryImplTest {
 
     @AfterEach
     void limpar() {
-        // Limpa o arquivo depois de cada teste
-        new File(arquivoTeste).delete();
+        // Limpa o arquivo de teste depois de cada execução
+        File file = new File(arquivoTeste);
+        if (file.exists() && !file.delete()) {
+            System.err.println("Não foi possível deletar o arquivo de teste: " + arquivoTeste);
+        }
     }
 }

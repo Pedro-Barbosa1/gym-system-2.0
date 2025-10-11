@@ -120,7 +120,7 @@ public class MenuTreinos {
     }
 
     private boolean validacaoPlano(Optional<PlanoTreino> planoOpt, int idUsuarioLogado, int idPlanoEscolhido) {
-        if (!planoOpt.isPresent() || planoOpt.get().getIdUsuario() != idUsuarioLogado) {
+        if (planoOpt.isEmpty() || planoOpt.get().getIdUsuario() != idUsuarioLogado) {
             System.out.println("Plano com ID " + idPlanoEscolhido + " não encontrado ou não pertence a você.");
             return false;
         }
