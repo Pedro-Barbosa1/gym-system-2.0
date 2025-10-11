@@ -83,8 +83,8 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         relatorio.setDataFim(dataFim);
 
         if (!indicadoresNoPeriodo.isEmpty()) {
-            relatorio.setIndicadorInicial(indicadoresNoPeriodo.get(0));
-            relatorio.setIndicadorFinal(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1));
+            relatorio.setIndicadorInicial(Optional.of(indicadoresNoPeriodo.get(0)));
+            relatorio.setIndicadorFinal(Optional.of(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1)));
             relatorio.calcularDiferencas();
         }else{
             logger.log(Level.WARNING, "Nenhum indicador encontrado no período.");
