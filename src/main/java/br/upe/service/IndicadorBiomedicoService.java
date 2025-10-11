@@ -51,7 +51,6 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         return indicadorRepository.salvar(novoIndicador);
     }
 
-
     // Verifica as condições e gera o relatorio pela data
     @Override
     public List<IndicadorBiomedico> gerarRelatorioPorData(int idUsuario, LocalDate dataInicio, LocalDate dataFim) {
@@ -87,6 +86,9 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
             relatorio.setIndicadorInicial(indicadoresNoPeriodo.get(0));
             relatorio.setIndicadorFinal(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1));
             relatorio.calcularDiferencas();
+        }else{
+            logger.log(Level.WARNING, "Nenhum indicador encontrado no período.");
+            return relatorio;
         }
         return relatorio;
     }
