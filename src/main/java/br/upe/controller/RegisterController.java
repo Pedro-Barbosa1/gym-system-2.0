@@ -12,8 +12,12 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RegisterController {
+
+    private static final Logger logger = Logger.getLogger(RegisterController.class.getName());
 
     @FXML
     private TextField nomeCompletoTextField;
@@ -48,6 +52,7 @@ public class RegisterController {
 
             if (!senha.equals(confirmaSenha)) {
                 mostrarAlerta(Alert.AlertType.WARNING, "Senhas não conferem", "As senhas informadas são diferentes.");
+                logger.warning(() -> "Tentativa de cadastro com senhas diferentes para email: " + email);
                 return;
             }
 
@@ -56,21 +61,23 @@ public class RegisterController {
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso!",
                     "Usuário cadastrado com sucesso:\n" + novoUsuario.getNome());
 
+            logger.info(() -> "Usuário cadastrado: " + novoUsuario.getEmail());
             limparCampos();
 
         } catch (IllegalArgumentException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro no cadastro", e.getMessage());
+            logger.log(Level.WARNING, () -> "Erro de validação ao cadastrar: " + e.getMessage());
         } catch (Exception e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro inesperado", "Ocorreu um erro: " + e.getMessage());
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Erro inesperado no onCadastrar.", e);
         }
     }
 
     @FXML
     void onVoltar(ActionEvent event) {
         try {
-            // Carrega a tela inicial (ajuste o caminho do FXML conforme o seu projeto)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("")); // colocar o path da pagina land/home
+            // Carrega a tela de login
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/auth/Login.fxml"));
             Parent root = loader.load();
 
             // Obtém a janela atual e substitui a cena
@@ -79,9 +86,11 @@ public class RegisterController {
             stage.setTitle("Gym System - Tela Inicial");
             stage.show();
 
+            logger.info("Retornando para a tela de login.");
+
         } catch (IOException e) {
-            e.printStackTrace();
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível voltar à tela inicial.");
+            logger.log(Level.SEVERE, "Erro ao carregar a tela de login no onVoltar.", e);
         }
     }
 

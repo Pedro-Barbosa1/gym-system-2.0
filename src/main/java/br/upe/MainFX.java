@@ -6,30 +6,32 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainFX extends Application {
 
-    // Cria o logger da classe
     private static final Logger logger = Logger.getLogger(MainFX.class.getName());
 
     @Override
     public void start(Stage stage) {
+        abrirTela(stage, "auth/Login.fxml", "GymSystem - Login");
+    }
+
+    public void abrirTela(Stage stage, String caminhoFXML, String tituloJanela) {
         try {
-            // Carrega o arquivo FXML da tela de cadastro
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/auth/Signup.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/" + caminhoFXML));
             Parent root = loader.load();
 
-            Scene scene = new Scene(root);
-            stage.setTitle("Gym System - Cadastro");
-            stage.setScene(scene);
+            stage.setTitle(tituloJanela);
+            stage.setScene(new Scene(root));
             stage.show();
 
-            logger.info("Tela de cadastro carregada com sucesso.");
+            logger.info(() -> "Tela carregada com sucesso: " + caminhoFXML);
 
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Erro ao carregar a tela de cadastro.", e);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Erro ao carregar a tela: " + caminhoFXML, e);
         }
     }
 

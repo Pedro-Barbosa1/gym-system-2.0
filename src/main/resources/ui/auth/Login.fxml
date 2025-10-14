@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.LoginController">
+   <top>
+      <AnchorPane prefHeight="164.0" prefWidth="900.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="halterImageView" fitHeight="135.0" fitWidth="185.0" layoutX="383.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/563828.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </top>
+   <bottom>
+      <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER" />
+   </bottom>
+   <left>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER" />
+   </right>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER">
+         <children>
+            <Pane layoutX="29.0" layoutY="33.0" prefHeight="370.0" prefWidth="442.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
+                <children>
+                    <Label layoutX="68.0" layoutY="96.0" prefHeight="28.0" prefWidth="90.0" text="E-mail" />
+                    <TextField fx:id="emailTextField" layoutX="68.0" layoutY="124.0" prefHeight="26.0" prefWidth="307.0" promptText="E-mail" />
+                    <Label layoutX="68.0" layoutY="159.0" prefHeight="28.0" prefWidth="90.0" text="Senha" />
+                    <PasswordField fx:id="setSenhaField" layoutX="68.0" layoutY="186.0" prefHeight="26.0" prefWidth="307.0" promptText="Senha" />
+                    <Button fx:id="entrarBotao" layoutX="154.0" layoutY="241.0" mnemonicParsing="false" onAction="#onEntrar" prefHeight="26.0" prefWidth="134.0" style="-fx-background-color: #5A189A;" text="Entrar" textFill="#ececec">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Button>
+                    <Button fx:id="cadastreseBotao" layoutX="223.0" layoutY="296.0" mnemonicParsing="false" onAction="#onCadastrase" prefHeight="26.0" prefWidth="91.0" style="-fx-background-color: #FFDE21;" text="Cadastre-se" textFill="#f7f7f7">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Button>
+                    <Text layoutX="128.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System" textAlignment="CENTER" wrappingWidth="186.93673706054688">
+                        <font>
+                            <Font size="33.0" />
+                        </font>
+                    </Text>
+                  <Label layoutX="128.0" layoutY="301.0" text="Já tem cadastro?" />
+                </children> 
+            </Pane>
+
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
