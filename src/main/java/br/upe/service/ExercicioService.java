@@ -2,18 +2,16 @@ package br.upe.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import br.upe.model.Exercicio;
 import br.upe.repository.IExercicioRepository;
 import br.upe.repository.impl.ExercicioRepositoryImpl;
 
 public class ExercicioService implements IExercicioService {
-
-    private IExercicioRepository exercicioRepository;
-
-    public ExercicioService(IExercicioRepository exercicioRepository) {
-        this.exercicioRepository = exercicioRepository;
-    }
+    private static final Logger logger = Logger.getLogger(ExercicioService.class.getName());
+    private final IExercicioRepository exercicioRepository;
 
     public ExercicioService() {
         this.exercicioRepository = new ExercicioRepositoryImpl();
@@ -42,7 +40,6 @@ public class ExercicioService implements IExercicioService {
     public List<Exercicio> listarExerciciosDoUsuario(int idUsuario) {
         return exercicioRepository.buscarTodosDoUsuario(idUsuario);
     }
-
 
     // Busca o exercicio pelo nome
     @Override
@@ -78,53 +75,67 @@ public class ExercicioService implements IExercicioService {
             exercicioRepository.deletar(exercicioParaDeletar.getIdExercicio());
             return true;
         } else {
-            System.out.println("Exercício com nome '" + nomeExercicio + "' não encontrado entre os seus exercícios.");
+            logger.log(Level.WARNING, "Exercício com nome ''{0}'' não encontrado entre os seus exercícios.", nomeExercicio);
             return false;
         }
     }
 
     // Alterar exercicios
-    
+
     private boolean verificarNomeDuplicado(int idUsuario, String novoNome) {
         List<Exercicio> exerciciosDoUsuario = exercicioRepository.buscarTodosDoUsuario(idUsuario);
         return exerciciosDoUsuario.stream()
-            .anyMatch(e -> e.getNome().equalsIgnoreCase(novoNome.trim()));
+                .anyMatch(e -> e.getNome().equalsIgnoreCase(novoNome.trim()));
     }
 
     public void atualizarExercicio(int idUsuario, String nomeAtualExercicio, String novoNome, String novaDescricao, String novoCaminhoGif) {
+        Exercicio exercicio = buscarExercicioValido(idUsuario, nomeAtualExercicio);
+
+        atualizarNomeExercicio(idUsuario, exercicio, novoNome);
+        atualizarDescricaoExercicio(exercicio, novaDescricao);
+        atualizarCaminhoGifExercicio(exercicio, novoCaminhoGif);
+
+        exercicioRepository.editar(exercicio);
+    }
+
+    private Exercicio buscarExercicioValido(int idUsuario, String nomeAtualExercicio) {
         if (nomeAtualExercicio == null || nomeAtualExercicio.trim().isEmpty()) {
             throw new IllegalArgumentException("O nome atual do exercício não pode ser vazio.");
         }
 
-        Optional<Exercicio> exercicioOpt = buscarExercicioDoUsuarioPorNome(idUsuario, nomeAtualExercicio);
+        return buscarExercicioDoUsuarioPorNome(idUsuario, nomeAtualExercicio)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Erro: Exercício '" + nomeAtualExercicio + "' não encontrado entre os seus exercícios para atualização."));
+    }
 
-        if (exercicioOpt.isPresent()) {
-            Exercicio exercicio = exercicioOpt.get();
+    private void atualizarNomeExercicio(int idUsuario, Exercicio exercicio, String novoNome) {
+        if (novoNome == null || novoNome.trim().isEmpty() || novoNome.trim().equalsIgnoreCase(exercicio.getNome())) {
+            return; // nada a fazer
+        }
 
-            if (novoNome != null && !novoNome.trim().isEmpty() && !novoNome.trim().equalsIgnoreCase(exercicio.getNome())) {
-                if (verificarNomeDuplicado(idUsuario, novoNome)) {
-                    throw new IllegalArgumentException("Você já possui um exercício com o novo nome '" + novoNome + "'.");
-                }
-            }
+        if (verificarNomeDuplicado(idUsuario, novoNome)) {
+            throw new IllegalArgumentException(
+                    "Você já possui um exercício com o novo nome '" + novoNome + "'.");
+        }
 
-            if (novoNome != null && !novoNome.trim().isEmpty()) {
-                exercicio.setNome(novoNome.trim());
-            }
-            if (novaDescricao != null) {
-                exercicio.setDescricao(novaDescricao);
-            }
-            if (novoCaminhoGif != null) {
-                exercicio.setCaminhoGif(novoCaminhoGif);
-            }
+        exercicio.setNome(novoNome.trim());
+    }
 
-            exercicioRepository.editar(exercicio);
-        } else {
-            throw new IllegalArgumentException("Erro: Exercício '" + nomeAtualExercicio + "' não encontrado entre os seus exercícios para atualização.");
+    private void atualizarDescricaoExercicio(Exercicio exercicio, String novaDescricao) {
+        if (novaDescricao != null) {
+            exercicio.setDescricao(novaDescricao);
         }
     }
 
+    private void atualizarCaminhoGifExercicio(Exercicio exercicio, String novoCaminhoGif) {
+        if (novoCaminhoGif != null) {
+            exercicio.setCaminhoGif(novoCaminhoGif);
+        }
+    }
+
+
     public void limparDados() {
-        if(exercicioRepository instanceof ExercicioRepositoryImpl) {
+        if (exercicioRepository instanceof ExercicioRepositoryImpl) {
             ((ExercicioRepositoryImpl) exercicioRepository).limpar();
         }
     }

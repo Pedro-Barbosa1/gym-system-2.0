@@ -137,7 +137,7 @@ public class MenuTreinos {
             System.out.println("Planejado: Carga " + itemPlanejado.getCargaKg() + "kg, Repetições " + itemPlanejado.getRepeticoes());
 
             int repRealizadas = lerInteiroOpcional("Repetições realizadas (deixe em branco para planejado: " + itemPlanejado.getRepeticoes() + "): ", itemPlanejado.getRepeticoes());
-            double cargaRealizada = lerDoubleOpcional("Carga utilizada (kg, deixe em branco para planejado: " + itemPlanejado.getCargaKg() + "): ", (double) itemPlanejado.getCargaKg());
+            double cargaRealizada = lerDoubleOpcional("Carga utilizada (kg, deixe em branco para planejado: " + itemPlanejado.getCargaKg() + "): ", itemPlanejado.getCargaKg());
 
             sessaoTreinoService.registrarExecucao(sessaoAtual, itemPlanejado.getIdExercicio(), repRealizadas, cargaRealizada);
         }
@@ -159,14 +159,14 @@ public class MenuTreinos {
         if (!sugestoes.isEmpty()) {
             System.out.println("\n--- Sugestões de Atualização do Plano ---");
             for (SessaoTreinoService.SugestaoAtualizacaoPlano sugestao : sugestoes) {
-                System.out.printf("O exercício '%s' (ID: %d) teve alterações.\n", sugestao.nomeExercicio, sugestao.idExercicio);
-                System.out.printf("  Repetições: Planejado %d -> Realizado %d\n", sugestao.repPlanejadas, sugestao.repRealizadas);
-                System.out.printf("  Carga: Planejado %.0fkg -> Realizado %.0fkg\n", sugestao.cargaPlanejada, sugestao.cargaRealizada);
+                System.out.printf("O exercício '%s' (ID: %d) teve alterações.\n", sugestao.nomeExercicio(), sugestao.idExercicio());
+                System.out.printf("  Repetições: Planejado %d -> Realizado %d\n", sugestao.repPlanejadas(), sugestao.repRealizadas());
+                System.out.printf("  Carga: Planejado %.0fkg -> Realizado %.0fkg\n", sugestao.cargaPlanejada(), sugestao.cargaRealizada());
                 System.out.print("Deseja atualizar o plano com os novos valores? (s/n): ");
                 String resposta = sc.nextLine();
                 if (resposta.equalsIgnoreCase("s")) {
-                    sessaoTreinoService.aplicarAtualizacoesNoPlano(planoBase.getIdPlano(), sugestao.idExercicio, sugestao.repRealizadas, sugestao.cargaRealizada);
-                    System.out.println("Plano atualizado para " + sugestao.nomeExercicio + ".");
+                    sessaoTreinoService.aplicarAtualizacoesNoPlano(planoBase.getIdPlano(), sugestao.idExercicio(), sugestao.repRealizadas(), sugestao.cargaRealizada());
+                    System.out.println("Plano atualizado para " + sugestao.nomeExercicio() + ".");
                 }
             }
         } else {

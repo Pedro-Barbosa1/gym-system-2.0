@@ -13,10 +13,16 @@ class IndicadorBiomedicoTest {
     void deveCriarIndicadorComTodosAtributos() {
         LocalDate hoje = LocalDate.of(2025, 9, 25);
 
-        IndicadorBiomedico indicador = new IndicadorBiomedico(
-                1, 10, hoje,
-                70.5, 175.0, 20.0, 80.0, 23.0
-        );
+        IndicadorBiomedico indicador = new IndicadorBiomedico.Builder()
+        .id(1)
+        .idUsuario(10)
+        .data(hoje)
+        .pesoKg(70.5)
+        .alturaCm(175.0)
+        .percentualGordura(20.0)
+        .percentualMassaMagra(80.0)
+        .imc(23.0)
+        .build();
 
         assertEquals(1, indicador.getId());
         assertEquals(10, indicador.getIdUsuario());
@@ -32,10 +38,15 @@ class IndicadorBiomedicoTest {
     void deveCriarIndicadorSemId() {
         LocalDate data = LocalDate.of(2025, 1, 1);
 
-        IndicadorBiomedico indicador = new IndicadorBiomedico(
-                15, data,
-                80.0, 180.0, 25.0, 75.0, 24.7
-        );
+        IndicadorBiomedico indicador = new IndicadorBiomedico.Builder()
+        .idUsuario(15)
+        .data(data)
+        .pesoKg(80.0)
+        .alturaCm(180.0)
+        .percentualGordura(25.0)
+        .percentualMassaMagra(75.0)
+        .imc(24.7)
+        .build();
 
         assertEquals(15, indicador.getIdUsuario());
         assertEquals(data, indicador.getData());
@@ -51,10 +62,16 @@ class IndicadorBiomedicoTest {
 
     @Test
     void deveAlterarValoresComSetters() {
-        IndicadorBiomedico indicador = new IndicadorBiomedico(
-                1, 20, LocalDate.now(),
-                60.0, 160.0, 18.0, 82.0, 21.0
-        );
+        IndicadorBiomedico indicador = new IndicadorBiomedico.Builder()
+        .id(1)
+        .idUsuario(20)
+        .data(LocalDate.now())
+        .pesoKg(60.0)
+        .alturaCm(160.0)
+        .percentualGordura(18.0)
+        .percentualMassaMagra(82.0)
+        .imc(21.0)
+        .build();
 
         indicador.setId(2);
         indicador.setIdUsuario(30);
@@ -79,10 +96,16 @@ class IndicadorBiomedicoTest {
     void deveRetornarToStringFormatado() {
         LocalDate data = LocalDate.of(2025, 9, 25);
 
-        IndicadorBiomedico indicador = new IndicadorBiomedico(
-                1, 10, data,
-                70.5, 175.0, 20.0, 80.0, 23.456
-        );
+        IndicadorBiomedico indicador = new IndicadorBiomedico.Builder()
+        .id(1)
+        .idUsuario(10)
+        .data(data)
+        .pesoKg(70.5)
+        .alturaCm(175.0)
+        .percentualGordura(20.0)
+        .percentualMassaMagra(80.0)
+        .imc(23.456)
+        .build();
 
         String esperado = String.format(Locale.US,
                 "ID: %d | Data: %-12s | Peso: %.1fkg | Altura: %.0fcm | Gordura: %.1f%% | Massa Magra: %.1f%% | IMC: %-8.2f",

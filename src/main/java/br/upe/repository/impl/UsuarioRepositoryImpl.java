@@ -8,12 +8,16 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UsuarioRepositoryImpl implements IUsuarioRepository {
 
     private static final String CAMINHO_ARQUIVO = "src/main/resources/data/usuarios.csv";
-    private List<Usuario> usuarios;
-    private AtomicInteger proximoId;
+    private final List<Usuario> usuarios;
+    private final AtomicInteger proximoId;
+
+    private static final Logger logger = Logger.getLogger(UsuarioRepositoryImpl.class.getName());
 
     public UsuarioRepositoryImpl() {
         this.usuarios = new ArrayList<>();
@@ -26,13 +30,13 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
         try {
             Files.createDirectories(Paths.get("src/main/resources/data"));
         } catch (IOException e) {
-            System.err.println("Erro ao criar diretório para CSV: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao criar diretório para CSV", e);
             return;
         }
 
         File file = new File(CAMINHO_ARQUIVO);
         if (!file.exists()) {
-            System.out.println("Arquivo CSV de usuários não encontrado. Criando usuário 'adm' inicial...");
+            logger.info("Arquivo CSV de usuários não encontrado. Criando usuário 'adm' inicial...");
             Usuario adminUser = new Usuario(gerarProximoId(), "Administrador", "adm", "adm", TipoUsuario.ADMIN);
             usuarios.add(adminUser);
             escreverParaCsv();
@@ -41,9 +45,12 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String linha;
-            reader.readLine();
+            int linhaNum = 0;
             int maxId = 0;
             while ((linha = reader.readLine()) != null) {
+                linhaNum++;
+                if (linhaNum == 1) continue; // pula cabeçalho
+
                 Usuario usuario = parseLinhaCsv(linha);
                 if (usuario != null) {
                     usuarios.add(usuario);
@@ -54,7 +61,7 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
             }
             proximoId.set(maxId + 1);
         } catch (IOException e) {
-            System.err.println("Erro ao ler usuários do arquivo CSV: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao ler usuários do arquivo CSV", e);
         }
     }
 
@@ -67,7 +74,7 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Erro ao escrever usuários no arquivo CSV: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao escrever usuários no arquivo CSV", e);
         }
     }
 
@@ -83,11 +90,12 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
                 TipoUsuario tipo = TipoUsuario.valueOf(partes[4]);
                 return new Usuario(id, nome, email, senha, tipo);
             } catch (IllegalArgumentException e) {
-                System.err.println("Erro ao parsear linha CSV de usuário: " + linha + " - " + e.getMessage());
+                logger.log(Level.WARNING, "Erro ao parsear linha CSV de usuário: {0}", new Object[]{linha});
+                logger.log(Level.WARNING, "Exceção capturada", e);
                 return null;
             }
         }
-        System.err.println("Formato inválido de linha CSV de usuário: " + linha);
+        logger.log(Level.WARNING, "Formato inválido de linha CSV de usuário: {0}", new Object[]{linha});
         return null;
     }
 
@@ -104,7 +112,7 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
     @Override
     public Usuario salvar(Usuario usuario) {
         Optional<Usuario> existenteOpt = buscarPorId(usuario.getId());
-        if (!existenteOpt.isPresent() || usuario.getId() == 0) {
+        if (existenteOpt.isEmpty() || usuario.getId() == 0) {
             usuario.setId(gerarProximoId());
             usuarios.add(usuario);
         } else {
@@ -145,7 +153,7 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
             usuarios.add(usuario);
             escreverParaCsv();
         } else {
-            System.err.println("Erro: Usuário com ID " + usuario.getId() + " não encontrado para edição.");
+            logger.log(Level.WARNING, "Usuário com ID {0} não encontrado para edição.", new Object[]{usuario.getId()});
         }
     }
 
@@ -156,7 +164,7 @@ public class UsuarioRepositoryImpl implements IUsuarioRepository {
         if (removido) {
             escreverParaCsv();
         } else {
-            System.err.println("Erro: Usuário com ID " + id + " não encontrado para remoção.");
+            logger.log(Level.WARNING, "Usuário com ID {0} não encontrado para remoção.", new Object[]{id});
         }
     }
 

@@ -13,25 +13,39 @@ public class IndicadorBiomedico {
     private double percentualMassaMagra;
     private double imc;
 
-    public IndicadorBiomedico(int id, int idUsuario, LocalDate data, double pesoKg, double alturaCm, double percentualGordura, double percentualMassaMagra, double imc) {
-        this.id = id;
-        this.idUsuario = idUsuario;
-        this.data = data;
-        this.pesoKg = pesoKg;
-        this.alturaCm = alturaCm;
-        this.percentualGordura = percentualGordura;
-        this.percentualMassaMagra = percentualMassaMagra;
-        this.imc = imc;
+    public IndicadorBiomedico(Builder builder) {
+        this.id = builder.id;
+        this.idUsuario = builder.idUsuario;
+        this.data = builder.data;
+        this.pesoKg = builder.pesoKg;
+        this.alturaCm = builder.alturaCm;
+        this.percentualGordura = builder.percentualGordura;
+        this.percentualMassaMagra = builder.percentualMassaMagra;
+        this.imc = builder.imc;
     }
 
-    public IndicadorBiomedico(int idUsuario, LocalDate data, double pesoKg, double alturaCm, double percentualGordura, double percentualMassaMagra, double imc) {
-        this.idUsuario = idUsuario;
-        this.data = data;
-        this.pesoKg = pesoKg;
-        this.alturaCm = alturaCm;
-        this.percentualGordura = percentualGordura;
-        this.percentualMassaMagra = percentualMassaMagra;
-        this.imc = imc;
+    public static class Builder {
+        private int id;
+        private int idUsuario;
+        private LocalDate data;
+        private double pesoKg;
+        private double alturaCm;
+        private double percentualGordura;
+        private double percentualMassaMagra;
+        private double imc;
+
+        public Builder id(int id) { this.id = id; return this; }
+        public Builder idUsuario(int idUsuario) { this.idUsuario = idUsuario; return this; }
+        public Builder data(LocalDate data) { this.data = data; return this; }
+        public Builder pesoKg(double pesoKg) { this.pesoKg = pesoKg; return this; }
+        public Builder alturaCm(double alturaCm) { this.alturaCm = alturaCm; return this; }
+        public Builder percentualGordura(double percentualGordura) { this.percentualGordura = percentualGordura; return this; }
+        public Builder percentualMassaMagra(double percentualMassaMagra) { this.percentualMassaMagra = percentualMassaMagra; return this; }
+        public Builder imc(double imc) { this.imc = imc; return this; }
+
+        public IndicadorBiomedico build() {
+            return new IndicadorBiomedico(this);
+        }
     }
 
     public int getId() {

@@ -5,18 +5,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ExercicioServiceTest {
+class ExercicioServiceTest {
 
     ExercicioService exercicioService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         exercicioService = new ExercicioService();
         exercicioService.limparDados();
     }
 
     @Test
-    public void testCadastrarExercicioComNomeVazio() {
+    void testCadastrarExercicioComNomeVazio() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             exercicioService.cadastrarExercicio(1, "   ", "Descricao", "caminho.gif");
         });
@@ -24,7 +24,7 @@ public class ExercicioServiceTest {
     }
  
     @Test
-    public void testCadastrarExercicioComNomeDuplicado() {
+    void testCadastrarExercicioComNomeDuplicado() {
     exercicioService.cadastrarExercicio(1, "ExercicioDuplicado", "Descricao1", "caminho1.gif");
     Exception exception = assertThrows(IllegalArgumentException.class, () -> {
     exercicioService.cadastrarExercicio(1, "ExercicioDuplicado", "Descricao2", "caminho2.gif");
@@ -33,24 +33,24 @@ public class ExercicioServiceTest {
     }
 
     @Test
-    public void testBuscarExercicioComNomeVazio() {
+    void testBuscarExercicioComNomeVazio() {
         assertTrue(exercicioService.buscarExercicioDoUsuarioPorNome(1, "  ").isEmpty());
     }
 
     @Test
-    public void testBuscarExercicioInexistente() {
+    void testBuscarExercicioInexistente() {
         assertTrue(exercicioService.buscarExercicioDoUsuarioPorNome(1, "Inexistente").isEmpty());
     }
 
     @Test
-    public void testCadastrarEBuscarExercicio() {
+    void testCadastrarEBuscarExercicio() {
         // Use um nome exclusivo para este teste
         exercicioService.cadastrarExercicio(1, "ExercicioBuscar1", "Descricao", "caminho.gif");
         assertTrue(exercicioService.buscarExercicioDoUsuarioPorNome(1, "ExercicioBuscar1").isPresent());
     }
  
     @Test
-    public void testListarExerciciosDoUsuario() {
+    void testListarExerciciosDoUsuario() {
         // Cadastra exercícios usando IDs de usuário diferentes ou nomes únicos
         exercicioService.cadastrarExercicio(2, "ExercicioListarrrrr", "Descricao", "caminho.gif");
         exercicioService.cadastrarExercicio(2, "ExercicioListarrrr", "Descricao", "caminho.gif");
@@ -59,7 +59,7 @@ public class ExercicioServiceTest {
     }
 
     @Test
-    public void testBuscarExercicioPorIdGlobal() {
+    void testBuscarExercicioPorIdGlobal() {
         // Cadastra um exercício com nome e ID de usuário únicos
         var exercicio = exercicioService.cadastrarExercicio(3, "ExercicioID1", "Descricao", "caminho.gif");
         assertTrue(exercicioService.buscarExercicioPorIdGlobal(exercicio.getIdExercicio()).isPresent());
@@ -67,7 +67,7 @@ public class ExercicioServiceTest {
     }
 
     @Test
-    public void testDeletarExercicioComNomeVazio() {
+    void testDeletarExercicioComNomeVazio() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             exercicioService.deletarExercicioPorNome(1, "   ");
         });
@@ -75,19 +75,19 @@ public class ExercicioServiceTest {
     }
 
     @Test
-    public void testDeletarExercicioExistente() {
+    void testDeletarExercicioExistente() {
         exercicioService.cadastrarExercicio(4, "ExercicioDel", "Descricao", "caminho.gif");
         assertTrue(exercicioService.deletarExercicioPorNome(4, "ExercicioDel"));
         assertTrue(exercicioService.buscarExercicioDoUsuarioPorNome(4, "ExercicioDel").isEmpty());
     }
 
     @Test
-    public void testDeletarExercicioInexistente() {
+    void testDeletarExercicioInexistente() {
         assertFalse(exercicioService.deletarExercicioPorNome(1, "Inexistente"));
     }
 
     @Test
-    public void testAtualizarExercicioComNomeAtualVazio() {
+    void testAtualizarExercicioComNomeAtualVazio() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             exercicioService.atualizarExercicio(1, "   ", "NovoNome", "NovaDesc", "novo.gif");
         });
@@ -95,7 +95,7 @@ public class ExercicioServiceTest {
     }
 
     @Test
-    public void testAtualizarExercicioInexistente() {
+    void testAtualizarExercicioInexistente() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             exercicioService.atualizarExercicio(1, "Inexistente", "NovoNome", "NovaDesc", "novo.gif");
         });
@@ -103,7 +103,7 @@ public class ExercicioServiceTest {
     }
 
     @Test
-    public void testAtualizarExercicioComNomeDuplicado() {
+    void testAtualizarExercicioComNomeDuplicado() {
         // Cria um estado inicial para o teste
         exercicioService.cadastrarExercicio(5, "ExercicioA", "Desc", "caminho.gif");
         exercicioService.cadastrarExercicio(5, "ExercicioB", "Desc", "caminho.gif");
@@ -116,7 +116,7 @@ public class ExercicioServiceTest {
     }
 
     @Test
-    public void testAtualizarExercicioFluxoFeliz() {
+    void testAtualizarExercicioFluxoFeliz() {
         // Cria um exercício para ser atualizado, com nome e ID de usuário únicos
         exercicioService.cadastrarExercicio(6, "ExercicioAntigo", "DescAntiga", "gifAntigo.gif");
 

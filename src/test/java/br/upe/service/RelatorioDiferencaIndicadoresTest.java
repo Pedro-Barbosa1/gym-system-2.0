@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import br.upe.model.IndicadorBiomedico;
 
-public class RelatorioDiferencaIndicadoresTest {
+class RelatorioDiferencaIndicadoresTest {
 
     private RelatorioDiferencaIndicadores relatorio;
     private IndicadorBiomedico inicial;
@@ -21,41 +21,59 @@ public class RelatorioDiferencaIndicadoresTest {
     // Criar instâncias separadas será feito no setup para evitar referenciar o mesmo objeto
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         relatorio = new RelatorioDiferencaIndicadores();
 
-        relatorio.dataInicio = LocalDate.of(2025, 1, 1);
-        relatorio.dataFim = LocalDate.of(2025, 1, 31);
+        relatorio.setDataInicio(LocalDate.of(2025, 1, 1));
+        relatorio.setDataFim(LocalDate.of(2025, 1, 31));
 
         // Criar Indicadores de exemplo
-        inicial = new IndicadorBiomedico(0, null, 0, 0, 0, 0, 0);
+        inicial = new IndicadorBiomedico.Builder()
+        .id(0)
+        .idUsuario(0)
+        .data(null)
+        .pesoKg(0)
+        .alturaCm(0)
+        .percentualGordura(0)
+        .percentualMassaMagra(0)
+        .imc(0)
+        .build();
         inicial.setPesoKg(70.0);
         inicial.setPercentualGordura(20.0);
         inicial.setPercentualMassaMagra(75.0);
         inicial.setImc(22.0);
 
-        finalObj = new IndicadorBiomedico(0, null, 0, 0, 0, 0, 0);
+        finalObj = new IndicadorBiomedico.Builder()
+        .id(0)
+        .idUsuario(0)
+        .data(null)
+        .pesoKg(0)
+        .alturaCm(0)
+        .percentualGordura(0)
+        .percentualMassaMagra(0)
+        .imc(0)
+        .build();
         finalObj.setPesoKg(68.0);
         finalObj.setPercentualGordura(18.0);
         finalObj.setPercentualMassaMagra(77.0);
         finalObj.setImc(21.5);
 
-        relatorio.indicadorInicial = Optional.of(inicial);
-        relatorio.indicadorFinal = Optional.of(finalObj);
+        relatorio.setIndicadorInicial(Optional.of(inicial));
+        relatorio.setIndicadorFinal(Optional.of(finalObj));
 
         relatorio.calcularDiferencas();
     }
 
      @Test
-     public void testCalcularDiferencasCorretamente() {
-         assertEquals(-2.0, relatorio.diferencaPeso, 0.01);
-         assertEquals(-2.0, relatorio.diferencaPercentualGordura, 0.01);
-         assertEquals(2.0, relatorio.diferencaPercentualMassaMagra, 0.01);
-         assertEquals(-0.5, relatorio.diferencaImc, 0.01);
+     void testCalcularDiferencasCorretamente() {
+         assertEquals(-2.0, relatorio.getDiferencaPeso(), 0.01);
+         assertEquals(-2.0, relatorio.getDiferencaPercentualGordura(), 0.01);
+         assertEquals(2.0, relatorio.getDiferencaPercentualMassaMagra(), 0.01);
+         assertEquals(-0.5, relatorio.getDiferencaImc(), 0.01);
      }
 
      @Test
-     public void testToStringConteudoFormatado() {
+     void testToStringConteudoFormatado() {
          String relatorioStr = relatorio.toString();
          assertTrue(relatorioStr.contains("Relatório de Evolução"));
          assertTrue(relatorioStr.contains("Peso (kg)"));
@@ -65,7 +83,7 @@ public class RelatorioDiferencaIndicadoresTest {
      }
  
      @Test
-     public void testExportarParaCsvCriaArquivo() throws IOException {
+     void testExportarParaCsvCriaArquivo() throws IOException {
          String caminho = "test-relatorio.csv";
 
          // Garante que o arquivo não exista antes

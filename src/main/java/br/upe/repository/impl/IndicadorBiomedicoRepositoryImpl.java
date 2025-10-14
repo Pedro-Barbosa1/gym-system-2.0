@@ -102,7 +102,17 @@ public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepo
             double percentualGordura = Double.parseDouble(partes[5]);
             double percentualMassaMagra = Double.parseDouble(partes[6]);
             double imc = Double.parseDouble(partes[7]);
-            return new IndicadorBiomedico(id, idUsuario, data, pesoKg, alturaCm, percentualGordura, percentualMassaMagra, imc);
+           return new IndicadorBiomedico.Builder()
+            .id(id)
+            .idUsuario(idUsuario)
+            .data(data)
+            .pesoKg(pesoKg)
+            .alturaCm(alturaCm)
+            .percentualGordura(percentualGordura)
+            .percentualMassaMagra(percentualMassaMagra)
+            .imc(imc)
+            .build();
+                    
         } catch (Exception e) {
             logger.log(Level.WARNING, "Erro ao parsear linha CSV de indicador: {0}", linha);
             logger.log(Level.WARNING, "Detalhes da exceção:", e);
