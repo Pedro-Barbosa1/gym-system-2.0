@@ -62,10 +62,28 @@ public class RegisterController {
             Usuario novoUsuario = usuarioService.cadastrarUsuario(nome, email, senha, TipoUsuario.COMUM);
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso!",
-                    "Usuário cadastrado com sucesso:\n" + novoUsuario.getNome());
+                    "Usuário cadastrado com sucesso:\n" + novoUsuario.getNome() + "\nPor favor, retome para a tela de login.");
 
             logger.info(() -> "Usuário cadastrado: " + novoUsuario.getEmail());
             limparCampos();
+
+            try {
+            // Carrega a tela de login
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPrincipal.fxml"));
+            Parent root = loader.load();
+
+            // Obtém a janela atual e substitui a cena
+            Stage stage = (Stage) voltarBotao.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Gym System - Tela Inicial");
+            stage.show();
+
+            logger.info("Retornando para a tela de login.");
+
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível voltar à tela inicial.");
+            logger.log(Level.SEVERE, "Erro ao carregar a tela de login no onVoltar.", e);
+        }
 
         } catch (IllegalArgumentException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro no cadastro", e.getMessage());
