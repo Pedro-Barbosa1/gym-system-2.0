@@ -1,4 +1,4 @@
-package br.upe.uiInterfaces;
+package br.upe.ui.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
