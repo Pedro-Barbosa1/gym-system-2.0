@@ -47,7 +47,7 @@
                   <Insets bottom="40.0" />
                </padding>
             </HBox>
-            <Button fx:id="exportarRelatorioB" minHeight="90.0" minWidth="500.0" mnemonicParsing="false" onAction="#handleExportarRelatorioPorData" prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório Por Data" textFill="#e5a000">
+            <Button fx:id="exportarRelatorioB" minHeight="90.0" minWidth="500.0" mnemonicParsing="false" prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório Por Data" textFill="#e5a000">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -55,7 +55,7 @@
                   <Insets bottom="50.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="exportarRelatorioDeDiferencaB" minHeight="90.0" minWidth="500.0" mnemonicParsing="false" onAction="#handleExportarRelatorioDeDiferenca" prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório De Diferença" textFill="#e5a000">
+            <Button fx:id="exportarRelatorioDeDiferencaB" minHeight="90.0" minWidth="500.0" mnemonicParsing="false" prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório De Diferença" textFill="#e5a000">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
