@@ -7,31 +7,31 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Classe principal da aplicação JavaFX - SysFit
- * Esta classe inicia a interface gráfica do sistema
+ * Classe de teste para a tela de Menu Plano Treinos
  */
-public class MainApp extends Application {
+public class TestMenuPlanoTreinos extends Application {
 
     @Override
     public void start(Stage primaryStage) {
         try {
-            // TEMPORÁRIO: Testando MenuRelatorios
-            // Carrega o arquivo FXML do Menu Principal
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuRelatorios.fxml"));
+            // Carrega o arquivo FXML do Menu Plano Treinos
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPlanoTreinos.fxml"));
             Parent root = loader.load();
 
             // Cria a cena
-            Scene scene = new Scene(root, 1000, 700);
+            Scene scene = new Scene(root, 900, 700);
             
             // Configura a janela principal
-            primaryStage.setTitle("SysFit - Sistema de Gerenciamento de Academia");
+            primaryStage.setTitle("SysFit - Menu Plano de Treinos");
             primaryStage.setScene(scene);
             primaryStage.setResizable(true);
             primaryStage.setMinWidth(900);
-            primaryStage.setMinHeight(600);
+            primaryStage.setMinHeight(700);
             
             // Exibe a janela
             primaryStage.show();
+            
+            System.out.println("Tela Menu Plano Treinos carregada com sucesso!");
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,9 +39,6 @@ public class MainApp extends Application {
         }
     }
 
-    /**
-     * Método main - ponto de entrada da aplicação JavaFX
-     */
     public static void main(String[] args) {
         launch(args);
     }
