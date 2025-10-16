@@ -16,7 +16,7 @@
     <center>
         <AnchorPane prefHeight="700.0" prefWidth="900.0" BorderPane.alignment="CENTER">
             <ImageView fitHeight="700.0" fitWidth="907.0" layoutX="-1.0" layoutY="1.0" pickOnBounds="true">
-                <Image url="@../../images/behang-met-dumbells-en-gewichten.png" />
+                <Image url="@../images/behang-met-dumbells-en-gewichten.png" />
             </ImageView>
             <AnchorPane layoutX="227.0" layoutY="1.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #515151;">
                 <Pane layoutX="28.0" layoutY="223.0" prefHeight="370.0" prefWidth="394.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
@@ -41,10 +41,15 @@
                     </Text>
                     <Label layoutX="104.0" layoutY="300.0" text="Já tem cadastro?" />
                 </Pane>
-                <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@../../images/dumbbells.png" />
+                <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../images/dumbbells.png" />
                 </ImageView>
             </AnchorPane>
+         <Button fx:id="voltarBotao" layoutX="840.0" layoutY="30.0" mnemonicParsing="false" onAction="#onVoltar" style="-fx-background-color: #515151;" text="Voltar" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
+         </Button>
         </AnchorPane>
     </center>
 </BorderPane>
