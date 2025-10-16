@@ -1,4 +1,4 @@
-package br.upe.ui.telas.controllers;
+package br.upe.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

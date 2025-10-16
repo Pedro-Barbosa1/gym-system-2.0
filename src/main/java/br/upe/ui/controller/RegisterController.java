@@ -1,4 +1,4 @@
-package br.upe.controller;
+package br.upe.ui.controller;
 
 import br.upe.model.TipoUsuario;
 import br.upe.model.Usuario;

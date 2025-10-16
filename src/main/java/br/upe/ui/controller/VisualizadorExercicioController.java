@@ -1,4 +1,4 @@
-package br.upe.controller;
+package br.upe.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
