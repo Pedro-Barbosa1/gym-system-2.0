@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.controller.MenuPrincipalController">
+   <children>
+      <ImageView fitHeight="736.0" fitWidth="1052.0" layoutX="-109.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/behang-met-dumbells-en-gewichten_7%20-%20Editado%202.png" />
+         </image>
+      </ImageView>
+      <StackPane layoutY="161.0" prefHeight="666.0" prefWidth="1448.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
+         <children>
+            <AnchorPane prefHeight="489.0" prefWidth="678.0" style="-fx-background-color: #312F2F;">
+               <children>
+                  <VBox alignment="CENTER" cacheShape="false" layoutX="8.0" prefHeight="460.0" prefWidth="1482.0" spacing="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="-8.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                           <image>
+                              <Image url="@../images/dumbbells%201.png" />
+                           </image>
+                        </ImageView>
+                        <HBox alignment="CENTER" prefHeight="116.0" prefWidth="787.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                 <children>
+                                    <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #E5A000;">
+                                       <children>
+                                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../images/User.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <Button fx:id="loginB" alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="152.0" style="-fx-border-color: #9c27b0; -fx-background-color: #312F2F; -fx-border-radius: 6px; -fx-background-radius: 6px;" text="Entrar" textFill="#e5a000" />
+                                 </children>
+                                 <padding>
+                                    <Insets right="50.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                 <children>
+                                    <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #E5A000;">
+                                       <children>
+                                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../images/Book%20open.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <Button fx:id="registerB" alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="154.0" style="-fx-border-color: #9c27b0; -fx-background-color: #312F2F; -fx-border-radius: 6px; -fx-background-radius: 6px;" text="Cadastrar" textFill="#e5a000" />
+                                 </children>
+                                 <padding>
+                                    <Insets right="50.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                 <children>
+                                    <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #E5A000;">
+                                       <children>
+                                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../images/Arrow%20right-circle.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <Button fx:id="exitB" alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="153.0" style="-fx-border-color: #9c27b0; -fx-background-color: #312F2F; -fx-border-radius: 6px; -fx-background-radius: 6px;" text="Sair" textFill="#e5a000" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
+   </children>
+   <opaqueInsets>
+      <Insets bottom="80.0" top="80.0" />
+   </opaqueInsets>
+</AnchorPane>
