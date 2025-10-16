@@ -13,55 +13,38 @@
 <?import javafx.scene.text.Text?>
 
 <BorderPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.LoginController">
-   <top>
-      <AnchorPane prefHeight="164.0" prefWidth="900.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER">
-         <children>
-            <ImageView fx:id="halterImageView" fitHeight="135.0" fitWidth="185.0" layoutX="383.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../images/563828.png" />
-               </image>
+    <center>
+        <AnchorPane prefHeight="700.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+            <ImageView fitHeight="700.0" fitWidth="907.0" layoutX="-1.0" layoutY="1.0" pickOnBounds="true">
+                <Image url="@../../images/behang-met-dumbells-en-gewichten.png" />
             </ImageView>
-         </children>
-      </AnchorPane>
-   </top>
-   <bottom>
-      <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER" />
-   </bottom>
-   <left>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER" />
-   </left>
-   <right>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER" />
-   </right>
-   <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER">
-         <children>
-            <Pane layoutX="29.0" layoutY="33.0" prefHeight="370.0" prefWidth="442.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
-                <children>
-                    <Label layoutX="68.0" layoutY="96.0" prefHeight="28.0" prefWidth="90.0" text="E-mail" />
-                    <TextField fx:id="emailTextField" layoutX="68.0" layoutY="124.0" prefHeight="26.0" prefWidth="307.0" promptText="E-mail" />
-                    <Label layoutX="68.0" layoutY="159.0" prefHeight="28.0" prefWidth="90.0" text="Senha" />
-                    <PasswordField fx:id="setSenhaField" layoutX="68.0" layoutY="186.0" prefHeight="26.0" prefWidth="307.0" promptText="Senha" />
-                    <Button fx:id="entrarBotao" layoutX="154.0" layoutY="241.0" mnemonicParsing="false" onAction="#onEntrar" prefHeight="26.0" prefWidth="134.0" style="-fx-background-color: #5A189A;" text="Entrar" textFill="#ececec">
+            <AnchorPane layoutX="227.0" layoutY="1.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #515151;">
+                <Pane layoutX="28.0" layoutY="223.0" prefHeight="370.0" prefWidth="394.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
+                    <Label layoutX="44.0" layoutY="94.0" prefHeight="28.0" prefWidth="90.0" text="E-mail" />
+                    <TextField fx:id="emailTextField" layoutX="44.0" layoutY="122.0" prefHeight="26.0" prefWidth="307.0" promptText="E-mail" />
+                    <Label layoutX="44.0" layoutY="157.0" prefHeight="28.0" prefWidth="90.0" text="Senha" />
+                    <PasswordField fx:id="setSenhaField" layoutX="44.0" layoutY="184.0" prefHeight="26.0" prefWidth="307.0" promptText="Senha" />
+                    <Button fx:id="entrarBotao" layoutX="130.0" layoutY="240.0" mnemonicParsing="false" onAction="#onEntrar" prefHeight="26.0" prefWidth="134.0" style="-fx-background-color: #5A189A;" text="Entrar" textFill="#ececec">
                         <font>
                             <Font name="System Bold" size="12.0" />
                         </font>
                     </Button>
-                    <Button fx:id="cadastreseBotao" layoutX="223.0" layoutY="296.0" mnemonicParsing="false" onAction="#onCadastrase" prefHeight="26.0" prefWidth="91.0" style="-fx-background-color: #FFDE21;" text="Cadastre-se" textFill="#f7f7f7">
+                    <Button fx:id="cadastreseBotao" layoutX="199.0" layoutY="295.0" mnemonicParsing="false" onAction="#onCadastrase" prefHeight="26.0" prefWidth="91.0" style="-fx-background-color: #FFDE21;" text="Cadastre-se" textFill="#f7f7f7">
                         <font>
                             <Font name="System Bold" size="12.0" />
                         </font>
                     </Button>
-                    <Text layoutX="128.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System" textAlignment="CENTER" wrappingWidth="186.93673706054688">
+                    <Text layoutX="104.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System" textAlignment="CENTER" wrappingWidth="186.93673706054688">
                         <font>
                             <Font size="33.0" />
                         </font>
                     </Text>
-                  <Label layoutX="128.0" layoutY="301.0" text="Já tem cadastro?" />
-                </children> 
-            </Pane>
-
-         </children>
-      </AnchorPane>
-   </center>
+                    <Label layoutX="104.0" layoutY="300.0" text="Já tem cadastro?" />
+                </Pane>
+                <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../../images/dumbbells.png" />
+                </ImageView>
+            </AnchorPane>
+        </AnchorPane>
+    </center>
 </BorderPane>
