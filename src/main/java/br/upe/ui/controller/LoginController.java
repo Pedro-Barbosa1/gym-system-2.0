@@ -33,6 +33,9 @@ public class LoginController {
     @FXML
     private Button cadastreseBotao;
 
+    @FXML
+    private Button voltarBotao;
+
     private final UsuarioService usuarioService = new UsuarioService();
 
     /**
@@ -91,6 +94,27 @@ public class LoginController {
         } catch (IOException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela de cadastro.");
             logger.log(Level.SEVERE, "Erro ao carregar tela de cadastro.", e);
+        }
+    }
+
+    @FXML
+    void onVoltar(ActionEvent event) {
+        try {
+            // Carrega a tela do menu principal
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPrincipal.fxml"));
+            Parent root = loader.load();
+
+            // Obtém a janela atual e substitui a cena
+            Stage stage = (Stage) voltarBotao.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Gym System - Tela Inicial");
+            stage.show();
+
+            logger.info("Retornando para a tela de menu principal.");
+
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível voltar à tela inicial.");
+            logger.log(Level.SEVERE, "Erro ao carregar a tela de login no onVoltar.", e);
         }
     }
 
