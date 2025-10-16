@@ -52,11 +52,27 @@
       <version>${mysql.connector.version}</version>
     </dependency>
 
-<dependency>
-  <groupId>net.sf.jasperreports</groupId>
-  <artifactId>jasperreports</artifactId>
-  <version>6.21.0</version>
-</dependency>
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports</artifactId>
+      <version>6.21.0</version>
+    </dependency>
+
+        <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>21.0.2</version>
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <version>21.0.2</version>
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>21.0.2</version>
+    </dependency>
 
   </dependencies>
 
@@ -111,6 +127,15 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <configuration>
+            <mainClass>br.upe.Main</mainClass>
+        </configuration>
+    </plugin>
     </plugins>
   </build>
 </project>
