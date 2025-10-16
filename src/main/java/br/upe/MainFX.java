@@ -1,14 +1,14 @@
 package br.upe;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MainFX extends Application {
 
@@ -16,12 +16,12 @@ public class MainFX extends Application {
 
     @Override
     public void start(Stage stage) {
-        abrirTela(stage, "auth/Login.fxml", "GymSystem - Login");
+        abrirTela(stage, "fxml/MenuPrincipal.fxml", "SysFit - Menu Principal");
     }
 
     public void abrirTela(Stage stage, String caminhoFXML, String tituloJanela) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/" + caminhoFXML));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + caminhoFXML));
             Parent root = loader.load();
 
             stage.setTitle(tituloJanela);

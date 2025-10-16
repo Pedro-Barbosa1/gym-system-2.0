@@ -1,17 +1,19 @@
 package br.upe.ui.controller;
 
+import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
-/**
- * Controller para a tela do Menu Principal
- * Gerencia as ações dos botões: Entrar, Cadastrar e Sair
- */
+
 public class MenuPrincipalController {
 
-    // Referências aos botões do FXML (usando os fx:id definidos)
     @FXML
     private Button loginB;
 
@@ -21,66 +23,62 @@ public class MenuPrincipalController {
     @FXML
     private Button exitB;
 
-    /**
-     * Inicializa o controller após o carregamento do FXML
-     * Este método é chamado automaticamente pelo JavaFX
-     */
+   
     @FXML
     public void initialize() {
         System.out.println("Menu Principal inicializado com sucesso!");
         
-        // Aqui você pode adicionar configurações iniciais se necessário
-        // Exemplo: desabilitar botões, carregar dados, etc.
+       
+        configurarAcoes();
     }
 
-    /**
-     * Manipula o clique no botão "Entrar" (Login)
-     * TODO: Implementar navegação para tela de login
-     */
+    
+    private void configurarAcoes() {
+        loginB.setOnAction(e -> handleLogin());
+        registerB.setOnAction(e -> handleRegister());
+        exitB.setOnAction(e -> handleExit());
+    }
+
+
     @FXML
     private void handleLogin() {
         System.out.println("Botão ENTRAR clicado!");
         
-        // Por enquanto, mostra uma mensagem
-        showInfo("Login", "Funcionalidade de login será implementada em breve.");
-        
-        // TODO: Navegar para tela de login
-        // Exemplo de como será:
-        /*
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuLogin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) loginB.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.setTitle("SysFit - Login");
         } catch (IOException e) {
             showError("Erro", "Não foi possível abrir a tela de login.");
+            e.printStackTrace();
         }
-        */
     }
 
-    /**
-     * Manipula o clique no botão "Cadastrar"
-     * TODO: Implementar navegação para tela de cadastro
-     */
+
     @FXML
     private void handleRegister() {
         System.out.println("Botão CADASTRAR clicado!");
         
-        // Por enquanto, mostra uma mensagem
-        showInfo("Cadastro", "Funcionalidade de cadastro será implementada em breve.");
-        
-        // TODO: Navegar para tela de cadastro
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Signup.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) registerB.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("SysFit - Cadastro");
+        } catch (IOException e) {
+            showError("Erro", "Não foi possível abrir a tela de cadastro.");
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * Manipula o clique no botão "Sair"
-     * Fecha a aplicação
-     */
+
     @FXML
     private void handleExit() {
         System.out.println("Botão SAIR clicado - Encerrando aplicação...");
         
-        // Fecha a aplicação JavaFX
+
         Platform.exit();
         System.exit(0);
     }

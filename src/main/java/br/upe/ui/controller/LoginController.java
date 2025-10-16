@@ -1,5 +1,9 @@
 package br.upe.ui.controller;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import br.upe.model.Usuario;
 import br.upe.service.UsuarioService;
 import javafx.event.ActionEvent;
@@ -7,12 +11,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LoginController {
 
@@ -49,7 +52,7 @@ public class LoginController {
                 logger.info("Usuário autenticado com sucesso: " + usuario.getEmail());
 
                 // Carregar tela principal ou home
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("")); // path do home
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuUsuarioLogado.fxml")); // path do home
                 Parent root = loader.load();
 
                 Stage stage = (Stage) entrarBotao.getScene().getWindow();
@@ -76,7 +79,7 @@ public class LoginController {
     @FXML
     void onCadastrase(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/auth/Signup.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Signup.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) cadastreseBotao.getScene().getWindow();

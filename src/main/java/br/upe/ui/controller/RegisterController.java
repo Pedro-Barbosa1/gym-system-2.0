@@ -1,5 +1,9 @@
 package br.upe.ui.controller;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import br.upe.model.TipoUsuario;
 import br.upe.model.Usuario;
 import br.upe.service.UsuarioService;
@@ -8,12 +12,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RegisterController {
 
@@ -77,7 +80,7 @@ public class RegisterController {
     void onVoltar(ActionEvent event) {
         try {
             // Carrega a tela de login
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/auth/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPrincipal.fxml"));
             Parent root = loader.load();
 
             // Obtém a janela atual e substitui a cena

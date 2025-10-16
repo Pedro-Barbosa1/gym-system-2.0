@@ -44,7 +44,7 @@
                                           </ImageView>
                                        </children>
                                     </StackPane>
-                                    <Button fx:id="loginB" alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="152.0" style="-fx-border-color: #9c27b0; -fx-background-color: #312F2F; -fx-border-radius: 6px; -fx-background-radius: 6px;" text="Entrar" textFill="#e5a000" />
+                                    <Button fx:id="loginB" alignment="CENTER" mnemonicParsing="false" onAction="#handleLogin" prefHeight="27.0" prefWidth="152.0" style="-fx-border-color: #9c27b0; -fx-background-color: #312F2F; -fx-border-radius: 6px; -fx-background-radius: 6px;" text="Entrar" textFill="#e5a000" />
                                  </children>
                                  <padding>
                                     <Insets right="50.0" />
@@ -61,7 +61,7 @@
                                           </ImageView>
                                        </children>
                                     </StackPane>
-                                    <Button fx:id="registerB" alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="154.0" style="-fx-border-color: #9c27b0; -fx-background-color: #312F2F; -fx-border-radius: 6px; -fx-background-radius: 6px;" text="Cadastrar" textFill="#e5a000" />
+                                    <Button fx:id="registerB" alignment="CENTER" mnemonicParsing="false" onAction="#handleRegister" prefHeight="27.0" prefWidth="154.0" style="-fx-border-color: #9c27b0; -fx-background-color: #312F2F; -fx-border-radius: 6px; -fx-background-radius: 6px;" text="Cadastrar" textFill="#e5a000" />
                                  </children>
                                  <padding>
                                     <Insets right="50.0" />
@@ -78,7 +78,7 @@
                                           </ImageView>
                                        </children>
                                     </StackPane>
-                                    <Button fx:id="exitB" alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="153.0" style="-fx-border-color: #9c27b0; -fx-background-color: #312F2F; -fx-border-radius: 6px; -fx-background-radius: 6px;" text="Sair" textFill="#e5a000" />
+                                    <Button fx:id="exitB" alignment="CENTER" mnemonicParsing="false" onAction="#handleExit" prefHeight="27.0" prefWidth="153.0" style="-fx-border-color: #9c27b0; -fx-background-color: #312F2F; -fx-border-radius: 6px; -fx-background-radius: 6px;" text="Sair" textFill="#e5a000" />
                                  </children>
                               </VBox>
                            </children>

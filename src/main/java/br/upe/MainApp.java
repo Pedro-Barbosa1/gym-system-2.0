@@ -15,9 +15,8 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // TEMPORÁRIO: Testando MenuRelatorios
             // Carrega o arquivo FXML do Menu Principal
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuRelatorios.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPrincipal.fxml"));
             Parent root = loader.load();
 
             // Cria a cena
