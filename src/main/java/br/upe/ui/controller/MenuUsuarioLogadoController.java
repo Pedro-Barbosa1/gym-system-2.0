@@ -1,21 +1,23 @@
 package br.upe.ui.controller;
 
-import javafx.event.ActionEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class MenuUsuarioLogadoController {
 
+    private static final Logger logger = Logger.getLogger(MenuUsuarioLogadoController.class.getName());
+
     // --- VARIÁVEIS VINCULADAS AOS COMPONENTES DA TELA ---
-    // Para que estas variáveis funcionem, você precisa definir o "fx:id"
-    // para cada botão correspondente no Scene Builder.
     @FXML
     private Button btnMeusTreinos;
 
@@ -35,97 +37,105 @@ public class MenuUsuarioLogadoController {
     private Button btnSair;
 
 
-    // --- MÉTODOS EXECUTADOS PELOS BOTÕES (On Mouse Clicked) ---
+    // --- MÉTODOS EXECUTADOS PELOS BOTÕES ---
 
     /**
      * Chamado quando o botão "Meus Treinos" é clicado.
-     * Deve abrir a tela de visualização de treinos do usuário.
+     * Abre a tela de visualização de treinos do usuário.
      */
     @FXML
-    void abrirMeusTreinos(ActionEvent event) {
-        System.out.println("Botão 'Meus Treinos' clicado!");
-        // Exemplo de como carregar uma nova tela:
-        // carregarNovaTela(event, "TelaMeusTreinos.fxml");
+    void abrirMeusTreinos(MouseEvent event) {
+        logger.info("Botão 'Meus Treinos' clicado!");
+        carregarNovaTela("/fxml/TreinoView.fxml", "Gym System - Meus Treinos");
     }
 
     /**
      * Chamado quando o botão "Meus Indicadores" é clicado.
-     * Deve abrir a tela de indicadores de progresso do usuário.
+     * Abre a tela de indicadores de progresso do usuário.
      */
     @FXML
-    void abrirMeusIndicadores(ActionEvent event) {
-        System.out.println("Botão 'Meus Indicadores' clicado!");
-        // carregarNovaTela(event, "TelaMeusIndicadores.fxml");
+    void abrirMeusIndicadores(MouseEvent event) {
+        logger.info("Botão 'Meus Indicadores' clicado!");
+        carregarNovaTela("/fxml/IndicadoresView.fxml", "Gym System - Meus Indicadores");
     }
 
     /**
      * Chamado quando o botão "Gerenciar Plano de Treino" é clicado.
-     * Deve abrir a tela para o usuário gerenciar seus planos.
+     * Abre a tela para o usuário gerenciar seus planos.
      */
     @FXML
-    void abrirGerenciarPlanoDeTreino(ActionEvent event) {
-        System.out.println("Botão 'Gerenciar Plano de Treino' clicado!");
-        // carregarNovaTela(event, "TelaPlanoTreino.fxml");
+    void abrirGerenciarPlanoDeTreino(MouseEvent event) {
+        logger.info("Botão 'Gerenciar Plano de Treino' clicado!");
+        carregarNovaTela("/fxml/MenuPlanoTreinos.fxml", "Gym System - Planos de Treino");
     }
 
     /**
      * Chamado quando o botão "Gerenciar Exercícios" é clicado.
-     * Deve abrir a tela de gerenciamento de exercícios.
+     * Abre a tela de gerenciamento de exercícios.
      */
     @FXML
-    void abrirGerenciarExercicios(ActionEvent event) {
-        System.out.println("Botão 'Gerenciar Exercícios' clicado!");
-        // carregarNovaTela(event, "TelaGerenciarExercicios.fxml");
+    void abrirGerenciarExercicios(MouseEvent event) {
+        logger.info("Botão 'Gerenciar Exercícios' clicado!");
+        carregarNovaTela("/fxml/ExercicioView.fxml", "Gym System - Gerenciar Exercícios");
     }
 
     /**
      * Chamado quando o botão "Exportar Relatórios" é clicado.
-     * Deve abrir a funcionalidade de exportação de relatórios.
+     * Abre a funcionalidade de exportação de relatórios.
      */
     @FXML
-    void abrirExportarRelatorios(ActionEvent event) {
-        System.out.println("Botão 'Exportar Relatórios' clicado!");
-        // carregarNovaTela(event, "TelaExportarRelatorios.fxml");
+    void abrirExportarRelatorios(MouseEvent event) {
+        logger.info("Botão 'Exportar Relatórios' clicado!");
+        carregarNovaTela("/fxml/MenuRelatorios.fxml", "Gym System - Relatórios");
     }
 
     /**
      * Chamado quando o botão "Sair" é clicado.
-     * Deve fechar a tela atual e retornar para a tela de login.
+     * Fecha a tela atual e retorna para a tela de login.
      */
     @FXML
-    void sairDaConta(ActionEvent event) {
-        System.out.println("Botão 'Sair' clicado! Voltando para a tela de login...");
-        // Exemplo para voltar à tela de login
-        // carregarNovaTela(event, "TelaLogin.fxml");
+    void sairDaConta(MouseEvent event) {
+        logger.info("Botão 'Sair' clicado! Voltando para a tela de login...");
+        carregarNovaTela("/fxml/Login.fxml", "Gym System - Login");
     }
 
 
     /**
      * Método auxiliar para carregar uma nova tela FXML, fechando a atual.
      *
-     * @param event    O evento de ação que disparou a chamada (necessário para obter o Stage atual).
-     * @param fxmlFile O nome do arquivo FXML a ser carregado (ex: "TelaLogin.fxml").
+     * @param fxmlFile O caminho do arquivo FXML a ser carregado.
+     * @param titulo   O título da nova janela.
      */
-    private void carregarNovaTela(ActionEvent event, String fxmlFile) {
+    private void carregarNovaTela(String fxmlFile, String titulo) {
         try {
-            // Carrega o recurso FXML da nova tela
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Parent root = loader.load();
 
-            // Obtém o Stage (a janela) atual a partir do evento do botão
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            // Cria a nova cena com o FXML carregado
-            Scene scene = new Scene(root);
-
-            // Define a nova cena no Stage
-            stage.setScene(scene);
-
-            // Exibe o Stage atualizado
+            Stage stage = (Stage) btnSair.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle(titulo);
             stage.show();
 
+            logger.info(() -> "Tela carregada com sucesso: " + fxmlFile);
+
         } catch (IOException e) {
-            System.err.println("Falha ao carregar a tela: " + fxmlFile);
-            e.printStackTrace();
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela solicitada.");
+            logger.log(Level.SEVERE, "Erro ao carregar tela: " + fxmlFile, e);
         }
+    }
+
+    /**
+     * Exibe uma caixa de diálogo para feedback do usuário.
+     *
+     * @param tipo     Tipo do alerta (INFORMATION, WARNING, ERROR, etc.)
+     * @param titulo   Título da janela de alerta
+     * @param mensagem Mensagem a ser exibida
+     */
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 }
