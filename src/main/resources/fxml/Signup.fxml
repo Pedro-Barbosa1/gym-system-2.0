@@ -18,7 +18,7 @@
          <children>
             <ImageView fitHeight="700.0" fitWidth="900.0" pickOnBounds="true">
                <image>
-                  <Image url="@../../images/behang-met-dumbells-en-gewichten.png" />
+                  <Image url="@../images/behang-met-dumbells-en-gewichten.png" />
                </image>
             </ImageView>
             <AnchorPane layoutX="225.0" layoutY="-2.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #515151;">
@@ -50,9 +50,9 @@
                         </Text>
                      </children>
                   </Pane>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../images/dumbbells.png" />
+                        <Image url="@../images/dumbbells.png" />
                      </image>
                   </ImageView>
                </children>
