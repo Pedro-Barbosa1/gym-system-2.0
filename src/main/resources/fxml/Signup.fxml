@@ -18,10 +18,10 @@
          <children>
             <ImageView fitHeight="700.0" fitWidth="900.0" pickOnBounds="true">
                <image>
-                  <Image url="@../../images/behang-met-dumbells-en-gewichten.png" />
+                  <Image url="@../images/behang-met-dumbells-en-gewichten_7%20-%20Editado%202.png" />
                </image>
             </ImageView>
-            <AnchorPane layoutX="225.0" layoutY="-2.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #515151;">
+            <AnchorPane layoutX="225.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #2C2C2C;">
                <children>
                   <Pane layoutX="35.0" layoutY="192.0" prefHeight="438.0" prefWidth="379.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
                      <children>
@@ -52,7 +52,7 @@
                   </Pane>
                   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../images/dumbbells.png" />
+                        <Image url="@../images/dumbbells%201.png" />
                      </image>
                   </ImageView>
                </children>

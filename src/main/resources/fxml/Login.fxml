@@ -15,10 +15,10 @@
 <BorderPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.controller.LoginController">
     <center>
         <AnchorPane prefHeight="700.0" prefWidth="900.0" BorderPane.alignment="CENTER">
-            <ImageView fitHeight="700.0" fitWidth="907.0" layoutX="-1.0" layoutY="1.0" pickOnBounds="true">
-                <Image url="@../../images/behang-met-dumbells-en-gewichten.png" />
+            <ImageView fitHeight="702.0" fitWidth="921.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true">
+                <Image url="@../images/behang-met-dumbells-en-gewichten_7%20-%20Editado%202.png" />
             </ImageView>
-            <AnchorPane layoutX="227.0" layoutY="1.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #515151;">
+            <AnchorPane layoutX="227.0" layoutY="1.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #2C2C2C;">
                 <Pane layoutX="28.0" layoutY="223.0" prefHeight="370.0" prefWidth="394.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
                     <Label layoutX="44.0" layoutY="94.0" prefHeight="28.0" prefWidth="90.0" text="E-mail" />
                     <TextField fx:id="emailTextField" layoutX="44.0" layoutY="122.0" prefHeight="26.0" prefWidth="307.0" promptText="E-mail" />
@@ -42,7 +42,7 @@
                     <Label layoutX="104.0" layoutY="300.0" text="Já tem cadastro?" />
                 </Pane>
                 <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@../../images/dumbbells.png" />
+                    <Image url="@../images/dumbbells%201.png" />
                 </ImageView>
             </AnchorPane>
         </AnchorPane>
