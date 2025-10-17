@@ -96,7 +96,7 @@ public class MenuUsuarioLogadoController {
     @FXML
     void sairDaConta(MouseEvent event) {
         logger.info("Botão 'Sair' clicado! Voltando para a tela de login...");
-        carregarNovaTela("/fxml/Login.fxml", "Gym System - Login");
+        carregarNovaTela("/fxml/MenuPrincipal.fxml", "Gym System - Login");
     }
 
 
