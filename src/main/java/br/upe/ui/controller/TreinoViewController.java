@@ -36,7 +36,7 @@ import javafx.stage.Stage;
 
 /**
  * Controlador da tela de Treinos do usuário.
- * Gerencia a navegação e funcionalidades relacionadas aos planos de treino através de pop-ups.
+ * Gerencia a navegação e funcionalidades relacionadas aos planos de treino.
  * Adaptado da classe MenuTreinos para interface gráfica JavaFX.
  */
 public class TreinoViewController {
@@ -59,22 +59,13 @@ public class TreinoViewController {
         private ImageView IFechar;
 
         @FXML
+        private javafx.scene.control.ButtonBar exitB;
+
+        @FXML
         private Button BListarTR;
 
         @FXML
         private Button BEditarTR;
-
-        @FXML
-        private Button BDeletarTR;
-
-        @FXML
-        private Button BAdicionarTR;
-
-        @FXML
-        private Button BRemoverTR;
-
-        @FXML
-        private Button BDetalhesTR;
 
         /**
          * Construtor - inicializa os serviços necessários.
@@ -89,84 +80,13 @@ public class TreinoViewController {
         // --- MÉTODOS EXECUTADOS PELOS BOTÕES ---
 
         /**
-         * Inicia uma nova sessão de treino através de um dialog interativo.
+         * Inicia uma nova sessão de treino através de dialogs interativos.
+         * Vinculado ao botão "Nova Sessão de Treino".
          * Adaptado do método iniciarNovaSessao() da classe MenuTreinos.
          */
         @FXML
-        void listarPlanosDeTreino(ActionEvent event) {
+        void iniciarNovaSessao(ActionEvent event) {
                 logger.info("Iniciando nova sessão de treino...");
-                iniciarNovaSessao();
-        }
-
-        /**
-         * Exibe o histórico de sessões de treino (funcionalidade futura).
-         */
-        @FXML
-        void editarPlanoDeTreino(ActionEvent event) {
-                logger.info("Visualizando histórico de sessões...");
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Em Desenvolvimento", 
-                        "Funcionalidade de histórico de sessões em desenvolvimento.");
-        }
-
-        /**
-         * Funcionalidade placeholder - pode ser removida ou reutilizada.
-         */
-        @FXML
-        void deletarPlanoDeTreino(ActionEvent event) {
-                logger.info("Botão 'Deletar plano de treino' clicado!");
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Funcionalidade Futura", 
-                        "Esta funcionalidade será implementada em breve.");
-        }
-
-        /**
-         * Funcionalidade placeholder - pode ser removida ou reutilizada.
-         */
-        @FXML
-        void adicionarPlanoDeTreino(ActionEvent event) {
-                logger.info("Botão 'Adicionar plano de treino' clicado!");
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Funcionalidade Futura", 
-                        "Esta funcionalidade será implementada em breve.");
-        }
-
-        /**
-         * Funcionalidade placeholder - pode ser removida ou reutilizada.
-         */
-        @FXML
-        void removerPlanoDeTreino(ActionEvent event) {
-                logger.info("Botão 'Remover plano de treino' clicado!");
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Funcionalidade Futura", 
-                        "Esta funcionalidade será implementada em breve.");
-        }
-
-        /**
-         * Funcionalidade placeholder - pode ser removida ou reutilizada.
-         */
-        @FXML
-        void verDetalhesTreino(ActionEvent event) {
-                logger.info("Botão 'Ver detalhes' clicado!");
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Funcionalidade Futura", 
-                        "Esta funcionalidade será implementada em breve.");
-        }
-
-        /**
-         * Chamado ao clicar no ícone de fechar (IFechar).
-         * Retorna ao menu principal do usuário logado.
-         */
-        @FXML
-        void fecharTela(MouseEvent event) {
-                logger.info("Ícone 'Fechar' clicado! Retornando ao menu principal...");
-                carregarNovaTela("/fxml/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
-        }
-
-
-        // --- LÓGICA DE NEGÓCIO ADAPTADA DE MenuTreinos ---
-
-        /**
-         * Inicia uma nova sessão de treino.
-         * Adaptado do método iniciarNovaSessao() da classe MenuTreinos para usar Dialogs JavaFX.
-         */
-        private void iniciarNovaSessao() {
-                logger.info("===== INICIAR NOVA SESSÃO DE TREINO =====");
                 
                 // 1. Buscar planos do usuário
                 List<PlanoTreino> meusPlanos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
@@ -196,7 +116,7 @@ public class TreinoViewController {
                         SessaoTreino sessaoAtual = sessaoTreinoService.iniciarSessao(idUsuarioLogado, planoEscolhido.getIdPlano());
                         logger.info("Sessão iniciada para o plano: " + planoEscolhido.getNome() + " em " + sessaoAtual.getDataSessao());
 
-                        // 5. Registrar execução de cada exercício
+                        // 5. Registrar execução de cada exercício através de dialogs
                         boolean concluido = registrarExerciciosComDialog(sessaoAtual, planoEscolhido);
                         
                         if (!concluido) {
@@ -229,7 +149,22 @@ public class TreinoViewController {
         }
 
         /**
+         * Exibe o histórico de sessões de treino do usuário.
+         * Vinculado ao botão "Ver Histórico de Sessões".
+         */
+        @FXML
+        void verHistoricoSessoes(ActionEvent event) {
+                logger.info("Botão 'Ver Histórico de Sessões' clicado!");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Em Desenvolvimento", 
+                        "A funcionalidade de histórico de sessões será implementada em breve.");
+        }
+
+
+        // --- LÓGICA DE NEGÓCIO ADAPTADA DE MenuTreinos ---
+
+        /**
          * Exibe dialog para seleção de plano de treino.
+         * Adaptado do método exibirPlanos() e solicitarPlanoId() do MenuTreinos.
          */
         private PlanoTreino exibirDialogSelecaoPlano(List<PlanoTreino> planos) {
                 List<String> opcoesPlanos = new ArrayList<>();
@@ -255,7 +190,8 @@ public class TreinoViewController {
         }
 
         /**
-         * Registra a execução de exercícios através de dialogs.
+         * Registra a execução de exercícios através de dialogs customizados.
+         * Adaptado do método registrarExercicios() do MenuTreinos.
          */
         private boolean registrarExerciciosComDialog(SessaoTreino sessaoAtual, PlanoTreino planoBase) {
                 logger.info("--- Registrando Exercícios ---");
@@ -269,6 +205,7 @@ public class TreinoViewController {
                         dialog.setTitle("Registrar Exercício");
                         dialog.setHeaderText("Exercício: " + nomeExercicio);
 
+                        // Criar grid com campos de entrada
                         GridPane grid = new GridPane();
                         grid.setHgap(10);
                         grid.setVgap(10);
@@ -277,7 +214,7 @@ public class TreinoViewController {
                         Label infoLabel = new Label(String.format("Planejado: Carga %.0fkg, Repetições %d", 
                                 itemPlanejado.getCargaKg(), (int)itemPlanejado.getRepeticoes()));
                         Label repLabel = new Label("Repetições realizadas:");
-                        TextField repField = new TextField(String.valueOf(itemPlanejado.getRepeticoes()));
+                        TextField repField = new TextField(String.valueOf((int)itemPlanejado.getRepeticoes()));
                         Label cargaLabel = new Label("Carga utilizada (kg):");
                         TextField cargaField = new TextField(String.valueOf(itemPlanejado.getCargaKg()));
 
@@ -304,7 +241,7 @@ public class TreinoViewController {
                         } catch (NumberFormatException e) {
                                 mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Valores inválidos. Usando valores planejados.");
                                 sessaoTreinoService.registrarExecucao(sessaoAtual, itemPlanejado.getIdExercicio(), 
-                                        itemPlanejado.getRepeticoes(), itemPlanejado.getCargaKg());
+                                        (int)itemPlanejado.getRepeticoes(), itemPlanejado.getCargaKg());
                         }
                 }
                 return true;
@@ -312,6 +249,7 @@ public class TreinoViewController {
 
         /**
          * Trata sugestões de atualização do plano através de dialogs de confirmação.
+         * Adaptado do método tratarSugestoes() do MenuTreinos.
          */
         private void tratarSugestoesComDialog(List<SessaoTreinoService.SugestaoAtualizacaoPlano> sugestoes, 
                                               PlanoTreino planoBase) {
@@ -348,8 +286,16 @@ public class TreinoViewController {
                 }
         }
 
+        /**
+         * Chamado ao clicar no ícone de fechar (IFechar).
+         * Retorna ao menu principal do usuário logado.
+         */
+        @FXML
+        void fecharTela(MouseEvent event) {
+                logger.info("Ícone 'Fechar' clicado! Retornando ao menu principal...");
+                carregarNovaTela("/fxml/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
+        }
 
-        // --- MÉTODOS AUXILIARES ---
 
         /**
          * Método auxiliar para carregar uma nova tela FXML, fechando a atual.

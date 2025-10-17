@@ -41,10 +41,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.controller.AdministradorViewController">
-  <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" VBox.vgrow="ALWAYS">
-      <children>
+<VBox minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.controller.ExercicioViewController">
+   <children>
+      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" VBox.vgrow="ALWAYS">
+         <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <HBox alignment="CENTER" prefHeight="161.0" prefWidth="900.0">
@@ -65,7 +65,7 @@
                               <Insets left="50.0" right="150.0" />
                            </HBox.margin>
                         </ImageView>
-                        <ImageView fx:id="IFechar" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="IFechar" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleAbrirMenu">
                            <image>
                               <Image url="@../images/imagesMenu/Design%20sem%20nome%20(6)%201.png" />
                            </image>
@@ -74,11 +74,9 @@
                            </HBox.margin>
                         </ImageView>
                      </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
                   </HBox>
-                  <Button fx:id="BCadastrarEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Cadastrar novo exercício" textFill="#e5a000">
+
+                  <Button fx:id="BCadastrarEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Cadastrar novo exercício" textFill="#e5a000" onAction="#handleCadastrarExercicio">
                      <VBox.margin>
                         <Insets top="75.0" />
                      </VBox.margin>
@@ -86,7 +84,8 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="BListarEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Listar meus exercícios" textFill="#e5a000">
+
+                  <Button fx:id="BListarEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Listar meus exercícios" textFill="#e5a000" onAction="#handleListarExercicios">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>
@@ -94,7 +93,8 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="BEditarEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Editar exercício" textFill="#e5a000">
+
+                  <Button fx:id="BEditarEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Editar exercício" textFill="#e5a000" onAction="#handleEditarExercicio">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -102,7 +102,8 @@
                         <Insets top="20.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="BExcluirEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Excluir exercício" textFill="#e5a000">
+
+                  <Button fx:id="BExcluirEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Excluir exercício" textFill="#e5a000" onAction="#handleExcluirExercicio">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -110,7 +111,8 @@
                         <Insets top="20.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="BDetalhesEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Ver detalhes de exercício" textFill="#e5a000">
+
+                  <Button fx:id="BDetalhesEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Ver detalhes de exercício" textFill="#e5a000" onAction="#handleVerDetalhesExercicio">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -118,9 +120,10 @@
                         <Insets top="20.0" />
                      </VBox.margin>
                   </Button>
+
                </children>
             </VBox>
-      </children>
-    </AnchorPane>
-  </children>
+         </children>
+      </AnchorPane>
+   </children>
 </VBox>

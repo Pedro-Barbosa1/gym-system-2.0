@@ -101,7 +101,7 @@ public class MenuUsuarioLogadoController {
 
 
     /**
-     * Método auxiliar para carregar uma nova tela FXML, fechando a atual.
+     * Metodo auxiliar para carregar uma nova tela FXML, fechando a atual.
      *
      * @param fxmlFile O caminho do arquivo FXML a ser carregado.
      * @param titulo   O título da nova janela.
