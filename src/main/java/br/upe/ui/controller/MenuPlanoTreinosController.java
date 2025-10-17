@@ -1,56 +1,67 @@
 package br.upe.ui.controller;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Controller para a tela do Menu de Planos de Treino
- * Gerencia todas as operações relacionadas aos planos de treino
+ * Controller para a tela do Menu de Planos de Treino.
+ *
+ * Responsabilidades:
+ * - Gerenciar ações dos botões da tela de planos de treino.
+ * - Abrir telas correspondentes para criar, listar, editar, deletar planos.
+ * - Exibir mensagens de informação, erro ou confirmação ao usuário.
  */
 public class MenuPlanoTreinosController {
 
-    // Referências aos botões do FXML
+    // Logger para registrar informações e erros do controller
+    private static final Logger logger = Logger.getLogger(MenuPlanoTreinosController.class.getName());
+
+    // --- VARIÁVEIS VINCULADAS AOS BOTÕES DO FXML ---
     @FXML
-    private Button sairB;
+    private Button sairB; // Botão para voltar ao menu anterior
 
     @FXML
-    private Button criarPlanoB;
+    private Button criarPlanoB; // Botão para criar novo plano de treino
 
     @FXML
-    private Button ListarPlanoB;
+    private Button ListarPlanoB; // Botão para listar planos existentes
 
     @FXML
-    private Button editarPlanoB;
+    private Button editarPlanoB; // Botão para editar um plano existente
 
     @FXML
-    private Button deletarPlanoB;
+    private Button deletarPlanoB; // Botão para deletar um plano existente
 
     @FXML
-    private Button adicionarExercicioAoPlanoB;
+    private Button adicionarExercicioAoPlanoB; // Botão para adicionar exercício a um plano
 
     @FXML
-    private Button removerExercíciodoPlanoB;
+    private Button removerExercíciodoPlanoB; // Botão para remover exercício de um plano
 
     @FXML
-    private Button verDetalhesDePlanoB;
+    private Button verDetalhesDePlanoB; // Botão para visualizar detalhes de um plano
 
+    // --- MÉTODO DE INICIALIZAÇÃO ---
     /**
-     * Inicializa o controller após o carregamento do FXML
-     * Este método é chamado automaticamente pelo JavaFX
+     * Chamado automaticamente pelo JavaFX após o carregamento do FXML.
+     * Aqui configuramos as ações dos botões.
      */
     @FXML
     public void initialize() {
-        System.out.println("Menu Plano Treinos inicializado com sucesso!");
-        
-        // Configura as ações dos botões
-        configurarAcoes();
+        logger.info("Menu Plano Treinos inicializado com sucesso!");
+        configurarAcoes(); // Associa métodos aos botões
     }
 
-    /**
-     * Configura as ações dos botões
-     */
+    // --- MÉTODO AUXILIAR PARA CONFIGURAR BOTÕES ---
     private void configurarAcoes() {
         criarPlanoB.setOnAction(e -> handleCriarPlano());
         ListarPlanoB.setOnAction(e -> handleListarPlanos());
@@ -62,157 +73,73 @@ public class MenuPlanoTreinosController {
         sairB.setOnAction(e -> handleSair());
     }
 
+    // --- MÉTODOS DE TRATAMENTO DOS BOTÕES ---
     /**
-     * Manipula o clique no botão "Criar Novo Plano de Treino"
-     * TODO: Implementar criação de plano
+     * Executado ao clicar em "Criar Novo Plano de Treino".
+     * Exibe alerta informando que a funcionalidade será implementada.
      */
     @FXML
     private void handleCriarPlano() {
-        System.out.println("Criar Novo Plano de Treino clicado!");
-        
+        logger.info("Criar Novo Plano de Treino clicado!");
         showInfo("Criar Plano", "Funcionalidade de criar plano será implementada em breve.");
-        
-        // TODO: Abrir formulário de criação de plano
-        /*
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CriarPlanoTreino.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) criarPlanoB.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (IOException e) {
-            showError("Erro", "Não foi possível abrir o formulário de criação.");
-        }
-        */
     }
 
-    /**
-     * Manipula o clique no botão "Listar Meus Planos de Treino"
-     * TODO: Implementar listagem de planos
-     */
     @FXML
     private void handleListarPlanos() {
-        System.out.println("Listar Meus Planos de Treino clicado!");
-        
+        logger.info("Listar Meus Planos de Treino clicado!");
         showInfo("Listar Planos", "Funcionalidade de listar planos será implementada em breve.");
-        
-        // TODO: Abrir tela de listagem
-        // Exemplo:
-        // PlanoTreinoService service = new PlanoTreinoService();
-        // List<PlanoTreino> planos = service.listarPorUsuario(usuarioId);
-        // Exibir em tabela ou lista
     }
 
-    /**
-     * Manipula o clique no botão "Editar Plano de Treino"
-     * TODO: Implementar edição de plano
-     */
     @FXML
     private void handleEditarPlano() {
-        System.out.println("Editar Plano de Treino clicado!");
-        
+        logger.info("Editar Plano de Treino clicado!");
         showInfo("Editar Plano", "Funcionalidade de editar plano será implementada em breve.");
-        
-        // TODO: Abrir formulário de edição
-        // 1. Solicitar ID ou nome do plano
-        // 2. Carregar dados do plano
-        // 3. Abrir formulário preenchido
     }
 
-    /**
-     * Manipula o clique no botão "Deletar Plano de Treino"
-     * TODO: Implementar exclusão de plano
-     */
     @FXML
     private void handleDeletarPlano() {
-        System.out.println("Deletar Plano de Treino clicado!");
-        
+        logger.info("Deletar Plano de Treino clicado!");
         showInfo("Deletar Plano", "Funcionalidade de deletar plano será implementada em breve.");
-        
-        // TODO: Implementar exclusão
-        // 1. Solicitar ID ou nome do plano
-        // 2. Confirmar exclusão
-        // 3. Deletar do banco/arquivo
     }
 
-    /**
-     * Manipula o clique no botão "Adicionar Exercício ao Plano"
-     * TODO: Implementar adição de exercício
-     */
     @FXML
     private void handleAdicionarExercicio() {
-        System.out.println("Adicionar Exercício ao Plano clicado!");
-        
+        logger.info("Adicionar Exercício ao Plano clicado!");
         showInfo("Adicionar Exercício", "Funcionalidade de adicionar exercício será implementada em breve.");
-        
-        // TODO: Implementar adição
-        // 1. Selecionar plano
-        // 2. Selecionar exercício
-        // 3. Definir séries, repetições, carga
-        // 4. Adicionar ao plano
     }
 
-    /**
-     * Manipula o clique no botão "Remover Exercício do Plano"
-     * TODO: Implementar remoção de exercício
-     */
     @FXML
     private void handleRemoverExercicio() {
-        System.out.println("Remover Exercício do Plano clicado!");
-        
+        logger.info("Remover Exercício do Plano clicado!");
         showInfo("Remover Exercício", "Funcionalidade de remover exercício será implementada em breve.");
-        
-        // TODO: Implementar remoção
-        // 1. Selecionar plano
-        // 2. Listar exercícios do plano
-        // 3. Selecionar exercício a remover
-        // 4. Confirmar e remover
     }
 
-    /**
-     * Manipula o clique no botão "Ver Detalhes do Plano"
-     * TODO: Implementar visualização de detalhes
-     */
     @FXML
     private void handleVerDetalhes() {
-        System.out.println("Ver Detalhes do Plano clicado!");
-        
+        logger.info("Ver Detalhes do Plano clicado!");
         showInfo("Ver Detalhes", "Funcionalidade de ver detalhes será implementada em breve.");
-        
-        // TODO: Implementar visualização
-        // 1. Solicitar ID ou nome do plano
-        // 2. Carregar detalhes completos
-        // 3. Exibir em tela de detalhes
     }
 
     /**
-     * Manipula o clique no botão "Sair"
-     * Fecha a aplicação ou volta para o menu anterior
+     * Executado ao clicar no botão "Sair".
+     * Tenta carregar a tela do menu do usuário logado.
      */
     @FXML
     private void handleSair() {
-        System.out.println("Botão SAIR clicado - Encerrando aplicação...");
-        
-        // Opção 1: Fechar a aplicação completamente
-        Platform.exit();
-        
-        // Opção 2: Voltar para o menu principal (quando implementado)
-        // TODO: Implementar navegação para menu anterior
-        /*
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPrincipal.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuUsuarioLogado.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) sairB.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Não foi possível voltar ao menu.", e);
             showError("Erro", "Não foi possível voltar ao menu.");
         }
-        */
     }
 
+    // --- MÉTODOS AUXILIARES PARA ALERTAS ---
     /**
-     * Exibe um alerta de informação
-     * @param title Título do alerta
-     * @param content Conteúdo da mensagem
+     * Exibe uma caixa de diálogo de informação.
      */
     private void showInfo(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -223,9 +150,7 @@ public class MenuPlanoTreinosController {
     }
 
     /**
-     * Exibe um alerta de erro
-     * @param title Título do alerta
-     * @param content Conteúdo da mensagem
+     * Exibe uma caixa de diálogo de erro.
      */
     private void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -236,9 +161,8 @@ public class MenuPlanoTreinosController {
     }
 
     /**
-     * Exibe um alerta de confirmação
-     * @param title Título do alerta
-     * @param content Conteúdo da mensagem
+     * Exibe uma caixa de diálogo de confirmação e retorna a resposta do usuário.
+     *
      * @return true se o usuário confirmar, false caso contrário
      */
     private boolean showConfirmation(String title, String content) {
@@ -246,7 +170,7 @@ public class MenuPlanoTreinosController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
-        
+
         return alert.showAndWait().get() == javafx.scene.control.ButtonType.OK;
     }
 }
