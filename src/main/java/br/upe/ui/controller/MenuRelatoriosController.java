@@ -8,13 +8,19 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import br.upe.service.IndicadorBiomedicoService;
+import br.upe.service.RelatorioDiferencaIndicadores;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 /**
@@ -24,6 +30,16 @@ import javafx.stage.Stage;
 public class MenuRelatoriosController {
 
     private static final Logger logger = Logger.getLogger(MenuRelatoriosController.class.getName());
+    
+    // Services
+    private IndicadorBiomedicoService indicadorService;
+    
+    // ID do usuário logado
+    private int idUsuarioLogado = 1; // TODO: Integrar com sistema de login
+    
+    // Formatter para datas
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATTER_ISO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     // Referências aos botões do FXML
     @FXML
@@ -41,7 +57,9 @@ public class MenuRelatoriosController {
      */
     @FXML
     public void initialize() {
-        logger.info(() -> "Menu Relatórios inicializado com sucesso!");
+        this.indicadorService = new IndicadorBiomedicoService();
+        
+        logger.info("Menu Relatórios inicializado com sucesso!");
 
         // Configura as ações dos botões
         configurarAcoes();
@@ -62,46 +80,70 @@ public class MenuRelatoriosController {
      */
     @FXML
     private void handleExportarRelatorioPorData() {
-        logger.info(() -> "Exportar Relatório Por Data clicado!");
+        logger.info("Exportar Relatório Por Data clicado!");
 
-        // Solicita a data ao usuário
-        Optional<String> dataInput = solicitarData("Exportar Relatório",
-                "Digite a data para o relatório (formato: dd/MM/yyyy):");
-
-        if (dataInput.isPresent() && !dataInput.get().trim().isEmpty()) {
-            String dataStr = dataInput.get().trim();
-
-            // Valida o formato da data
-            if (validarFormatoData(dataStr)) {
-                showInfo("Exportação Iniciada",
-                        "Gerando relatório para a data: " + dataStr + "\n\n" +
-                                "O arquivo será salvo na pasta de relatórios.");
-
-                // TODO: Implementar exportação de relatório por data
-                /*
-                try {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    LocalDate data = LocalDate.parse(dataStr, formatter);
-
-                    // Buscar dados do repositório
-                    List<SessaoTreino> sessoes = sessaoTreinoRepository.findByData(data);
-                    List<IndicadorBiomedico> indicadores = indicadorRepository.findByData(data);
-
-                    // Gerar relatório usando JasperReports
-                    RelatorioService relatorioService = new RelatorioService();
-                    String caminhoArquivo = relatorioService.gerarRelatorioPorData(data, sessoes, indicadores);
-
-                    showInfo("Sucesso", "Relatório exportado com sucesso!\nArquivo: " + caminhoArquivo);
-                } catch (Exception ex) {
-                    showError("Erro", "Erro ao exportar relatório: " + ex.getMessage());
-                    logger.log(Level.SEVERE, "Erro ao exportar relatório por data", ex);
+        // Criar Dialog com GridPane para duas datas
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Exportar Relatório Por Data");
+        dialog.setHeaderText("Informe o período para o relatório:");
+        
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        
+        TextField dataInicioField = new TextField();
+        dataInicioField.setPromptText("AAAA-MM-DD");
+        TextField dataFimField = new TextField();
+        dataFimField.setPromptText("AAAA-MM-DD");
+        
+        grid.add(new Label("Data Início:"), 0, 0);
+        grid.add(dataInicioField, 1, 0);
+        grid.add(new Label("Data Fim:"), 0, 1);
+        grid.add(dataFimField, 1, 1);
+        grid.add(new Label("Formato: AAAA-MM-DD"), 0, 2, 2, 1);
+        grid.add(new Label("Exemplo: 2025-10-15"), 0, 3, 2, 1);
+        
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        Optional<ButtonType> resultado = dialog.showAndWait();
+        
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            String dataInicioStr = dataInicioField.getText().trim();
+            String dataFimStr = dataFimField.getText().trim();
+            
+            if (dataInicioStr.isEmpty() || dataFimStr.isEmpty()) {
+                showError("Erro", "As datas de início e fim não podem estar vazias.");
+                return;
+            }
+            
+            try {
+                LocalDate dataInicio = LocalDate.parse(dataInicioStr, FORMATTER_ISO);
+                LocalDate dataFim = LocalDate.parse(dataFimStr, FORMATTER_ISO);
+                
+                // Verificar se data início é anterior à data fim
+                if (dataInicio.isAfter(dataFim)) {
+                    showError("Erro de Data", "A data inicial deve ser anterior ou igual à data final!");
+                    return;
                 }
-                */
-            } else {
-                showError("Data Inválida",
-                        "Formato de data inválido!\n" +
-                                "Use o formato: dd/MM/yyyy\n" +
-                                "Exemplo: 15/10/2025");
+                
+                // Exportar relatório
+                String caminho = "src/main/resources/relatorios/relatorio_por_data_" + idUsuarioLogado + ".csv";
+                indicadorService.exportarRelatorioPorDataParaCsv(idUsuarioLogado, dataInicio, dataFim, caminho);
+                
+                showInfo("Sucesso", 
+                    "Relatório por data exportado com sucesso!\n\n" +
+                    "Período: " + dataInicio.format(FORMATTER_ISO) + " a " + dataFim.format(FORMATTER_ISO) + "\n" +
+                    "Arquivo: " + caminho);
+                    
+            } catch (DateTimeParseException e) {
+                showError("Data Inválida", 
+                    "Formato de data inválido!\n" +
+                    "Use o formato: AAAA-MM-DD\n" +
+                    "Exemplo: 2025-10-15");
+            } catch (Exception e) {
+                showError("Erro", "Erro ao exportar relatório: " + e.getMessage());
+                logger.log(Level.SEVERE, "Erro ao exportar relatório por data", e);
             }
         }
     }
@@ -112,71 +154,74 @@ public class MenuRelatoriosController {
      */
     @FXML
     private void handleExportarRelatorioDeDiferenca() {
-        logger.info(() -> "Exportar Relatório De Diferença clicado!");
+        logger.info("Exportar Relatório De Diferença clicado!");
 
-        // Solicita a primeira data
-        Optional<String> dataInicial = solicitarData("Relatório de Diferença",
-                "Digite a DATA INICIAL (formato: dd/MM/yyyy):");
-
-        if (dataInicial.isPresent() && !dataInicial.get().trim().isEmpty()) {
-            String dataInicialStr = dataInicial.get().trim();
-
-            if (!validarFormatoData(dataInicialStr)) {
-                showError("Data Inválida",
-                        "Formato de data inicial inválido!\n" +
-                                "Use o formato: dd/MM/yyyy");
+        // Criar Dialog com GridPane para duas datas
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Relatório de Diferença");
+        dialog.setHeaderText("Informe as datas para comparação:");
+        
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        
+        TextField dataInicioField = new TextField();
+        dataInicioField.setPromptText("AAAA-MM-DD");
+        TextField dataFimField = new TextField();
+        dataFimField.setPromptText("AAAA-MM-DD");
+        
+        grid.add(new Label("Data Início:"), 0, 0);
+        grid.add(dataInicioField, 1, 0);
+        grid.add(new Label("Data Fim:"), 0, 1);
+        grid.add(dataFimField, 1, 1);
+        grid.add(new Label("Formato: AAAA-MM-DD"), 0, 2, 2, 1);
+        grid.add(new Label("Exemplo: 2025-10-15"), 0, 3, 2, 1);
+        
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        Optional<ButtonType> resultado = dialog.showAndWait();
+        
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            String dataInicioStr = dataInicioField.getText().trim();
+            String dataFimStr = dataFimField.getText().trim();
+            
+            if (dataInicioStr.isEmpty() || dataFimStr.isEmpty()) {
+                showError("Erro", "As datas de início e fim não podem estar vazias.");
                 return;
             }
-
-            // Solicita a segunda data
-            Optional<String> dataFinal = solicitarData("Relatório de Diferença",
-                    "Digite a DATA FINAL (formato: dd/MM/yyyy):");
-
-            if (dataFinal.isPresent() && !dataFinal.get().trim().isEmpty()) {
-                String dataFinalStr = dataFinal.get().trim();
-
-                if (!validarFormatoData(dataFinalStr)) {
-                    showError("Data Inválida",
-                            "Formato de data final inválido!\n" +
-                                    "Use o formato: dd/MM/yyyy");
+            
+            try {
+                LocalDate dataInicio = LocalDate.parse(dataInicioStr, FORMATTER_ISO);
+                LocalDate dataFim = LocalDate.parse(dataFimStr, FORMATTER_ISO);
+                
+                // Verificar se data início é anterior à data fim
+                if (dataInicio.isAfter(dataFim)) {
+                    showError("Erro de Data", "A data inicial deve ser anterior ou igual à data final!");
                     return;
                 }
-
-                showInfo("Exportação Iniciada",
-                        "Gerando relatório de diferença:\n" +
-                                "Data Inicial: " + dataInicialStr + "\n" +
-                                "Data Final: " + dataFinalStr + "\n\n" +
-                                "O arquivo será salvo na pasta de relatórios.");
-
-                // TODO: Implementar exportação de relatório de diferença
-                /*
-                try {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    LocalDate dtInicial = LocalDate.parse(dataInicialStr, formatter);
-                    LocalDate dtFinal = LocalDate.parse(dataFinalStr, formatter);
-
-                    // Verificar se a data inicial é anterior à final
-                    if (dtInicial.isAfter(dtFinal)) {
-                        showError("Erro de Data", "A data inicial deve ser anterior à data final!");
-                        return;
-                    }
-
-                    // Buscar indicadores das duas datas
-                    List<IndicadorBiomedico> indicadoresInicial = indicadorRepository.findByData(dtInicial);
-                    List<IndicadorBiomedico> indicadoresFinal = indicadorRepository.findByData(dtFinal);
-
-                    // Gerar relatório de diferença
-                    RelatorioDiferencaIndicadores relatorio = new RelatorioDiferencaIndicadores();
-                    String caminhoArquivo = relatorio.gerar(dtInicial, dtFinal,
-                        indicadoresInicial, indicadoresFinal);
-
-                    showInfo("Sucesso", "Relatório de diferença exportado com sucesso!\n" +
-                        "Arquivo: " + caminhoArquivo);
-                } catch (Exception ex) {
-                    showError("Erro", "Erro ao exportar relatório: " + ex.getMessage());
-                    logger.log(Level.SEVERE, "Erro ao exportar relatório de diferença", ex);
-                }
-                */
+                
+                // Gerar relatório de diferença
+                RelatorioDiferencaIndicadores relatorio = indicadorService.gerarRelatorioDiferenca(
+                    idUsuarioLogado, dataInicio, dataFim);
+                
+                String caminho = "src/main/resources/relatorios/relatorio_diferenca_" + idUsuarioLogado + ".csv";
+                relatorio.exportarParaCsv(caminho);
+                
+                showInfo("Sucesso", 
+                    "Relatório de diferença exportado com sucesso!\n\n" +
+                    "Data Inicial: " + dataInicio.format(FORMATTER_ISO) + "\n" +
+                    "Data Final: " + dataFim.format(FORMATTER_ISO) + "\n\n" +
+                    "Arquivo: " + caminho);
+                    
+            } catch (DateTimeParseException e) {
+                showError("Data Inválida", 
+                    "Formato de data inválido!\n" +
+                    "Use o formato: AAAA-MM-DD\n" +
+                    "Exemplo: 2025-10-15");
+            } catch (Exception e) {
+                showError("Erro", "Erro ao exportar relatório: " + e.getMessage());
+                logger.log(Level.SEVERE, "Erro ao exportar relatório de diferença", e);
             }
         }
     }
@@ -198,36 +243,7 @@ public class MenuRelatoriosController {
         }
     }
 
-    /**
-     * Solicita uma data ao usuário através de um diálogo
-     * @param titulo Título do diálogo
-     * @param mensagem Mensagem a ser exibida
-     * @return Optional contendo a data digitada
-     */
-    private Optional<String> solicitarData(String titulo, String mensagem) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle(titulo);
-        dialog.setHeaderText(null);
-        dialog.setContentText(mensagem);
-
-        return dialog.showAndWait();
-    }
-
-    /**
-     * Valida se a string está no formato de data dd/MM/yyyy
-     * @param data String a ser validada
-     * @return true se o formato é válido, false caso contrário
-     */
-    private boolean validarFormatoData(String data) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate.parse(data, formatter);
-            return true;
-        } catch (DateTimeParseException e) {
-            return false;
-        }
-    }
-
+    // --- MÉTODOS AUXILIARES PARA ALERTAS ---
     /**
      * Exibe um alerta de informação
      * @param title Título do alerta

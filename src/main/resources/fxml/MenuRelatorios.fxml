@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.controller.MenuRelatoriosController">
    <children>
@@ -54,6 +55,9 @@
                <VBox.margin>
                   <Insets bottom="50.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
             <Button fx:id="exportarRelatorioDeDiferencaB" minHeight="90.0" minWidth="500.0" mnemonicParsing="false" prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório De Diferença" textFill="#e5a000">
                <opaqueInsets>
@@ -62,6 +66,9 @@
                <VBox.margin>
                   <Insets bottom="220.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
          </children>
       </VBox>

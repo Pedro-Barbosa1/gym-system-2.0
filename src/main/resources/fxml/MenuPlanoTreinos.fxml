@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.controller.MenuPlanoTreinosController">
    <children>
@@ -51,6 +52,9 @@
                <VBox.margin>
                   <Insets bottom="20.0" top="60.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
             <Button fx:id="ListarPlanoB" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Listar Meus Planos de Treino" textFill="#e5a000">
                <opaqueInsets>
@@ -59,6 +63,9 @@
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
             <Button fx:id="editarPlanoB" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Editar Plano de Treino" textFill="#e5a000">
                <opaqueInsets>
@@ -67,6 +74,9 @@
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
             <Button fx:id="deletarPlanoB" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Deletar Plano de Treino" textFill="#e5a000">
                <opaqueInsets>
@@ -75,6 +85,9 @@
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
             <Button fx:id="adicionarExercicioAoPlanoB" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Adicionar Exercício ao Plano" textFill="#e5a000">
                <opaqueInsets>
@@ -83,6 +96,9 @@
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
             <Button fx:id="removerExercíciodoPlanoB" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Remover Exercício do Plano" textFill="#e5a000">
                <opaqueInsets>
@@ -91,6 +107,9 @@
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
             <Button fx:id="verDetalhesDePlanoB" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Ver Detalhes do Plano" textFill="#e5a000">
                <opaqueInsets>
@@ -99,6 +118,9 @@
                <VBox.margin>
                   <Insets bottom="50.0" />
                </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
          </children>
       </VBox>

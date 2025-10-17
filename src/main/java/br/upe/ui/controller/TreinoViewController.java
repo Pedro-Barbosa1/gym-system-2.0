@@ -169,7 +169,7 @@ public class TreinoViewController {
         private PlanoTreino exibirDialogSelecaoPlano(List<PlanoTreino> planos) {
                 List<String> opcoesPlanos = new ArrayList<>();
                 for (PlanoTreino p : planos) {
-                        opcoesPlanos.add("ID: " + p.getIdPlano() + " - " + p.getNome());
+                        opcoesPlanos.add(p.getIdPlano() + " - " + p.getNome());
                 }
 
                 ChoiceDialog<String> dialog = new ChoiceDialog<>(opcoesPlanos.get(0), opcoesPlanos);
@@ -180,7 +180,7 @@ public class TreinoViewController {
                 Optional<String> resultado = dialog.showAndWait();
                 if (resultado.isPresent()) {
                         String escolha = resultado.get();
-                        int idPlano = Integer.parseInt(escolha.split(" - ")[0].replace("ID: ", ""));
+                        int idPlano = Integer.parseInt(escolha.split(" - ")[0].trim());
                         return planos.stream()
                                 .filter(p -> p.getIdPlano() == idPlano)
                                 .findFirst()
@@ -211,10 +211,10 @@ public class TreinoViewController {
                         grid.setVgap(10);
                         grid.setPadding(new Insets(20, 150, 10, 10));
 
-                        Label infoLabel = new Label(String.format("Planejado: Carga %.0fkg, Repetições %d", 
-                                itemPlanejado.getCargaKg(), (int)itemPlanejado.getRepeticoes()));
+                        Label infoLabel = new Label(String.format("Planejado: Carga %dkg, Repetições %d", 
+                                itemPlanejado.getCargaKg(), itemPlanejado.getRepeticoes()));
                         Label repLabel = new Label("Repetições realizadas:");
-                        TextField repField = new TextField(String.valueOf((int)itemPlanejado.getRepeticoes()));
+                        TextField repField = new TextField(String.valueOf(itemPlanejado.getRepeticoes()));
                         Label cargaLabel = new Label("Carga utilizada (kg):");
                         TextField cargaField = new TextField(String.valueOf(itemPlanejado.getCargaKg()));
 
