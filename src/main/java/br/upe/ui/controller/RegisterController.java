@@ -97,7 +97,7 @@ public class RegisterController {
     @FXML
     void onVoltar(ActionEvent event) {
         try {
-            // Carrega a tela de login
+            // Carrega a tela de menu principal
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPrincipal.fxml"));
             Parent root = loader.load();
 
@@ -107,11 +107,11 @@ public class RegisterController {
             stage.setTitle("Gym System - Tela Inicial");
             stage.show();
 
-            logger.info("Retornando para a tela de login.");
+            logger.info("Retornando para a tela de menu principal.");
 
         } catch (IOException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível voltar à tela inicial.");
-            logger.log(Level.SEVERE, "Erro ao carregar a tela de login no onVoltar.", e);
+            logger.log(Level.SEVERE, "Erro ao carregar a tela de menu principal no onVoltar.", e);
         }
     }
 

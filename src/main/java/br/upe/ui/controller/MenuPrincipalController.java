@@ -1,6 +1,8 @@
 package br.upe.ui.controller;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -11,8 +13,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-
 public class MenuPrincipalController {
+
+    private static final Logger logger = Logger.getLogger(MenuPrincipalController.class.getName());
 
     @FXML
     private Button loginB;
@@ -23,27 +26,21 @@ public class MenuPrincipalController {
     @FXML
     private Button exitB;
 
-   
     @FXML
     public void initialize() {
-        System.out.println("Menu Principal inicializado com sucesso!");
-        
-       
+        logger.info("Menu Principal inicializado com sucesso!");
         configurarAcoes();
     }
 
-    
     private void configurarAcoes() {
         loginB.setOnAction(e -> handleLogin());
         registerB.setOnAction(e -> handleRegister());
         exitB.setOnAction(e -> handleExit());
     }
 
-
     @FXML
     private void handleLogin() {
-        System.out.println("Botão ENTRAR clicado!");
-        
+        logger.info("Botão ENTRAR clicado!");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
@@ -51,16 +48,14 @@ public class MenuPrincipalController {
             stage.setScene(new Scene(root));
             stage.setTitle("SysFit - Login");
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Erro ao abrir a tela de login", e);
             showError("Erro", "Não foi possível abrir a tela de login.");
-            e.printStackTrace();
         }
     }
 
-
     @FXML
     private void handleRegister() {
-        System.out.println("Botão CADASTRAR clicado!");
-        
+        logger.info("Botão CADASTRAR clicado!");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Signup.fxml"));
             Parent root = loader.load();
@@ -68,39 +63,18 @@ public class MenuPrincipalController {
             stage.setScene(new Scene(root));
             stage.setTitle("SysFit - Cadastro");
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Erro ao abrir a tela de cadastro", e);
             showError("Erro", "Não foi possível abrir a tela de cadastro.");
-            e.printStackTrace();
         }
     }
 
-
     @FXML
     private void handleExit() {
-        System.out.println("Botão SAIR clicado - Encerrando aplicação...");
-        
-
+        logger.info("Botão SAIR clicado - Encerrando aplicação...");
         Platform.exit();
         System.exit(0);
     }
 
-    /**
-     * Exibe um alerta de informação
-     * @param title Título do alerta
-     * @param content Conteúdo da mensagem
-     */
-    private void showInfo(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    /**
-     * Exibe um alerta de erro
-     * @param title Título do alerta
-     * @param content Conteúdo da mensagem
-     */
     private void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

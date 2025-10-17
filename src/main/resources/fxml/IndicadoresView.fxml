@@ -49,20 +49,42 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="186.0" prefWidth="900.0">
                      <children>
+<<<<<<< HEAD
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/dumbbells%201.png" />
+=======
+                        <ImageView fitHeight="125.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true" scaleX="1.1" scaleY="1.1">
+                           <image>
+                              <Image url="@../images/imagesMenu/dumbbells%201.png" />
+>>>>>>> acde665f8e0bb5512c58d8294f8a03db1da79ed4
                            </image>
                            <HBox.margin>
                               <Insets left="10.0" right="200.0" />
                            </HBox.margin>
                         </ImageView>
+<<<<<<< HEAD
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+=======
+                        <ImageView fx:id="IFavoritos" onMouseClicked="#abrirFavoritos" fitHeight="111.0" fitWidth="124.0" pickOnBounds="true" preserveRatio="true" scaleX="1.3" scaleY="1.3">
+>>>>>>> acde665f8e0bb5512c58d8294f8a03db1da79ed4
                            <image>
                               <Image url="@../images/imagesMenu/Design%20sem%20nome%20(2)%201.png" />
                            </image>
                            <HBox.margin>
+<<<<<<< HEAD
                               <Insets right="200.0" />
+=======
+                              <Insets right="120.0" top="50.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <ImageView fx:id="IFechar" onMouseClicked="#voltar" fitHeight="125.0" fitWidth="136.0" pickOnBounds="true" preserveRatio="true" scaleX="1.1" scaleY="1.1">
+                           <image>
+                              <Image url="@../images/imagesMenu/Design%20sem%20nome%20(6)%201.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets top="50.0" />
+>>>>>>> acde665f8e0bb5512c58d8294f8a03db1da79ed4
                            </HBox.margin>
                         </ImageView>
                         <AnchorPane prefHeight="138.0" prefWidth="150.0">
@@ -77,7 +99,11 @@
                         </AnchorPane>
                      </children>
                   </HBox>
+<<<<<<< HEAD
                   <Button fx:id="BCadastrarIN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Cadastrar novo indicador" textFill="#e5a000">
+=======
+                  <Button fx:id="BCadastrarIN" onAction="#abrirCadastrarIndicador" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" scaleX="1.5" scaleY="1.5" style="-fx-background-color: #1E1E1E;" text="Cadastrar novo indicador" textFill="#e5a000">
+>>>>>>> acde665f8e0bb5512c58d8294f8a03db1da79ed4
                      <VBox.margin>
                         <Insets top="100.0" />
                      </VBox.margin>
@@ -85,7 +111,11 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
+<<<<<<< HEAD
                   <Button fx:id="BListarIN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Ver meus indicadores" textFill="#e5a000">
+=======
+                  <Button fx:id="BListarIN" onAction="#abrirListarIndicadores" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" scaleX="1.5" scaleY="1.5" style="-fx-background-color: #1E1E1E;" text="Ver meus indicadores" textFill="#e5a000">
+>>>>>>> acde665f8e0bb5512c58d8294f8a03db1da79ed4
                      <VBox.margin>
                         <Insets top="50.0" />
                      </VBox.margin>
