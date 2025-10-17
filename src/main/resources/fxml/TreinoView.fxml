@@ -10,29 +10,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="700.0" prefWidth="900.0"
-      xmlns="http://javafx.com/javafx/25"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="br.upe.ui.controller.TreinoViewController">
+<VBox prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.controller.TreinoViewController">
 
    <children>
-      <AnchorPane maxHeight="-1.0" maxWidth="-1.0"
-                  prefHeight="-1.0" prefWidth="-1.0"
-                  style="-fx-background-color: #2C2C2C;">
+      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-background-color: #2C2C2C;">
          <children>
-            <VBox alignment="TOP_CENTER"
-                  prefHeight="700.0" prefWidth="900.0"
-                  AnchorPane.bottomAnchor="0.0"
-                  AnchorPane.leftAnchor="0.0"
-                  AnchorPane.rightAnchor="0.0"
-                  AnchorPane.topAnchor="0.0">
+            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
                <children>
                   <HBox alignment="TOP_CENTER" prefHeight="143.0" prefWidth="900.0">
                      <children>
                         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/images/imagesMenu/dumbbells 1.png" />
+                              <Image url="@../images/imagesMenu/dumbbells%201.png" />
                            </image>
                            <HBox.margin>
                               <Insets left="30.0" top="5.0" />
@@ -40,7 +30,7 @@
                         </ImageView>
                         <ImageView fx:id="ITreino" fitHeight="150.0" fitWidth="228.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/images/imagesMenu/Design sem nome (1) 1.png" />
+                              <Image url="@../images/imagesMenu/Design%20sem%20nome%20(1)%201.png" />
                            </image>
                            <HBox.margin>
                               <Insets left="200.0" right="200.0" top="5.0" />
@@ -48,21 +38,21 @@
                         </ImageView>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <ButtonBar opacity="0.0" prefHeight="155.0" prefWidth="200.0">
+                              <ButtonBar fx:id="exitB" opacity="0.0" prefHeight="155.0" prefWidth="200.0">
                                 <buttons>
                                   <Button mnemonicParsing="false" prefHeight="115.0" prefWidth="233.0" text="Button" />
                                 </buttons>
                               </ButtonBar>
-                              <ImageView fx:id="IFechar" fitHeight="155.0" fitWidth="182.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="IFechar" fitHeight="155.0" fitWidth="182.0" layoutX="20.0" onMouseClicked="#fecharTela" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@/images/imagesMenu/Design sem nome (6) 1.png" />
+                                    <Image url="@../images/Design%20sem%20nome%20(6)%201.png" />
                                  </image>
                               </ImageView>
                            </children>
                         </AnchorPane>
                      </children>
                   </HBox>
-                  <Button fx:id="BListarTR" alignment="CENTER" contentDisplay="CENTER" minHeight="60.0" minWidth="500.0" mnemonicParsing="false" style="-fx-background-color: #1E1E1E;" text="Nova Sessão de Treino" textFill="#e5a000">
+                  <Button fx:id="BListarTR" alignment="CENTER" contentDisplay="CENTER" minHeight="60.0" minWidth="500.0" mnemonicParsing="false" onAction="#iniciarNovaSessao" style="-fx-background-color: #1E1E1E;" text="Nova Sessão de Treino" textFill="#e5a000">
                      <VBox.margin>
                         <Insets top="100.0" />
                      </VBox.margin>
@@ -70,7 +60,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="BEditarTR" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" minHeight="60.0" minWidth="500.0" mnemonicParsing="false" style="-fx-background-color: #1E1E1E;" text="Ver Histórico de Sessões" textFill="#e5a000">
+                  <Button fx:id="BEditarTR" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" minHeight="60.0" minWidth="500.0" mnemonicParsing="false" onAction="#verHistoricoSessoes" style="-fx-background-color: #1E1E1E;" text="Ver Histórico de Sessões" textFill="#e5a000">
                      <VBox.margin>
                         <Insets top="35.0" />
                      </VBox.margin>
