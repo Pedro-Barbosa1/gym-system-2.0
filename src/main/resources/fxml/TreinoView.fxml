@@ -30,49 +30,20 @@
                <children>
                   <HBox alignment="TOP_CENTER" prefHeight="143.0" prefWidth="900.0">
                      <children>
-<<<<<<< HEAD
                         <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@/images/imagesMenu/dumbbells 1.png" />
-=======
-                        <ImageView fitHeight="99.0" fitWidth="104.0" pickOnBounds="true"
-                                   preserveRatio="true" scaleX="1.1" scaleY="1.1">
-                           <image>
-                              <Image url="@../images/dumbbells.png" />
->>>>>>> 2ffc3264a81e859c7b60d2e92b81c9e9f31c44e7
                            </image>
                            <HBox.margin>
                               <Insets left="30.0" top="5.0" />
                            </HBox.margin>
                         </ImageView>
-<<<<<<< HEAD
                         <ImageView fx:id="ITreino" fitHeight="150.0" fitWidth="228.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@/images/imagesMenu/Design sem nome (1) 1.png" />
                            </image>
                            <HBox.margin>
                               <Insets left="200.0" right="200.0" top="5.0" />
-=======
-
-                        <ImageView fx:id="ITreino" fitHeight="95.0" fitWidth="104.0"
-                                   pickOnBounds="true" preserveRatio="true" scaleX="1.3" scaleY="1.3">
-                           <image>
-                              <Image url="@../images/imagesMenu/Design%20sem%20nome%20(4)%201.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets right="120.0" top="50.0" />
-                           </HBox.margin>
-                        </ImageView>
-
-                        <ImageView fx:id="IFechar" fitHeight="100.0" fitWidth="104.0"
-                                   pickOnBounds="true" preserveRatio="true" scaleX="1.1" scaleY="1.1"
-                                   onMouseClicked="#fecharTela">
-                           <image>
-                              <Image url="@../images/imagesMenu/Design%20sem%20nome%20(6)%201.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="50.0" />
->>>>>>> 2ffc3264a81e859c7b60d2e92b81c9e9f31c44e7
                            </HBox.margin>
                         </ImageView>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
@@ -91,20 +62,7 @@
                         </AnchorPane>
                      </children>
                   </HBox>
-<<<<<<< HEAD
                   <Button fx:id="BListarTR" alignment="CENTER" contentDisplay="CENTER" minHeight="60.0" minWidth="500.0" mnemonicParsing="false" style="-fx-background-color: #1E1E1E;" text="Nova Sessão de Treino" textFill="#e5a000">
-=======
-
-                  <Button fx:id="BListarTR"
-                          alignment="CENTER"
-                          contentDisplay="CENTER"
-                          mnemonicParsing="false"
-                          scaleX="1.5" scaleY="1.5"
-                          style="-fx-background-color: #1E1E1E;"
-                          text="Listar meus planos de treino"
-                          textFill="#e5a000"
-                          onAction="#listarPlanosDeTreino">
->>>>>>> 2ffc3264a81e859c7b60d2e92b81c9e9f31c44e7
                      <VBox.margin>
                         <Insets top="100.0" />
                      </VBox.margin>
@@ -112,20 +70,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-<<<<<<< HEAD
                   <Button fx:id="BEditarTR" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" minHeight="60.0" minWidth="500.0" mnemonicParsing="false" style="-fx-background-color: #1E1E1E;" text="Ver Histórico de Sessões" textFill="#e5a000">
-=======
-
-                  <Button fx:id="BEditarTR"
-                          alignment="CENTER"
-                          contentDisplay="CENTER"
-                          mnemonicParsing="false"
-                          scaleX="1.5" scaleY="1.5"
-                          style="-fx-background-color: #1E1E1E;"
-                          text="Editar plano de treino"
-                          textFill="#e5a000"
-                          onAction="#editarPlanoDeTreino">
->>>>>>> 2ffc3264a81e859c7b60d2e92b81c9e9f31c44e7
                      <VBox.margin>
                         <Insets top="35.0" />
                      </VBox.margin>
@@ -133,77 +78,6 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-<<<<<<< HEAD
-=======
-
-                  <Button fx:id="BDeletarTR"
-                          alignment="CENTER"
-                          contentDisplay="CENTER"
-                          mnemonicParsing="false"
-                          scaleX="1.5" scaleY="1.5"
-                          style="-fx-background-color: #1E1E1E;"
-                          text="Deletar plano de treino"
-                          textFill="#e5a000"
-                          onAction="#deletarPlanoDeTreino">
-                     <VBox.margin>
-                        <Insets top="35.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
-
-                  <Button fx:id="BAdicionarTR"
-                          alignment="CENTER"
-                          contentDisplay="CENTER"
-                          mnemonicParsing="false"
-                          scaleX="1.5" scaleY="1.5"
-                          style="-fx-background-color: #1E1E1E;"
-                          text="Adicionar plano de treino"
-                          textFill="#e5a000"
-                          onAction="#adicionarPlanoDeTreino">
-                     <VBox.margin>
-                        <Insets top="35.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
-
-                  <Button fx:id="BRemoverTR"
-                          alignment="CENTER"
-                          contentDisplay="CENTER"
-                          mnemonicParsing="false"
-                          scaleX="1.5" scaleY="1.5"
-                          style="-fx-background-color: #1E1E1E;"
-                          text="Remover plano de treino"
-                          textFill="#e5a000"
-                          onAction="#removerPlanoDeTreino">
-                     <VBox.margin>
-                        <Insets top="35.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
-
-                  <Button fx:id="BDetalhesTR"
-                          alignment="CENTER"
-                          contentDisplay="CENTER"
-                          mnemonicParsing="false"
-                          scaleX="1.5" scaleY="1.5"
-                          style="-fx-background-color: #1E1E1E;"
-                          text="Ver detalhes"
-                          textFill="#e5a000"
-                          onAction="#verDetalhesTreino">
-                     <VBox.margin>
-                        <Insets top="35.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
->>>>>>> 2ffc3264a81e859c7b60d2e92b81c9e9f31c44e7
                </children>
             </VBox>
          </children>

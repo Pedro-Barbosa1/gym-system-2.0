@@ -49,25 +49,15 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="161.0" prefWidth="900.0">
                      <children>
-<<<<<<< HEAD
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/dumbbells%201.png" />
-=======
-                        <ImageView fitHeight="106.0" fitWidth="104.0" pickOnBounds="true" preserveRatio="true" scaleX="1.1" scaleY="1.1">
-                           <image>
-                              <Image url="@../images/imagesMenu/dumbbells%201.png" />
->>>>>>> acde665f8e0bb5512c58d8294f8a03db1da79ed4
                            </image>
                            <HBox.margin>
                               <Insets left="35.0" right="150.0" />
                            </HBox.margin>
                         </ImageView>
-<<<<<<< HEAD
                         <ImageView fx:id="IMenu" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-=======
-                        <ImageView fx:id="IMenu" fitHeight="95.0" fitWidth="105.0" pickOnBounds="true" preserveRatio="true" scaleX="1.3" scaleY="1.3">
->>>>>>> acde665f8e0bb5512c58d8294f8a03db1da79ed4
                            <image>
                               <Image url="@../images/imagesMenu/Design%20sem%20nome%20(3)%201.png" />
                            </image>
@@ -75,11 +65,7 @@
                               <Insets left="50.0" right="150.0" />
                            </HBox.margin>
                         </ImageView>
-<<<<<<< HEAD
                         <ImageView fx:id="IFechar" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-=======
-                        <ImageView fx:id="IFechar" fitHeight="109.0" fitWidth="122.0" pickOnBounds="true" preserveRatio="true" scaleX="1.1" scaleY="1.1">
->>>>>>> acde665f8e0bb5512c58d8294f8a03db1da79ed4
                            <image>
                               <Image url="@../images/imagesMenu/Design%20sem%20nome%20(6)%201.png" />
                            </image>

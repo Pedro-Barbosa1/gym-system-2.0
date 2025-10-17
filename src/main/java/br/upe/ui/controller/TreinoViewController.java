@@ -1,26 +1,55 @@
 package br.upe.ui.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import br.upe.model.Exercicio;
+import br.upe.model.ItemPlanoTreino;
+import br.upe.model.PlanoTreino;
+import br.upe.model.SessaoTreino;
+import br.upe.service.ExercicioService;
+import br.upe.service.IExercicioService;
+import br.upe.service.IPlanoTreinoService;
+import br.upe.service.PlanoTreinoService;
+import br.upe.service.SessaoTreinoService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 /**
  * Controlador da tela de Treinos do usuário.
- * Permite listar, editar, deletar, adicionar e visualizar detalhes dos planos de treino.
+ * Gerencia a navegação e funcionalidades relacionadas aos planos de treino através de pop-ups.
+ * Adaptado da classe MenuTreinos para interface gráfica JavaFX.
  */
 public class TreinoViewController {
 
         private static final Logger logger = Logger.getLogger(TreinoViewController.class.getName());
+
+        // --- SERVIÇOS ---
+        private final SessaoTreinoService sessaoTreinoService;
+        private final IPlanoTreinoService planoTreinoService;
+        private final IExercicioService exercicioService;
+        
+        // ID do usuário logado (será configurado posteriormente com sistema de autenticação)
+        private int idUsuarioLogado = 1; // TODO: Integrar com sistema de login
 
         // --- COMPONENTES VINCULADOS AO FXML ---
         @FXML
@@ -47,67 +76,76 @@ public class TreinoViewController {
         @FXML
         private Button BDetalhesTR;
 
+        /**
+         * Construtor - inicializa os serviços necessários.
+         */
+        public TreinoViewController() {
+                this.sessaoTreinoService = new SessaoTreinoService();
+                this.planoTreinoService = new PlanoTreinoService();
+                this.exercicioService = new ExercicioService();
+        }
+
 
         // --- MÉTODOS EXECUTADOS PELOS BOTÕES ---
 
         /**
-         * Chamado ao clicar em "Listar meus planos de treino".
-         * TODO: implementar tela lista de planos de treino
+         * Inicia uma nova sessão de treino através de um dialog interativo.
+         * Adaptado do método iniciarNovaSessao() da classe MenuTreinos.
          */
         @FXML
-        void listarPlanosDeTreino(MouseEvent event) {
-                logger.info("Botão 'Listar meus planos de treino' clicado!");
-                carregarNovaTela("/fxml/ListarTreinosView.fxml", "Gym System - Meus Planos de Treino");
+        void listarPlanosDeTreino(ActionEvent event) {
+                logger.info("Iniciando nova sessão de treino...");
+                iniciarNovaSessao();
         }
 
         /**
-         * Chamado ao clicar em "Editar plano de treino".
-         * TODO: implementar tela editar plano de treino
+         * Exibe o histórico de sessões de treino (funcionalidade futura).
          */
         @FXML
-        void editarPlanoDeTreino(MouseEvent event) {
-                logger.info("Botão 'Editar plano de treino' clicado!");
-                carregarNovaTela("/fxml/EditarTreinoView.fxml", "Gym System - Editar Plano de Treino");
+        void editarPlanoDeTreino(ActionEvent event) {
+                logger.info("Visualizando histórico de sessões...");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Em Desenvolvimento", 
+                        "Funcionalidade de histórico de sessões em desenvolvimento.");
         }
 
         /**
-         * Chamado ao clicar em "Deletar plano de treino".
-         * TODO: implementar tela deletar plano de treino
+         * Funcionalidade placeholder - pode ser removida ou reutilizada.
          */
         @FXML
-        void deletarPlanoDeTreino(MouseEvent event) {
+        void deletarPlanoDeTreino(ActionEvent event) {
                 logger.info("Botão 'Deletar plano de treino' clicado!");
-                carregarNovaTela("/fxml/DeletarTreinoView.fxml", "Gym System - Deletar Plano de Treino");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Funcionalidade Futura", 
+                        "Esta funcionalidade será implementada em breve.");
         }
 
         /**
-         * Chamado ao clicar em "Adicionar plano de treino".
-         * TODO: implementar tela criar plano de treino
+         * Funcionalidade placeholder - pode ser removida ou reutilizada.
          */
         @FXML
-        void adicionarPlanoDeTreino(MouseEvent event) {
+        void adicionarPlanoDeTreino(ActionEvent event) {
                 logger.info("Botão 'Adicionar plano de treino' clicado!");
-                carregarNovaTela("/fxml/AdicionarTreinoView.fxml", "Gym System - Adicionar Plano de Treino");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Funcionalidade Futura", 
+                        "Esta funcionalidade será implementada em breve.");
         }
 
         /**
-         * Chamado ao clicar em "Remover plano de treino".
-         * está duplicado?
+         * Funcionalidade placeholder - pode ser removida ou reutilizada.
          */
         @FXML
-        void removerPlanoDeTreino(MouseEvent event) {
+        void removerPlanoDeTreino(ActionEvent event) {
                 logger.info("Botão 'Remover plano de treino' clicado!");
-                carregarNovaTela("/fxml/RemoverTreinoView.fxml", "Gym System - Remover Plano de Treino");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Funcionalidade Futura", 
+                        "Esta funcionalidade será implementada em breve.");
         }
 
         /**
-         * Chamado ao clicar em "Ver detalhes".
-         * TODO: implementar tela ver detalhes do plano de treino
+         * Funcionalidade placeholder - pode ser removida ou reutilizada.
          */
         @FXML
-        void verDetalhesTreino(MouseEvent event) {
+        void verDetalhesTreino(ActionEvent event) {
                 logger.info("Botão 'Ver detalhes' clicado!");
-                carregarNovaTela("/fxml/DetalhesTreinoView.fxml", "Gym System - Detalhes do Plano de Treino");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Funcionalidade Futura", 
+                        "Esta funcionalidade será implementada em breve.");
         }
 
         /**
@@ -121,20 +159,210 @@ public class TreinoViewController {
         }
 
 
+        // --- LÓGICA DE NEGÓCIO ADAPTADA DE MenuTreinos ---
+
+        /**
+         * Inicia uma nova sessão de treino.
+         * Adaptado do método iniciarNovaSessao() da classe MenuTreinos para usar Dialogs JavaFX.
+         */
+        private void iniciarNovaSessao() {
+                logger.info("===== INICIAR NOVA SESSÃO DE TREINO =====");
+                
+                // 1. Buscar planos do usuário
+                List<PlanoTreino> meusPlanos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+
+                if (meusPlanos.isEmpty()) {
+                        mostrarAlerta(Alert.AlertType.WARNING, "Sem Planos", 
+                                "Você não possui planos de treino cadastrados. Crie um plano primeiro.");
+                        return;
+                }
+
+                // 2. Exibir dialog de seleção de plano
+                PlanoTreino planoEscolhido = exibirDialogSelecaoPlano(meusPlanos);
+                if (planoEscolhido == null) {
+                        logger.info("Usuário cancelou a seleção de plano.");
+                        return;
+                }
+
+                // 3. Validar plano
+                if (planoEscolhido.getItensTreino().isEmpty()) {
+                        mostrarAlerta(Alert.AlertType.WARNING, "Plano Vazio", 
+                                "Este plano não possui exercícios. Adicione exercícios ao plano antes de iniciar uma sessão.");
+                        return;
+                }
+
+                try {
+                        // 4. Iniciar sessão
+                        SessaoTreino sessaoAtual = sessaoTreinoService.iniciarSessao(idUsuarioLogado, planoEscolhido.getIdPlano());
+                        logger.info("Sessão iniciada para o plano: " + planoEscolhido.getNome() + " em " + sessaoAtual.getDataSessao());
+
+                        // 5. Registrar execução de cada exercício
+                        boolean concluido = registrarExerciciosComDialog(sessaoAtual, planoEscolhido);
+                        
+                        if (!concluido) {
+                                logger.info("Sessão cancelada pelo usuário.");
+                                return;
+                        }
+
+                        // 6. Salvar sessão
+                        sessaoTreinoService.salvarSessao(sessaoAtual);
+                        logger.info("===== FIM DA SESSÃO =====");
+
+                        // 7. Verificar e exibir sugestões de atualização
+                        List<SessaoTreinoService.SugestaoAtualizacaoPlano> sugestoes = 
+                                sessaoTreinoService.verificarAlteracoesEGerarSugestoes(sessaoAtual);
+                        tratarSugestoesComDialog(sugestoes, planoEscolhido);
+
+                        // 8. Mensagem de sucesso
+                        mostrarAlerta(Alert.AlertType.INFORMATION, "Sessão Concluída", 
+                                "Sessão de treino registrada com sucesso!");
+
+                } catch (NumberFormatException e) {
+                        mostrarAlerta(Alert.AlertType.ERROR, "Erro de Entrada", 
+                                "Entrada inválida para repetições ou carga. Por favor, digite um número válido.");
+                        logger.log(Level.SEVERE, "Erro de formato numérico", e);
+                } catch (IllegalArgumentException e) {
+                        mostrarAlerta(Alert.AlertType.ERROR, "Erro", 
+                                "Erro ao iniciar ou registrar sessão: " + e.getMessage());
+                        logger.log(Level.SEVERE, "Erro ao processar sessão", e);
+                }
+        }
+
+        /**
+         * Exibe dialog para seleção de plano de treino.
+         */
+        private PlanoTreino exibirDialogSelecaoPlano(List<PlanoTreino> planos) {
+                List<String> opcoesPlanos = new ArrayList<>();
+                for (PlanoTreino p : planos) {
+                        opcoesPlanos.add("ID: " + p.getIdPlano() + " - " + p.getNome());
+                }
+
+                ChoiceDialog<String> dialog = new ChoiceDialog<>(opcoesPlanos.get(0), opcoesPlanos);
+                dialog.setTitle("Selecionar Plano de Treino");
+                dialog.setHeaderText("Escolha o plano para esta sessão:");
+                dialog.setContentText("Plano:");
+
+                Optional<String> resultado = dialog.showAndWait();
+                if (resultado.isPresent()) {
+                        String escolha = resultado.get();
+                        int idPlano = Integer.parseInt(escolha.split(" - ")[0].replace("ID: ", ""));
+                        return planos.stream()
+                                .filter(p -> p.getIdPlano() == idPlano)
+                                .findFirst()
+                                .orElse(null);
+                }
+                return null;
+        }
+
+        /**
+         * Registra a execução de exercícios através de dialogs.
+         */
+        private boolean registrarExerciciosComDialog(SessaoTreino sessaoAtual, PlanoTreino planoBase) {
+                logger.info("--- Registrando Exercícios ---");
+
+                for (ItemPlanoTreino itemPlanejado : planoBase.getItensTreino()) {
+                        Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(itemPlanejado.getIdExercicio());
+                        String nomeExercicio = exercicioOpt.isPresent() ? exercicioOpt.get().getNome() : "Exercício Desconhecido";
+
+                        // Dialog customizado para registrar repetições e carga
+                        Dialog<ButtonType> dialog = new Dialog<>();
+                        dialog.setTitle("Registrar Exercício");
+                        dialog.setHeaderText("Exercício: " + nomeExercicio);
+
+                        GridPane grid = new GridPane();
+                        grid.setHgap(10);
+                        grid.setVgap(10);
+                        grid.setPadding(new Insets(20, 150, 10, 10));
+
+                        Label infoLabel = new Label(String.format("Planejado: Carga %.0fkg, Repetições %d", 
+                                itemPlanejado.getCargaKg(), (int)itemPlanejado.getRepeticoes()));
+                        Label repLabel = new Label("Repetições realizadas:");
+                        TextField repField = new TextField(String.valueOf(itemPlanejado.getRepeticoes()));
+                        Label cargaLabel = new Label("Carga utilizada (kg):");
+                        TextField cargaField = new TextField(String.valueOf(itemPlanejado.getCargaKg()));
+
+                        grid.add(infoLabel, 0, 0, 2, 1);
+                        grid.add(repLabel, 0, 1);
+                        grid.add(repField, 1, 1);
+                        grid.add(cargaLabel, 0, 2);
+                        grid.add(cargaField, 1, 2);
+
+                        dialog.getDialogPane().setContent(grid);
+                        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+                        Optional<ButtonType> resultado = dialog.showAndWait();
+                        if (resultado.isEmpty() || resultado.get() == ButtonType.CANCEL) {
+                                logger.info("Registro de exercício cancelado pelo usuário.");
+                                return false;
+                        }
+
+                        try {
+                                int repRealizadas = Integer.parseInt(repField.getText());
+                                double cargaRealizada = Double.parseDouble(cargaField.getText());
+                                sessaoTreinoService.registrarExecucao(sessaoAtual, itemPlanejado.getIdExercicio(), 
+                                        repRealizadas, cargaRealizada);
+                        } catch (NumberFormatException e) {
+                                mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Valores inválidos. Usando valores planejados.");
+                                sessaoTreinoService.registrarExecucao(sessaoAtual, itemPlanejado.getIdExercicio(), 
+                                        itemPlanejado.getRepeticoes(), itemPlanejado.getCargaKg());
+                        }
+                }
+                return true;
+        }
+
+        /**
+         * Trata sugestões de atualização do plano através de dialogs de confirmação.
+         */
+        private void tratarSugestoesComDialog(List<SessaoTreinoService.SugestaoAtualizacaoPlano> sugestoes, 
+                                              PlanoTreino planoBase) {
+                if (sugestoes.isEmpty()) {
+                        logger.info("Nenhuma alteração significativa nos exercícios para sugerir atualização do plano.");
+                        return;
+                }
+
+                logger.info("--- Sugestões de Atualização do Plano ---");
+                for (SessaoTreinoService.SugestaoAtualizacaoPlano sugestao : sugestoes) {
+                        String mensagem = String.format(
+                                "O exercício '%s' teve alterações:\n\n" +
+                                "Repetições: Planejado %d → Realizado %d\n" +
+                                "Carga: Planejado %.0fkg → Realizado %.0fkg\n\n" +
+                                "Deseja atualizar o plano com os novos valores?",
+                                sugestao.nomeExercicio(),
+                                sugestao.repPlanejadas(), sugestao.repRealizadas(),
+                                sugestao.cargaPlanejada(), sugestao.cargaRealizada()
+                        );
+
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Atualizar Plano de Treino");
+                        alert.setHeaderText("Sugestão de Atualização");
+                        alert.setContentText(mensagem);
+
+                        Optional<ButtonType> resultado = alert.showAndWait();
+                        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                                sessaoTreinoService.aplicarAtualizacoesNoPlano(planoBase.getIdPlano(), 
+                                        sugestao.idExercicio(), sugestao.repRealizadas(), sugestao.cargaRealizada());
+                                logger.info("Plano atualizado para " + sugestao.nomeExercicio());
+                                mostrarAlerta(Alert.AlertType.INFORMATION, "Atualizado", 
+                                        "Plano atualizado com sucesso para " + sugestao.nomeExercicio() + "!");
+                        }
+                }
+        }
+
+
         // --- MÉTODOS AUXILIARES ---
 
         /**
-         * Metodo para carregar uma nova tela FXML, fechando a atual.
+         * Método auxiliar para carregar uma nova tela FXML, fechando a atual.
          *
-         * @param fxmlFile caminho do arquivo FXML
-         * @param titulo   título da nova janela
+         * @param fxmlFile O caminho do arquivo FXML a ser carregado.
+         * @param titulo   O título da nova janela.
          */
         private void carregarNovaTela(String fxmlFile, String titulo) {
                 try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
                         Parent root = loader.load();
 
-                        // obtém o stage atual através de qualquer botão (usa BListarTR como referência)
+                        // Obtém o stage atual através de qualquer botão (usa BListarTR como referência)
                         Stage stage = (Stage) BListarTR.getScene().getWindow();
                         stage.setScene(new Scene(root));
                         stage.setTitle(titulo);
@@ -143,18 +371,17 @@ public class TreinoViewController {
                         logger.info(() -> "Tela carregada com sucesso: " + fxmlFile);
 
                 } catch (IOException e) {
-                        mostrarAlerta(Alert.AlertType.ERROR, "Erro ao abrir tela",
-                                "Não foi possível carregar a tela solicitada. Verifique o caminho FXML.");
+                        mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela solicitada.");
                         logger.log(Level.SEVERE, "Erro ao carregar tela: " + fxmlFile, e);
                 }
         }
 
         /**
-         * Exibe uma caixa de diálogo de alerta para o usuário.
+         * Exibe uma caixa de diálogo para feedback do usuário.
          *
-         * @param tipo     Tipo do alerta (INFORMATION, WARNING, ERROR)
-         * @param titulo   Título do alerta
-         * @param mensagem Mensagem exibida
+         * @param tipo     Tipo do alerta (INFORMATION, WARNING, ERROR, etc.)
+         * @param titulo   Título da janela de alerta
+         * @param mensagem Mensagem a ser exibida
          */
         private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
                 Alert alert = new Alert(tipo);
