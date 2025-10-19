@@ -10,19 +10,13 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.MenuPlanoTreinosController">
-   <children>
       <AnchorPane layoutX="772.0" layoutY="-17.0" prefHeight="138.0" prefWidth="150.0">
-         <children>
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="35.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="29.0">
-               <image>
                   <Image url="@../images/sair.png" />
-               </image>
             </ImageView>
-            <Button fx:id="sairB" layoutX="37.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="" />
-         </children>
+            <Button fx:id="sairB" layoutX="37.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
       </AnchorPane>
       <AnchorPane prefHeight="700.0" prefWidth="317.0">
-         <children>
             <Button fx:id="criarPlanoB" layoutX="63.0" layoutY="249.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Criar Novo Plano de Treino" textFill="#e5a000">
                <opaqueInsets>
                   <Insets />
@@ -81,54 +75,36 @@
             </Button>
             <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="0.0" />
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="186.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@../images/halter_pequeno.png" />
-               </image>
             </ImageView>
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="17.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@../images/halter_pequeno.png" />
-               </image>
             </ImageView>
             <Separator layoutY="113.0" prefHeight="3.0" prefWidth="320.0" />
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@../images/halter_pequeno.png" />
-               </image>
             </ImageView>
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="308.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@../images/halter_pequeno.png" />
-               </image>
             </ImageView>
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@../images/halter_pequeno.png" />
-               </image>
             </ImageView>
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="432.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@../images/halter_pequeno.png" />
-               </image>
             </ImageView>
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="495.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@../images/halter_pequeno.png" />
-               </image>
             </ImageView>
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="557.0" pickOnBounds="true" preserveRatio="true">
-               <image>
                   <Image url="@../images/halter_pequeno.png" />
-               </image>
             </ImageView>
             <Text fill="#9c27b0" layoutX="97.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plano de Treinos">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Text>
-         </children>
       </AnchorPane>
-   </children>
    <opaqueInsets>
       <Insets bottom="80.0" top="80.0" />
    </opaqueInsets>
