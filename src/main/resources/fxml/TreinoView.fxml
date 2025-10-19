@@ -13,12 +13,12 @@
             <AnchorPane prefHeight="700.0" prefWidth="317.0">
                   <Button fx:id="BListarTR" alignment="CENTER" contentDisplay="CENTER" layoutX="62.0" layoutY="192.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" onAction="#iniciarNovaSessao" style="-fx-background-color: #1E1E1E;" text="Nova Sessão de Treino" textFill="#e5a000">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
                   <Button fx:id="BEditarTR" alignment="CENTER" contentDisplay="CENTER" layoutX="62.0" layoutY="267.0" maxHeight="-Infinity" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" onAction="#verHistoricoSessoes" style="-fx-background-color: #1E1E1E;" text="Ver Histórico de Sessões" textFill="#e5a000">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
                   <ImageView fx:id="ITreino" fitHeight="80.0" fitWidth="100.0" layoutX="15.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">

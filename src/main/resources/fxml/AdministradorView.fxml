@@ -15,22 +15,22 @@
             <AnchorPane prefHeight="701.0" prefWidth="317.0">
                   <Button fx:id="BListarUsuarios" layoutX="67.0" layoutY="189.0" mnemonicParsing="false" onAction="#handleListarUsuarios" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1e1e1e;" text="Listar Usuários" textFill="#e5a000">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
                   <Button fx:id="BPromoverUsuario" layoutX="67.0" layoutY="256.0" mnemonicParsing="false" onAction="#handlePromoverUsuario" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1e1e1e;" text="Promover Usuário a Admin" textFill="#e5a000">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
                   <Button fx:id="BRebaixarUsuario" layoutX="67.0" layoutY="323.0" mnemonicParsing="false" onAction="#handleRebaixarUsuario" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1e1e1e;" text="Rebaixar Usuário a Comum" textFill="#e5a000">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
                   <Button fx:id="BRemoverUsuario" layoutX="67.0" layoutY="388.0" mnemonicParsing="false" onAction="#handleRemoverUsuario" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1e1e1e;" text="Remover Usuário" textFill="#e5a000">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
                   <Separator layoutX="311.0" layoutY="1.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="21.0" />

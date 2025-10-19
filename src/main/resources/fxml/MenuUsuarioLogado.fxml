@@ -14,7 +14,7 @@
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="10.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="23.0">
                   <Image url="@../images/sair.png" />
             </ImageView>
-            <Button fx:id="sairB" layoutX="10.0" layoutY="23.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: transparent;"/>
+            <Button fx:id="sairB" layoutX="10.0" layoutY="23.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: transparent;" />
       </AnchorPane>
       <AnchorPane layoutX="3.0" prefHeight="700.0" prefWidth="317.0">
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="8.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true">
@@ -25,7 +25,7 @@
                   <Insets />
                </opaqueInsets>
                <font>
-                  <Font name="System Bold" size="15.0" />
+                  <Font size="15.0" />
                </font>
             </Button>
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="8.0" layoutY="263.0" pickOnBounds="true" preserveRatio="true">
@@ -36,7 +36,7 @@
                   <Insets />
                </opaqueInsets>
                <font>
-                  <Font name="System Bold" size="15.0" />
+                  <Font size="15.0" />
                </font>
             </Button>
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="8.0" layoutY="467.0" pickOnBounds="true" preserveRatio="true">
@@ -47,7 +47,7 @@
                   <Insets />
                </opaqueInsets>
                <font>
-                  <Font name="System Bold" size="15.0" />
+                  <Font size="15.0" />
                </font>
             </Button>
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="8.0" layoutY="329.0" pickOnBounds="true" preserveRatio="true">
@@ -58,7 +58,7 @@
                   <Insets />
                </opaqueInsets>
                <font>
-                  <Font name="System Bold" size="15.0" />
+                  <Font size="15.0" />
                </font>
             </Button>
             <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="8.0" layoutY="398.0" pickOnBounds="true" preserveRatio="true">
@@ -69,7 +69,7 @@
                   <Insets />
                </opaqueInsets>
                <font>
-                  <Font name="System Bold" size="15.0" />
+                  <Font size="15.0" />
                </font>
             </Button>
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="19.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
