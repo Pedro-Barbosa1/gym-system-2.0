@@ -1,4 +1,4 @@
-package br.upe.ui.controller;
+package br.upe.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;

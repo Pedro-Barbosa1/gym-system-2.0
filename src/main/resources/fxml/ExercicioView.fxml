@@ -41,7 +41,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.controller.ExercicioViewController">
+<VBox minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.ExercicioViewController">
    <children>
       <AnchorPane maxHeight="-1.0" maxWidth="-1.0" minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" VBox.vgrow="ALWAYS">
          <children>

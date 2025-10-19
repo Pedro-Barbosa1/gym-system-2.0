@@ -1,4 +1,4 @@
-package br.upe.ui.controller;
+package br.upe.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,11 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.ComboBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.ListCell;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 public class TreinoViewController {
 

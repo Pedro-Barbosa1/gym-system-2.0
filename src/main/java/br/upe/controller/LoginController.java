@@ -1,4 +1,4 @@
-package br.upe.ui.controller;
+package br.upe.controller;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -54,9 +54,6 @@ public class LoginController {
             if (usuario != null) {
                 logger.info(() -> "Usuário autenticado: " + usuario.getEmail() +
                         " (tipo: " + usuario.getTipo() + ")");
-
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Login realizado com sucesso",
-                        "Bem-vindo, " + usuario.getNome() + "!");
 
                 // Verifica o tipo de usuário e abre a tela correspondente
                 String caminhoFXML;
