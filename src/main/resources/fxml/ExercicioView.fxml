@@ -32,98 +32,93 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<VBox minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.ExercicioViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2c2c2c;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.ExercicioViewController">
    <children>
-      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" VBox.vgrow="ALWAYS">
+      <AnchorPane prefHeight="701.0" prefWidth="322.0">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <HBox alignment="CENTER" prefHeight="161.0" prefWidth="900.0">
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../images/dumbbells%201.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets left="35.0" right="150.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <ImageView fx:id="IMenu" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../images/imagesMenu/Design%20sem%20nome%20(3)%201.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets left="50.0" right="150.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <ImageView fx:id="IFechar" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleAbrirMenu">
-                           <image>
-                              <Image url="@../images/imagesMenu/Design%20sem%20nome%20(6)%201.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets left="50.0" right="20.0" />
-                           </HBox.margin>
-                        </ImageView>
-                     </children>
-                  </HBox>
-
-                  <Button fx:id="BCadastrarEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Cadastrar novo exercício" textFill="#e5a000" onAction="#handleCadastrarExercicio">
-                     <VBox.margin>
-                        <Insets top="75.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
-
-                  <Button fx:id="BListarEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Listar meus exercícios" textFill="#e5a000" onAction="#handleListarExercicios">
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
-
-                  <Button fx:id="BEditarEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Editar exercício" textFill="#e5a000" onAction="#handleEditarExercicio">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                  </Button>
-
-                  <Button fx:id="BExcluirEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Excluir exercício" textFill="#e5a000" onAction="#handleExcluirExercicio">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                  </Button>
-
-                  <Button fx:id="BDetalhesEX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Ver detalhes de exercício" textFill="#e5a000" onAction="#handleVerDetalhesExercicio">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                  </Button>
-
-               </children>
-            </VBox>
+            <Button fx:id="BDetalhesEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleVerDetalhesExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Ver detalhes de exercício" textFill="#e5a000">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="BExcluirEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleExcluirExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Excluir exercício" textFill="#e5a000">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="BEditarEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="302.0" mnemonicParsing="false" onAction="#handleEditarExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Editar exercício" textFill="#e5a000">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="BListarEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="169.0" mnemonicParsing="false" onAction="#handleListarExercicios" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Listar meus exercícios" textFill="#e5a000">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="BCadastrarEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="234.0" mnemonicParsing="false" onAction="#handleCadastrarExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Cadastrar novo exercício" textFill="#e5a000">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <ImageView fx:id="IMenu" fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/muque.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="167.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/coracao.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="232.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/coracao.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/coracao.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="366.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/coracao.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="430.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/coracao.png" />
+               </image>
+            </ImageView>
+            <Separator layoutX="316.0" layoutY="1.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="14.0" />
+            <Separator layoutY="107.0" prefHeight="7.0" prefWidth="320.0" />
+            <Text fill="#9c27b0" layoutX="100.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Exercícios">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
+      <AnchorPane layoutX="785.0" layoutY="-21.0" prefHeight="140.0" prefWidth="130.0">
+         <Button fx:id="IFechar" layoutX="25.0" layoutY="30.0" mnemonicParsing="false"
+                 onAction="#handleAbrirMenu" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;">
+            <graphic>
+               <ImageView fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/sair.png" />
+                  </image>
+               </ImageView>
+            </graphic>
+         </Button>
+      </AnchorPane>
    </children>
-</VBox>
+</AnchorPane>
