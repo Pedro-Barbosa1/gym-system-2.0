@@ -48,7 +48,7 @@ public class TreinoViewController {
     private ImageView ITreino;
 
     @FXML
-    private ImageView IFechar;
+    private Button IFechar;
 
     @FXML
     private javafx.scene.control.ButtonBar exitB;
@@ -198,7 +198,7 @@ public class TreinoViewController {
         return null;
     }
 
-    // NOVO MÉTODO DE REGISTRO DOS EXERCÍCIOS
+    // NOVO METODO DE REGISTRO DOS EXERCÍCIOS
     private boolean registrarExerciciosComDialog(SessaoTreino sessaoAtual, PlanoTreino planoBase) {
         logger.info("--- Registrando Exercícios ---");
 
@@ -300,7 +300,7 @@ public class TreinoViewController {
     }
 
     @FXML
-    void fecharTela(MouseEvent event) {
+    void fecharTela(ActionEvent event) {
         logger.info("Ícone 'Fechar' clicado! Retornando ao menu principal...");
         carregarNovaTela("/fxml/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
     }
