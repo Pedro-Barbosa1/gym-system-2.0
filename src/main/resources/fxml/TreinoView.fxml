@@ -9,11 +9,8 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.TreinoViewController">
-   <children>
-      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;">
-         <children>
+      <AnchorPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;">
             <AnchorPane prefHeight="700.0" prefWidth="317.0">
-               <children>
                   <Button fx:id="BListarTR" alignment="CENTER" contentDisplay="CENTER" layoutX="62.0" layoutY="192.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" onAction="#iniciarNovaSessao" style="-fx-background-color: #1E1E1E;" text="Nova Sessão de Treino" textFill="#e5a000">
                      <font>
                         <Font name="System Bold" size="15.0" />
@@ -25,40 +22,27 @@
                      </font>
                   </Button>
                   <ImageView fx:id="ITreino" fitHeight="80.0" fitWidth="100.0" layoutX="15.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
                         <Image url="@../images/muque.png" />
-                     </image>
                   </ImageView>
                   <Separator layoutX="314.0" layoutY="1.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="6.0" />
                   <Separator layoutY="109.0" prefHeight="8.0" prefWidth="314.0" />
                   <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="10.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
                         <Image url="@../images/logo_registro.png" />
-                     </image>
                   </ImageView>
                   <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="10.0" layoutY="190.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
                         <Image url="@../images/halter_pequeno.png" />
-                     </image>
                   </ImageView>
                   <Text fill="#9c27b0" layoutX="108.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Treinos">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Text>
-               </children>
             </AnchorPane>
             <AnchorPane layoutX="800.0" layoutY="-11.0" prefHeight="80.0" prefWidth="100.0">
-               <children>
                   <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="10.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="23.0">
-                     <image>
                         <Image url="@../images/sair.png" />
-                     </image>
                   </ImageView>
-                  <Button fx:id="IFechar" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" onAction="#fecharTela" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: transparent;" text="" />
-               </children>
+                  <Button fx:id="IFechar" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" onAction="#fecharTela" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: transparent;" />
             </AnchorPane>
-         </children>
       </AnchorPane>
-   </children>
 </AnchorPane>
