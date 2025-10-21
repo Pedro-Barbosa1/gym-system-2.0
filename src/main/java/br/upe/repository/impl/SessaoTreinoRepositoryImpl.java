@@ -73,6 +73,12 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
         }
     }
 
+    public List<SessaoTreino> listarPorUsuario(int idUsuario) {
+    return sessoes.stream()
+        .filter(s -> s.getIdUsuario() == idUsuario)
+        .collect(Collectors.toList());
+    }
+
     // Grava a sessao de treino no arquivo CSV
     private void escreverParaCsv() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ARQUIVO_CSV))) {

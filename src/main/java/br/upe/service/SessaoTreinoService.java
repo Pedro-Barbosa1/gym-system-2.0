@@ -92,6 +92,10 @@ public class SessaoTreinoService {
         return sugestoes;
     }
 
+    public List<SessaoTreino> listarSessoesPorUsuario(int idUsuario) {
+    return sessaoRepo.listarPorUsuario(idUsuario);
+    }
+
     // Verifica condições e atualiza o plano de acordo com a sessao
     public void aplicarAtualizacoesNoPlano(int idPlano, int idExercicio, int novasRepeticoes, double novaCarga) {
         Optional<PlanoTreino> planoOpt = planoRepo.buscarPorId(idPlano);

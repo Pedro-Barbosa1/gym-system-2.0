@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import br.upe.model.Exercicio;
 import br.upe.model.ItemPlanoTreino;
+import br.upe.model.ItemSessaoTreino;
 import br.upe.model.PlanoTreino;
 import br.upe.model.SessaoTreino;
 import br.upe.service.ExercicioService;
@@ -35,6 +36,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -129,9 +131,67 @@ public class TreinoViewController {
     @FXML
     void verHistoricoSessoes(ActionEvent event) {
         logger.info("Botão 'Ver Histórico de Sessões' clicado!");
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Em Desenvolvimento", 
-            "A funcionalidade de histórico de sessões será implementada em breve.");
+
+        List<SessaoTreino> historico = sessaoTreinoService.listarSessoesPorUsuario(idUsuarioLogado);
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Meu Histórico de Treinos");
+        dialog.setHeaderText("Total de " + historico.size() + " sessão(ões) registrada(s)");
+
+        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
+        dialog.setOnShown(e -> {
+            javafx.scene.Node headerPanel = dialog.getDialogPane().lookup(".header-panel");
+            if (headerPanel != null)
+                headerPanel.setStyle("-fx-background-color: #1e1e1e;");
+            javafx.scene.Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
+            if (headerLabel != null)
+                headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
+        });
+
+        StringBuilder historicoTxt = new StringBuilder();
+        for (SessaoTreino sessao : historico) {
+            historicoTxt.append("======================================\n");
+            historicoTxt.append("Data: ").append(sessao.getDataSessao()).append("\n");
+            historicoTxt.append("Plano ID: ").append(sessao.getIdPlanoTreino()).append("\n");
+            for (ItemSessaoTreino item : sessao.getItensExecutados()) {
+                String nomeExercicio = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio())
+                    .map(Exercicio::getNome)
+                    .orElse("Exercício Desconhecido");
+                historicoTxt.append(String.format(
+                    "Exercício: %s | Repetições: %d | Carga: %.1f kg\n",
+                    nomeExercicio,
+                    item.getRepeticoesRealizadas(),
+                    item.getCargaRealizada()
+                ));
+            }
+            historicoTxt.append("\n");
+        }
+    TextArea conteudo = new TextArea(historicoTxt.toString());
+    conteudo.setFont(Font.font("Consolas", 14));
+    conteudo.setStyle("-fx-text-fill: #ffb300; -fx-control-inner-background: #2c2c2c;");
+    conteudo.setEditable(false);
+    conteudo.setWrapText(false);
+    conteudo.setPrefWidth(600);
+    conteudo.setPrefHeight(400);
+
+    VBox box = new VBox(conteudo);
+    box.setStyle("-fx-background-color: #2c2c2c;");
+    box.setPadding(new Insets(10));
+
+    dialog.setTitle("Meu Histórico de Treinos");
+    dialog.setHeaderText("Total de " + historico.size() + " sessão(ões) registrada(s)");
+    dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+    dialog.getDialogPane().setContent(box);
+
+    dialog.showAndWait();
+
+
+        dialog.getDialogPane().setContent(box);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        dialog.showAndWait();
     }
+
 
     private PlanoTreino exibirDialogSelecaoPlano(List<PlanoTreino> planos) {
         List<String> opcoesPlanos = new ArrayList<>();

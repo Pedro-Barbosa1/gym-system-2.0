@@ -29,22 +29,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-/**
- * Controller da tela de Exercícios.
- * Gerencia o cadastro, listagem, edição, exclusão e visualização de exercícios através de pop-ups.
- * Adaptado da classe MenuExercicios para interface gráfica JavaFX.
- */
+
 public class ExercicioViewController {
 
     private static final Logger logger = Logger.getLogger(ExercicioViewController.class.getName());
 
-    // --- SERVIÇOS ---
     private final IExercicioService exercicioService;
     
-    // ID do usuário logado (será configurado posteriormente com sistema de autenticação)
     private int idUsuarioLogado = 1; // TODO: Integrar com sistema de login
 
-    // --- COMPONENTES VINCULADOS AO FXML ---
     @FXML
     private Button BCadastrarEX;      // Botão para cadastrar novo exercício
 
@@ -66,20 +59,10 @@ public class ExercicioViewController {
     @FXML
     private ImageView IMenu;          // Ícone para abrir o menu principal
 
-    /**
-     * Construtor - inicializa os serviços necessários.
-     */
     public ExercicioViewController() {
         this.exercicioService = new ExercicioService();
     }
 
-
-    // --- MÉTODOS EXECUTADOS PELOS BOTÕES ---
-
-    /**
-     * Abre dialog para cadastrar novo exercício.
-     * Adaptado do método cadastrarNovoExercicio() da classe MenuExercicios.
-     */
     @FXML
     void handleCadastrarExercicio(ActionEvent event) {
         logger.info("Abrindo dialog para cadastrar novo exercício...");
@@ -142,10 +125,6 @@ public class ExercicioViewController {
         });
     }
 
-    /**
-     * Abre dialog mostrando todos os exercícios do usuário.
-     * Adaptado do método listarMeusExercicios() da classe MenuExercicios.
-     */
     @FXML
     void handleListarExercicios(ActionEvent event) {
         logger.info("Listando exercícios do usuário...");
@@ -185,10 +164,6 @@ public class ExercicioViewController {
         dialog.showAndWait();
     }
 
-    /**
-     * Abre dialog para editar um exercício existente.
-     * Adaptado do método editarExercicio() da classe MenuExercicios.
-     */
     @FXML
     void handleEditarExercicio(ActionEvent event) {
         logger.info("Iniciando edição de exercício...");
@@ -261,10 +236,6 @@ public class ExercicioViewController {
         });
     }
 
-    /**
-     * Abre dialog para excluir um exercício.
-     * Adaptado do método excluirExercicio() da classe MenuExercicios.
-     */
     @FXML
     void handleExcluirExercicio(ActionEvent event) {
         logger.info("Iniciando exclusão de exercício...");
@@ -314,10 +285,6 @@ public class ExercicioViewController {
         });
     }
 
-    /**
-     * Abre dialog mostrando detalhes de um exercício.
-     * Adaptado do método verDetalhesExercicio() da classe MenuExercicios.
-     */
     @FXML
     void handleVerDetalhesExercicio(ActionEvent event) {
         logger.info("Visualizando detalhes de exercício...");
@@ -362,10 +329,6 @@ public class ExercicioViewController {
         dialog.showAndWait();
     }
 
-    /**
-     * Chamado ao clicar no ícone IFechar.
-     * Retorna ao menu principal do usuário logado.
-     */
     @FXML
     void handleAbrirMenu(MouseEvent event) {
         logger.info("Ícone 'Fechar' clicado! Retornando ao menu principal...");
@@ -373,11 +336,6 @@ public class ExercicioViewController {
     }
 
 
-    // --- MÉTODOS AUXILIARES ---
-
-    /**
-     * Exibe dialog para seleção de exercício de uma lista.
-     */
     private Exercicio exibirDialogSelecaoExercicio(List<Exercicio> exercicios, String titulo) {
         List<String> opcoesExercicios = new ArrayList<>();
         for (Exercicio ex : exercicios) {
