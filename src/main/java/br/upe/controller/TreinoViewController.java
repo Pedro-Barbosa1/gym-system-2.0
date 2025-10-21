@@ -29,17 +29,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ListCell;
-<<<<<<< HEAD:src/main/java/br/upe/ui/controller/TreinoViewController.java
 import javafx.scene.control.TextArea;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-=======
->>>>>>> 4fbce8a0fac5f0400545d352aee02a99e6ca747f:src/main/java/br/upe/controller/TreinoViewController.java
+import javafx.scene.layout.VBox;
 
 public class TreinoViewController {
 
