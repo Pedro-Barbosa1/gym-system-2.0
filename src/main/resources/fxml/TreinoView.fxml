@@ -26,11 +26,11 @@
                   </ImageView>
                   <Separator layoutX="314.0" layoutY="1.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="6.0" />
                   <Separator layoutY="109.0" prefHeight="8.0" prefWidth="314.0" />
-                  <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="10.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../images/logo_registro.png" />
+                  <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@../images/ver.png" />
                   </ImageView>
-                  <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="10.0" layoutY="190.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../images/halter_pequeno.png" />
+                  <ImageView fitHeight="50.0" fitWidth="28.0" layoutX="17.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@../images/ferramenta-lapis.png" />
                   </ImageView>
                   <Text fill="#9c27b0" layoutX="108.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Treinos">
                      <font>

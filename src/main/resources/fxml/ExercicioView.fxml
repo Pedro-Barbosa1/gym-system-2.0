@@ -44,27 +44,27 @@
 
       <AnchorPane prefHeight="701.0" prefWidth="322.0">
 
-            <Button fx:id="BDetalhesEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleVerDetalhesExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Ver detalhes de exercício" textFill="#e5a000">
+            <Button fx:id="BDetalhesEX" alignment="CENTER" contentDisplay="CENTER" layoutX="70.0" layoutY="434.0" mnemonicParsing="false" onAction="#handleVerDetalhesExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Ver detalhes de exercício" textFill="#e5a000">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="BExcluirEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleExcluirExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Excluir exercício" textFill="#e5a000">
+            <Button fx:id="BExcluirEX" alignment="CENTER" contentDisplay="CENTER" layoutX="70.0" layoutY="368.0" mnemonicParsing="false" onAction="#handleExcluirExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Excluir exercício" textFill="#e5a000">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="BEditarEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="302.0" mnemonicParsing="false" onAction="#handleEditarExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Editar exercício" textFill="#e5a000">
+            <Button fx:id="BEditarEX" alignment="CENTER" contentDisplay="CENTER" layoutX="70.0" layoutY="304.0" mnemonicParsing="false" onAction="#handleEditarExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Editar exercício" textFill="#e5a000">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="BListarEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="169.0" mnemonicParsing="false" onAction="#handleListarExercicios" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Listar meus exercícios" textFill="#e5a000">
+            <Button fx:id="BListarEX" alignment="CENTER" contentDisplay="CENTER" layoutX="70.0" layoutY="171.0" mnemonicParsing="false" onAction="#handleListarExercicios" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Listar meus exercícios" textFill="#e5a000">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="BCadastrarEX" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="234.0" mnemonicParsing="false" onAction="#handleCadastrarExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Cadastrar novo exercício" textFill="#e5a000">
+            <Button fx:id="BCadastrarEX" alignment="CENTER" contentDisplay="CENTER" layoutX="70.0" layoutY="236.0" mnemonicParsing="false" onAction="#handleCadastrarExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Cadastrar novo exercício" textFill="#e5a000">
                <font>
                   <Font size="15.0" />
                </font>
@@ -72,20 +72,20 @@
             <ImageView fx:id="IMenu" fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                   <Image url="@../images/muque.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="167.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/coracao.png" />
+            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="17.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/ver.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="232.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/coracao.png" />
+            <ImageView fitHeight="40.0" fitWidth="28.0" layoutX="19.0" layoutY="242.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/ferramenta-lapis.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/coracao.png" />
+            <ImageView fitHeight="50.0" fitWidth="35.0" layoutX="15.0" layoutY="307.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/editar.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="366.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/coracao.png" />
+            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="372.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/excluir.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="15.0" layoutY="430.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/coracao.png" />
+            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="17.0" layoutY="438.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/ver.png" />
             </ImageView>
             <Separator layoutX="316.0" layoutY="1.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="14.0" />
             <Separator layoutY="107.0" prefHeight="7.0" prefWidth="320.0" />
@@ -96,8 +96,7 @@
             </Text>
       </AnchorPane>
       <AnchorPane layoutX="785.0" layoutY="-21.0" prefHeight="140.0" prefWidth="130.0">
-         <Button fx:id="IFechar" layoutX="25.0" layoutY="30.0" mnemonicParsing="false"
-                 onAction="#handleAbrirMenu" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;">
+         <Button fx:id="IFechar" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleAbrirMenu" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;">
             <graphic>
                <ImageView fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                      <Image url="@../images/sair.png" />

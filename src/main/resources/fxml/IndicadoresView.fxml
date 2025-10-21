@@ -30,11 +30,11 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Text>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="14.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/logo_registro.png" />
+            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/ver.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="14.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/coracao.png" />
+            <ImageView fitHeight="50.0" fitWidth="28.0" layoutX="17.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/ferramenta-lapis.png" />
             </ImageView>
       </AnchorPane>
       <AnchorPane layoutX="786.0" layoutY="-21.0" prefHeight="140.0" prefWidth="130.0">

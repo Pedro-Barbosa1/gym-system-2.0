@@ -74,30 +74,30 @@
                </font>
             </Button>
             <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="0.0" />
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="186.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/halter_pequeno.png" />
+            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/ver.png" />
             </ImageView>
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="17.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
                   <Image url="@../images/halter_pequeno.png" />
             </ImageView>
             <Separator layoutY="113.0" prefHeight="3.0" prefWidth="320.0" />
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/halter_pequeno.png" />
+            <ImageView fitHeight="50.0" fitWidth="28.0" layoutX="17.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/ferramenta-lapis.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="308.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/halter_pequeno.png" />
+            <ImageView fitHeight="50.0" fitWidth="35.0" layoutX="14.0" layoutY="313.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/editar.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/halter_pequeno.png" />
+            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="376.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/excluir.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="432.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/halter_pequeno.png" />
+            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="438.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/ver.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="495.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/halter_pequeno.png" />
+            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="501.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/criar.png" />
             </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="45.0" layoutX="12.0" layoutY="557.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/halter_pequeno.png" />
+            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="563.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/excluir.png" />
             </ImageView>
             <Text fill="#9c27b0" layoutX="97.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plano de Treinos">
                <font>
