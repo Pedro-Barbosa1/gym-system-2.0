@@ -1,4 +1,4 @@
-package br.upe.ui.controller;
+package br.upe.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,12 +33,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.ComboBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.ListCell;
+<<<<<<< HEAD:src/main/java/br/upe/ui/controller/TreinoViewController.java
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+=======
+>>>>>>> 4fbce8a0fac5f0400545d352aee02a99e6ca747f:src/main/java/br/upe/controller/TreinoViewController.java
 
 public class TreinoViewController {
 
@@ -54,7 +55,7 @@ public class TreinoViewController {
     private ImageView ITreino;
 
     @FXML
-    private ImageView IFechar;
+    private Button IFechar;
 
     @FXML
     private javafx.scene.control.ButtonBar exitB;
@@ -262,7 +263,7 @@ public class TreinoViewController {
         return null;
     }
 
-    // NOVO MÉTODO DE REGISTRO DOS EXERCÍCIOS
+    // NOVO METODO DE REGISTRO DOS EXERCÍCIOS
     private boolean registrarExerciciosComDialog(SessaoTreino sessaoAtual, PlanoTreino planoBase) {
         logger.info("--- Registrando Exercícios ---");
 
@@ -364,7 +365,7 @@ public class TreinoViewController {
     }
 
     @FXML
-    void fecharTela(MouseEvent event) {
+    void fecharTela(ActionEvent event) {
         logger.info("Ícone 'Fechar' clicado! Retornando ao menu principal...");
         carregarNovaTela("/fxml/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
     }

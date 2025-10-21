@@ -1,4 +1,4 @@
-package br.upe.ui.controller;
+package br.upe.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class ExercicioViewController {
     private Button BListarEX;         // Botão para listar todos os exercícios
 
     @FXML
-    private ImageView IFechar;        // Ícone para fechar a tela
+    private Button IFechar;        // Ícone para fechar a tela
 
     @FXML
     private ImageView IMenu;          // Ícone para abrir o menu principal
@@ -330,7 +330,7 @@ public class ExercicioViewController {
     }
 
     @FXML
-    void handleAbrirMenu(MouseEvent event) {
+    void handleAbrirMenu(ActionEvent event) {
         logger.info("Ícone 'Fechar' clicado! Retornando ao menu principal...");
         carregarNovaTela("/fxml/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
     }
