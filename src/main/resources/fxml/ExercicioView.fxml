@@ -69,6 +69,11 @@
                   <Font size="15.0" />
                </font>
             </Button>
+      <Button fx:id="BVisualizarEX1" alignment="CENTER" contentDisplay="CENTER" layoutX="70.0" layoutY="494.0" mnemonicParsing="false" onAction="#handleVisualizarExercicio" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Visualizar Exercício" textFill="#e5a000">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
             <ImageView fx:id="IMenu" fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                   <Image url="@../images/muque.png" />
             </ImageView>
@@ -94,6 +99,11 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Text>
+      <ImageView fitHeight="50.0" fitWidth="35.0" layoutX="16.0" layoutY="497.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/play-alt.png" />
+         </image>
+      </ImageView>
       </AnchorPane>
       <AnchorPane layoutX="785.0" layoutY="-21.0" prefHeight="140.0" prefWidth="130.0">
          <Button fx:id="IFechar" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleAbrirMenu" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;">

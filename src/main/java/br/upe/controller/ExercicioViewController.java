@@ -22,7 +22,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -38,6 +37,7 @@ public class ExercicioViewController {
     @FXML private Button BEditarEX;
     @FXML private Button BExcluirEX;
     @FXML private Button BListarEX;
+    @FXML private Button BVisualizarEX1;
     @FXML private Button IFechar;
     @FXML private ImageView IMenu;
 
@@ -255,6 +255,51 @@ public class ExercicioViewController {
         dialog.getDialogPane().setContent(tableView);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         dialog.showAndWait();
+    }
+
+    @FXML
+    void handleVisualizarExercicio(ActionEvent event) {
+        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
+        if (exercicios.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Sem Exercícios", "Você não possui exercícios cadastrados.");
+            return;
+        }
+
+        Exercicio exercicioSelecionado = exibirDialogSelecaoExercicio(exercicios, "Visualizar Exercício");
+        if (exercicioSelecionado == null) return;
+
+        try {
+            // Normalizar o caminho do GIF
+            String caminhoGif = exercicioSelecionado.getCaminhoGif();
+            caminhoGif = caminhoGif.replace("\\", "/");
+            caminhoGif = caminhoGif.replaceFirst("^/gif/", "");
+            caminhoGif = caminhoGif.replaceFirst("^gif/", "");
+            caminhoGif = "/gif/" + caminhoGif;
+            
+            logger.info("Abrindo visualizador para o exercício: " + exercicioSelecionado.getNome());
+            
+            // Carregar o FXML do visualizador
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/visualizador.fxml"));
+            Parent root = loader.load();
+            
+            // Obter o controller e passar os dados do exercício
+            VisualizadorExercicioController controller = loader.getController();
+            controller.exibirExercicio(caminhoGif, exercicioSelecionado.getNome(), exercicioSelecionado.getDescricao());
+            
+            // Criar nova janela (Stage)
+            Stage stage = new Stage();
+            stage.setTitle("Visualizar Exercício - " + exercicioSelecionado.getNome());
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+            
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Erro ao abrir visualizador de exercício", e);
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir o visualizador do exercício.");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Erro ao carregar dados do exercício", e);
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Erro ao carregar o exercício: " + e.getMessage());
+        }
     }
 
     @FXML
