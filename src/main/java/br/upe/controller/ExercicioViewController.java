@@ -11,6 +11,9 @@ import br.upe.model.Exercicio;
 import br.upe.service.ExercicioService;
 import br.upe.service.IExercicioService;
 import br.upe.ui.util.StyledAlert;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -100,31 +104,39 @@ public class ExercicioViewController {
         Dialog<ButtonType> dialog = criarDialogPadrao("Meus Exercícios",
                 String.format("Total de %d exercício(s) cadastrados", exercicios.size()));
 
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);
-        textArea.setPrefWidth(600);
-        textArea.setPrefHeight(400);
-        textArea.setStyle("""
-                        -fx-control-inner-background: #2c2c2c;
-                        -fx-background-color: #2c2c2c;
-                        -fx-text-fill: #ffb300;
-                        -fx-border-color: transparent;
-                        -fx-focus-color: transparent;
-                        -fx-faint-focus-color: transparent;
-                        -fx-padding: 0;
-                    """);
+        // Criar TableView com tema dark
+        TableView<Exercicio> tableView = new TableView<>();
+        tableView.setItems(FXCollections.observableArrayList(exercicios));
+        tableView.setPrefWidth(700);
+        tableView.setPrefHeight(400);
 
-        StringBuilder sb = new StringBuilder();
-        for (Exercicio ex : exercicios) {
-            sb.append("═══════════════════════════════════════\n");
-            sb.append(String.format("ID: %d\n", ex.getIdExercicio()));
-            sb.append(String.format("Nome: %s\n", ex.getNome()));
-            sb.append(String.format("Descrição: %s\n", ex.getDescricao()));
-            sb.append(String.format("GIF: %s\n\n", ex.getCaminhoGif()));
-        }
-        textArea.setText(sb.toString());
+        // Coluna ID
+        TableColumn<Exercicio, Integer> colId = new TableColumn<>("ID");
+        colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdExercicio()).asObject());
+        colId.setPrefWidth(60);
+        colId.setStyle("-fx-alignment: CENTER;");
 
-        dialog.getDialogPane().setContent(textArea);
+        // Coluna Nome
+        TableColumn<Exercicio, String> colNome = new TableColumn<>("Nome");
+        colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
+        colNome.setPrefWidth(200);
+
+        // Coluna Descrição
+        TableColumn<Exercicio, String> colDescricao = new TableColumn<>("Descrição");
+        colDescricao.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescricao()));
+        colDescricao.setPrefWidth(300);
+
+        // Coluna GIF
+        TableColumn<Exercicio, String> colGif = new TableColumn<>("Caminho GIF");
+        colGif.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCaminhoGif()));
+        colGif.setPrefWidth(140);
+
+        tableView.getColumns().addAll(colId, colNome, colDescricao, colGif);
+
+        // Aplicar estilo dark theme
+        aplicarEstiloTableView(tableView);
+
+        dialog.getDialogPane().setContent(tableView);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         dialog.showAndWait();
     }
@@ -208,29 +220,39 @@ public class ExercicioViewController {
         if (exercicioSelecionado == null) return;
 
         Dialog<ButtonType> dialog = criarDialogPadrao("Detalhes do Exercício",
-                exercicioSelecionado.getNome());
+                String.format("%s (ID: %d)", exercicioSelecionado.getNome(), exercicioSelecionado.getIdExercicio()));
 
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);
-        textArea.setStyle("""
-                        -fx-control-inner-background: #2c2c2c;
-                        -fx-background-color: #2c2c2c;
-                        -fx-text-fill: #ffb300;
-                        -fx-border-color: transparent;
-                        -fx-focus-color: transparent;
-                        -fx-faint-focus-color: transparent;
-                        -fx-padding: 0;
-                    """);
-        textArea.setText(String.format(
-                "ID: %d\nNome: %s\nDescrição: %s\nGIF: %s\nUsuário: %d",
-                exercicioSelecionado.getIdExercicio(),
-                exercicioSelecionado.getNome(),
-                exercicioSelecionado.getDescricao(),
-                exercicioSelecionado.getCaminhoGif(),
-                exercicioSelecionado.getIdUsuario()
-        ));
+        // Criar TableView para exibir os detalhes
+        TableView<String[]> tableView = new TableView<>();
+        tableView.setPrefWidth(500);
+        tableView.setPrefHeight(250);
 
-        dialog.getDialogPane().setContent(textArea);
+        // Preparar dados
+        List<String[]> dadosDetalhes = new ArrayList<>();
+        dadosDetalhes.add(new String[]{"ID", String.valueOf(exercicioSelecionado.getIdExercicio())});
+        dadosDetalhes.add(new String[]{"Nome", exercicioSelecionado.getNome()});
+        dadosDetalhes.add(new String[]{"Descrição", exercicioSelecionado.getDescricao()});
+        dadosDetalhes.add(new String[]{"Caminho GIF", exercicioSelecionado.getCaminhoGif()});
+        dadosDetalhes.add(new String[]{"ID Usuário", String.valueOf(exercicioSelecionado.getIdUsuario())});
+
+        tableView.setItems(FXCollections.observableArrayList(dadosDetalhes));
+
+        // Colunas
+        TableColumn<String[], String> colCampo = new TableColumn<>("Campo");
+        colCampo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
+        colCampo.setPrefWidth(150);
+        colCampo.setStyle("-fx-alignment: CENTER-LEFT; -fx-font-weight: bold;");
+
+        TableColumn<String[], String> colValor = new TableColumn<>("Valor");
+        colValor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
+        colValor.setPrefWidth(350);
+
+        tableView.getColumns().addAll(colCampo, colValor);
+
+        // Aplicar estilo
+        aplicarEstiloTableView(tableView);
+
+        dialog.getDialogPane().setContent(tableView);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         dialog.showAndWait();
     }
@@ -345,6 +367,92 @@ public class ExercicioViewController {
         field.setPromptText(placeholder);
         field.setStyle("-fx-text-fill: #ffb300; -fx-background-color: #333; -fx-border-color: #1e1e1e;");
         return field;
+    }
+
+    private void aplicarEstiloTableView(TableView<?> tableView) {
+        aplicarEstiloTableViewGenerico(tableView);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
+        // Aplicar estilo inline diretamente no TableView
+        tableView.setStyle(
+            "-fx-background-color: #2c2c2c; " +
+            "-fx-control-inner-background: #2c2c2c; " +
+            "-fx-background-insets: 0; " +
+            "-fx-padding: 0; " +
+            "-fx-table-cell-border-color: #333;"
+        );
+        
+        // Aplicar estilo usando setRowFactory para garantir fundo escuro
+        tableView.setRowFactory(tv -> {
+            javafx.scene.control.TableRow<T> row = new javafx.scene.control.TableRow<>();
+            row.setStyle(
+                "-fx-background-color: #2c2c2c; " +
+                "-fx-text-fill: #ffb300; " +
+                "-fx-border-color: #333;"
+            );
+            
+            // Atualizar estilo quando o item mudar
+            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                if (newItem != null) {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            // Estilo de seleção
+            row.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                if (isSelected) {
+                    row.setStyle(
+                        "-fx-background-color: #5A189A; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-color: #333;"
+                    );
+                } else {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            return row;
+        });
+        
+        // Estilizar headers após a tabela ser exibida
+        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                tableView.applyCss();
+                tableView.layout();
+                
+                // Estilizar headers
+                javafx.scene.Node headerRow = tableView.lookup(".column-header-background");
+                if (headerRow != null) {
+                    headerRow.setStyle("-fx-background-color: #1e1e1e;");
+                }
+                
+                tableView.lookupAll(".column-header").forEach(node -> {
+                    node.setStyle(
+                        "-fx-background-color: #1e1e1e; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-border-color: #333;"
+                    );
+                });
+                
+                tableView.lookupAll(".column-header .label").forEach(node -> {
+                    ((javafx.scene.control.Labeled) node).setStyle(
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold;"
+                    );
+                });
+            }
+        });
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {

@@ -18,6 +18,9 @@ import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.service.SessaoTreinoService;
 import br.upe.ui.util.StyledAlert;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +31,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -146,48 +151,90 @@ public class TreinoViewController {
                 headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
         });
 
-        StringBuilder historicoTxt = new StringBuilder();
+        // Criar lista de dados para a tabela
+        List<HistoricoSessaoData> dadosTabela = new ArrayList<>();
         for (SessaoTreino sessao : historico) {
-            historicoTxt.append("======================================\n");
-            historicoTxt.append("Data: ").append(sessao.getDataSessao()).append("\n");
-            historicoTxt.append("Plano ID: ").append(sessao.getIdPlanoTreino()).append("\n");
             for (ItemSessaoTreino item : sessao.getItensExecutados()) {
                 String nomeExercicio = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio())
                     .map(Exercicio::getNome)
                     .orElse("Exercício Desconhecido");
-                historicoTxt.append(String.format(
-                    "Exercício: %s | Repetições: %d | Carga: %.1f kg\n",
+                
+                dadosTabela.add(new HistoricoSessaoData(
+                    sessao.getDataSessao().toString(),
+                    sessao.getIdPlanoTreino(),
                     nomeExercicio,
                     item.getRepeticoesRealizadas(),
                     item.getCargaRealizada()
                 ));
             }
-            historicoTxt.append("\n");
         }
-    TextArea conteudo = new TextArea(historicoTxt.toString());
-    conteudo.setFont(Font.font("Consolas", 14));
-    conteudo.setStyle("-fx-text-fill: #ffb300; -fx-control-inner-background: #2c2c2c;");
-    conteudo.setEditable(false);
-    conteudo.setWrapText(false);
-    conteudo.setPrefWidth(600);
-    conteudo.setPrefHeight(400);
 
-    VBox box = new VBox(conteudo);
-    box.setStyle("-fx-background-color: #2c2c2c;");
-    box.setPadding(new Insets(10));
+        // Criar TableView
+        TableView<HistoricoSessaoData> tableView = new TableView<>();
+        tableView.setItems(FXCollections.observableArrayList(dadosTabela));
+        tableView.setPrefWidth(700);
+        tableView.setPrefHeight(400);
 
-    dialog.setTitle("Meu Histórico de Treinos");
-    dialog.setHeaderText("Total de " + historico.size() + " sessão(ões) registrada(s)");
-    dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-    dialog.getDialogPane().setContent(box);
+        // Colunas
+        TableColumn<HistoricoSessaoData, String> colData = new TableColumn<>("Data");
+        colData.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getData()));
+        colData.setPrefWidth(120);
 
-    dialog.showAndWait();
+        TableColumn<HistoricoSessaoData, Integer> colPlano = new TableColumn<>("Plano ID");
+        colPlano.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdPlano()).asObject());
+        colPlano.setPrefWidth(80);
+        colPlano.setStyle("-fx-alignment: CENTER;");
 
+        TableColumn<HistoricoSessaoData, String> colExercicio = new TableColumn<>("Exercício");
+        colExercicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNomeExercicio()));
+        colExercicio.setPrefWidth(250);
+
+        TableColumn<HistoricoSessaoData, Integer> colRepeticoes = new TableColumn<>("Repetições");
+        colRepeticoes.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRepeticoes()).asObject());
+        colRepeticoes.setPrefWidth(120);
+        colRepeticoes.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<HistoricoSessaoData, String> colCarga = new TableColumn<>("Carga (kg)");
+        colCarga.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getCarga())));
+        colCarga.setPrefWidth(130);
+        colCarga.setStyle("-fx-alignment: CENTER;");
+
+        tableView.getColumns().addAll(colData, colPlano, colExercicio, colRepeticoes, colCarga);
+
+        // Aplicar estilo
+        aplicarEstiloTableView(tableView);
+
+        VBox box = new VBox(tableView);
+        box.setStyle("-fx-background-color: #2c2c2c;");
+        box.setPadding(new Insets(10));
 
         dialog.getDialogPane().setContent(box);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
 
         dialog.showAndWait();
+    }
+
+    // Classe auxiliar para dados do histórico
+    private static class HistoricoSessaoData {
+        private final String data;
+        private final int idPlano;
+        private final String nomeExercicio;
+        private final int repeticoes;
+        private final double carga;
+
+        public HistoricoSessaoData(String data, int idPlano, String nomeExercicio, int repeticoes, double carga) {
+            this.data = data;
+            this.idPlano = idPlano;
+            this.nomeExercicio = nomeExercicio;
+            this.repeticoes = repeticoes;
+            this.carga = carga;
+        }
+
+        public String getData() { return data; }
+        public int getIdPlano() { return idPlano; }
+        public String getNomeExercicio() { return nomeExercicio; }
+        public int getRepeticoes() { return repeticoes; }
+        public double getCarga() { return carga; }
     }
 
 
@@ -391,5 +438,91 @@ public class TreinoViewController {
         } else if (tipo == Alert.AlertType.CONFIRMATION) {
             StyledAlert.showConfirmationAndWait(titulo, mensagem);
         }
+    }
+
+    private void aplicarEstiloTableView(TableView<?> tableView) {
+        aplicarEstiloTableViewGenerico(tableView);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
+        // Aplicar estilo inline diretamente no TableView
+        tableView.setStyle(
+            "-fx-background-color: #2c2c2c; " +
+            "-fx-control-inner-background: #2c2c2c; " +
+            "-fx-background-insets: 0; " +
+            "-fx-padding: 0; " +
+            "-fx-table-cell-border-color: #333;"
+        );
+        
+        // Aplicar estilo usando setRowFactory para garantir fundo escuro
+        tableView.setRowFactory(tv -> {
+            javafx.scene.control.TableRow<T> row = new javafx.scene.control.TableRow<>();
+            row.setStyle(
+                "-fx-background-color: #2c2c2c; " +
+                "-fx-text-fill: #ffb300; " +
+                "-fx-border-color: #333;"
+            );
+            
+            // Atualizar estilo quando o item mudar
+            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                if (newItem != null) {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            // Estilo de seleção
+            row.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                if (isSelected) {
+                    row.setStyle(
+                        "-fx-background-color: #5A189A; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-color: #333;"
+                    );
+                } else {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            return row;
+        });
+        
+        // Estilizar headers após a tabela ser exibida
+        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                tableView.applyCss();
+                tableView.layout();
+                
+                // Estilizar headers
+                javafx.scene.Node headerRow = tableView.lookup(".column-header-background");
+                if (headerRow != null) {
+                    headerRow.setStyle("-fx-background-color: #1e1e1e;");
+                }
+                
+                tableView.lookupAll(".column-header").forEach(node -> {
+                    node.setStyle(
+                        "-fx-background-color: #1e1e1e; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-border-color: #333;"
+                    );
+                });
+                
+                tableView.lookupAll(".column-header .label").forEach(node -> {
+                    ((javafx.scene.control.Labeled) node).setStyle(
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold;"
+                    );
+                });
+            }
+        });
     }
 }

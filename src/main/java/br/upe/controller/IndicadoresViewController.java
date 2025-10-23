@@ -12,6 +12,8 @@ import br.upe.model.IndicadorBiomedico;
 import br.upe.service.IIndicadorBiomedicoService;
 import br.upe.service.IndicadorBiomedicoService;
 import br.upe.ui.util.StyledAlert;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +26,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -200,35 +203,49 @@ public class IndicadoresViewController {
             }
         });
 
-        // TextArea estilizada
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);
-        textArea.setPrefWidth(600);
-        textArea.setPrefHeight(400);
-        textArea.setStyle(
-            "-fx-control-inner-background: #2c2c2c;" +
-            "-fx-font-size: 14px;" +
-            "-fx-font-family: 'Consolas';" +
-            "-fx-text-fill: #ffb300;" +
-            "-fx-highlight-fill: #ffb30033;" +
-            "-fx-border-color: #1e1e1e;"
-        );
+        // Criar TableView
+        TableView<IndicadorBiomedico> tableView = new TableView<>();
+        tableView.setItems(FXCollections.observableArrayList(meusIndicadores));
+        tableView.setPrefWidth(700);
+        tableView.setPrefHeight(400);
 
-        // Montar o conteúdo
-        StringBuilder sb = new StringBuilder();
-        for (IndicadorBiomedico ind : meusIndicadores) {
-            sb.append("═══════════════════════════════════════\n");
-            sb.append(String.format("Data: %s\n", ind.getData().format(DATE_FORMATTER)));
-            sb.append(String.format("Peso: %.1f kg | Altura: %.1f cm\n", ind.getPesoKg(), ind.getAlturaCm()));
-            sb.append(String.format("IMC: %.1f\n", ind.getImc()));
-            sb.append(String.format("Gordura: %.1f%% | Massa Magra: %.1f%%\n", 
-                ind.getPercentualGordura(), ind.getPercentualMassaMagra()));
-            sb.append("\n");
-        }
-        textArea.setText(sb.toString());
+        // Colunas
+        TableColumn<IndicadorBiomedico, String> colData = new TableColumn<>("Data");
+        colData.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getData().format(DATE_FORMATTER)));
+        colData.setPrefWidth(120);
+
+        TableColumn<IndicadorBiomedico, String> colPeso = new TableColumn<>("Peso (kg)");
+        colPeso.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getPesoKg())));
+        colPeso.setPrefWidth(100);
+        colPeso.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<IndicadorBiomedico, String> colAltura = new TableColumn<>("Altura (cm)");
+        colAltura.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getAlturaCm())));
+        colAltura.setPrefWidth(100);
+        colAltura.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<IndicadorBiomedico, String> colIMC = new TableColumn<>("IMC");
+        colIMC.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getImc())));
+        colIMC.setPrefWidth(80);
+        colIMC.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<IndicadorBiomedico, String> colGordura = new TableColumn<>("Gordura (%)");
+        colGordura.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getPercentualGordura())));
+        colGordura.setPrefWidth(100);
+        colGordura.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<IndicadorBiomedico, String> colMassaMagra = new TableColumn<>("Massa Magra (%)");
+        colMassaMagra.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getPercentualMassaMagra())));
+        colMassaMagra.setPrefWidth(120);
+        colMassaMagra.setStyle("-fx-alignment: CENTER;");
+
+        tableView.getColumns().addAll(colData, colPeso, colAltura, colIMC, colGordura, colMassaMagra);
+
+        // Aplicar estilo
+        aplicarEstiloTableView(tableView);
 
         // Um VBox para aplicar fundo igual ao GridPane das outras telas
-        VBox vbox = new VBox(textArea);
+        VBox vbox = new VBox(tableView);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-background-color: #2c2c2c;");
 
@@ -312,5 +329,91 @@ public class IndicadoresViewController {
         } else if (tipo == Alert.AlertType.CONFIRMATION) {
             StyledAlert.showConfirmationAndWait(titulo, mensagem);
         }
+    }
+
+    private void aplicarEstiloTableView(TableView<?> tableView) {
+        aplicarEstiloTableViewGenerico(tableView);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
+        // Aplicar estilo inline diretamente no TableView
+        tableView.setStyle(
+            "-fx-background-color: #2c2c2c; " +
+            "-fx-control-inner-background: #2c2c2c; " +
+            "-fx-background-insets: 0; " +
+            "-fx-padding: 0; " +
+            "-fx-table-cell-border-color: #333;"
+        );
+        
+        // Aplicar estilo usando setRowFactory para garantir fundo escuro
+        tableView.setRowFactory(tv -> {
+            javafx.scene.control.TableRow<T> row = new javafx.scene.control.TableRow<>();
+            row.setStyle(
+                "-fx-background-color: #2c2c2c; " +
+                "-fx-text-fill: #ffb300; " +
+                "-fx-border-color: #333;"
+            );
+            
+            // Atualizar estilo quando o item mudar
+            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                if (newItem != null) {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            // Estilo de seleção
+            row.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                if (isSelected) {
+                    row.setStyle(
+                        "-fx-background-color: #5A189A; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-color: #333;"
+                    );
+                } else {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            return row;
+        });
+        
+        // Estilizar headers após a tabela ser exibida
+        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                tableView.applyCss();
+                tableView.layout();
+                
+                // Estilizar headers
+                javafx.scene.Node headerRow = tableView.lookup(".column-header-background");
+                if (headerRow != null) {
+                    headerRow.setStyle("-fx-background-color: #1e1e1e;");
+                }
+                
+                tableView.lookupAll(".column-header").forEach(node -> {
+                    node.setStyle(
+                        "-fx-background-color: #1e1e1e; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-border-color: #333;"
+                    );
+                });
+                
+                tableView.lookupAll(".column-header .label").forEach(node -> {
+                    ((javafx.scene.control.Labeled) node).setStyle(
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold;"
+                    );
+                });
+            }
+        });
     }
 }

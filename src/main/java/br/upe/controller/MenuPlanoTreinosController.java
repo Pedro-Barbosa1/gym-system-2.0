@@ -15,6 +15,9 @@ import br.upe.service.IExercicioService;
 import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.ui.util.StyledAlert;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -28,6 +31,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -160,21 +165,35 @@ public class MenuPlanoTreinosController {
         Dialog<ButtonType> dialog = criarDialogPadrao("Meus Planos de Treino", 
             String.format("Total de %d plano(s) de treino registrado(s)", planos.size()));
 
-        // TextArea estilizado
-        TextArea textArea = criarTextArea(600, 400);
+        // Criar TableView
+        TableView<PlanoTreino> tableView = new TableView<>();
+        tableView.setItems(FXCollections.observableArrayList(planos));
+        tableView.setPrefWidth(700);
+        tableView.setPrefHeight(400);
 
-        // Montar o texto a ser exibido
-        StringBuilder sb = new StringBuilder();
-        for (PlanoTreino plano : planos) {
-            sb.append("═══════════════════════════════════════\n");
-            sb.append(String.format("ID: %d\n", plano.getIdPlano()));
-            sb.append(String.format("Nome: %s\n", plano.getNome()));
-            sb.append(String.format("Exercícios no plano: %d\n", plano.getItensTreino().size()));
-            sb.append("\n");
-        }
-        textArea.setText(sb.toString());
+        // Coluna ID
+        TableColumn<PlanoTreino, Integer> colId = new TableColumn<>("ID");
+        colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdPlano()).asObject());
+        colId.setPrefWidth(80);
+        colId.setStyle("-fx-alignment: CENTER;");
 
-        dialog.getDialogPane().setContent(textArea);
+        // Coluna Nome
+        TableColumn<PlanoTreino, String> colNome = new TableColumn<>("Nome do Plano");
+        colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
+        colNome.setPrefWidth(400);
+
+        // Coluna Exercícios
+        TableColumn<PlanoTreino, Integer> colExercicios = new TableColumn<>("Exercícios");
+        colExercicios.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getItensTreino().size()).asObject());
+        colExercicios.setPrefWidth(220);
+        colExercicios.setStyle("-fx-alignment: CENTER;");
+
+        tableView.getColumns().addAll(colId, colNome, colExercicios);
+
+        // Aplicar estilo dark theme
+        aplicarEstiloTableView(tableView);
+
+        dialog.getDialogPane().setContent(tableView);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         
         dialog.showAndWait();
@@ -501,43 +520,88 @@ public class MenuPlanoTreinosController {
 
         // Criar dialog customizado
         Dialog<ButtonType> dialog = criarDialogPadrao("Detalhes do Plano", 
-            "Informações completas do plano:");
+            String.format("Plano: %s (ID: %d) | %d exercício(s)", 
+                planoSelecionado.getNome(), 
+                planoSelecionado.getIdPlano(), 
+                planoSelecionado.getItensTreino().size()));
 
-        // TextArea estilizado
-        TextArea textArea = criarTextArea(650, 420);
-
-        // Construir relatório detalhado
-        StringBuilder sb = new StringBuilder();
-        sb.append("═══════════════════════════════════════\n\n");
-        sb.append(String.format("ID do Plano: %d\n\n", planoSelecionado.getIdPlano()));
-        sb.append(String.format("Nome: %s\n\n", planoSelecionado.getNome()));
-        sb.append(String.format("ID do Usuário: %d\n\n", planoSelecionado.getIdUsuario()));
-        sb.append(String.format("Total de Exercícios: %d\n\n", planoSelecionado.getItensTreino().size()));
-
-        if (!planoSelecionado.getItensTreino().isEmpty()) {
-            sb.append("Exercícios no Plano:\n");
-            sb.append("───────────────────────────────────────\n");
+        if (planoSelecionado.getItensTreino().isEmpty()) {
+            TextArea textArea = criarTextArea(650, 420);
+            textArea.setText("Nenhum exercício adicionado ainda ao plano \"" + planoSelecionado.getNome() + "\".");
+            dialog.getDialogPane().setContent(textArea);
+        } else {
+            // Criar lista de dados para a tabela
+            List<ExercicioPlanoData> dadosTabela = new ArrayList<>();
             for (ItemPlanoTreino item : planoSelecionado.getItensTreino()) {
                 Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio());
                 String nomeExercicio = "Desconhecido";
                 if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == idUsuarioLogado) {
                     nomeExercicio = exercicioOpt.get().getNome();
                 }
-                sb.append(String.format(" • %s (ID: %d)\n", nomeExercicio, item.getIdExercicio()));
-                sb.append(String.format("    Carga: %d kg\n", item.getCargaKg()));
-                sb.append(String.format("    Repetições: %d\n\n", item.getRepeticoes()));
+                dadosTabela.add(new ExercicioPlanoData(
+                    item.getIdExercicio(),
+                    nomeExercicio,
+                    item.getCargaKg(),
+                    item.getRepeticoes()
+                ));
             }
-        } else {
-            sb.append("Nenhum exercício adicionado ainda.\n");
+
+            // Criar TableView
+            TableView<ExercicioPlanoData> tableView = new TableView<>();
+            tableView.setItems(FXCollections.observableArrayList(dadosTabela));
+            tableView.setPrefWidth(650);
+            tableView.setPrefHeight(420);
+
+            // Colunas
+            TableColumn<ExercicioPlanoData, Integer> colId = new TableColumn<>("ID");
+            colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdExercicio()).asObject());
+            colId.setPrefWidth(80);
+            colId.setStyle("-fx-alignment: CENTER;");
+
+            TableColumn<ExercicioPlanoData, String> colNome = new TableColumn<>("Exercício");
+            colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
+            colNome.setPrefWidth(320);
+
+            TableColumn<ExercicioPlanoData, Integer> colCarga = new TableColumn<>("Carga (kg)");
+            colCarga.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaKg()).asObject());
+            colCarga.setPrefWidth(120);
+            colCarga.setStyle("-fx-alignment: CENTER;");
+
+            TableColumn<ExercicioPlanoData, Integer> colRepeticoes = new TableColumn<>("Repetições");
+            colRepeticoes.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRepeticoes()).asObject());
+            colRepeticoes.setPrefWidth(130);
+            colRepeticoes.setStyle("-fx-alignment: CENTER;");
+
+            tableView.getColumns().addAll(colId, colNome, colCarga, colRepeticoes);
+
+            // Aplicar estilo
+            aplicarEstiloTableView(tableView);
+
+            dialog.getDialogPane().setContent(tableView);
         }
 
-        sb.append("\n═══════════════════════════════════════");
-        textArea.setText(sb.toString());
-
-        dialog.getDialogPane().setContent(textArea);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-
         dialog.showAndWait();
+    }
+
+    // Classe auxiliar para dados dos exercícios do plano
+    private static class ExercicioPlanoData {
+        private final int idExercicio;
+        private final String nome;
+        private final int cargaKg;
+        private final int repeticoes;
+
+        public ExercicioPlanoData(int idExercicio, String nome, int cargaKg, int repeticoes) {
+            this.idExercicio = idExercicio;
+            this.nome = nome;
+            this.cargaKg = cargaKg;
+            this.repeticoes = repeticoes;
+        }
+
+        public int getIdExercicio() { return idExercicio; }
+        public String getNome() { return nome; }
+        public int getCargaKg() { return cargaKg; }
+        public int getRepeticoes() { return repeticoes; }
     }
 
     /**
@@ -674,6 +738,92 @@ public class MenuPlanoTreinosController {
             "-fx-padding: 0;"
         );
         return textArea;
+    }
+
+    private void aplicarEstiloTableView(TableView<?> tableView) {
+        aplicarEstiloTableViewGenerico(tableView);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
+        // Aplicar estilo inline diretamente no TableView
+        tableView.setStyle(
+            "-fx-background-color: #2c2c2c; " +
+            "-fx-control-inner-background: #2c2c2c; " +
+            "-fx-background-insets: 0; " +
+            "-fx-padding: 0; " +
+            "-fx-table-cell-border-color: #333;"
+        );
+        
+        // Aplicar estilo usando setRowFactory para garantir fundo escuro
+        tableView.setRowFactory(tv -> {
+            javafx.scene.control.TableRow<T> row = new javafx.scene.control.TableRow<>();
+            row.setStyle(
+                "-fx-background-color: #2c2c2c; " +
+                "-fx-text-fill: #ffb300; " +
+                "-fx-border-color: #333;"
+            );
+            
+            // Atualizar estilo quando o item mudar
+            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                if (newItem != null) {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            // Estilo de seleção
+            row.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                if (isSelected) {
+                    row.setStyle(
+                        "-fx-background-color: #5A189A; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-color: #333;"
+                    );
+                } else {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            return row;
+        });
+        
+        // Estilizar headers após a tabela ser exibida
+        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                tableView.applyCss();
+                tableView.layout();
+                
+                // Estilizar headers
+                javafx.scene.Node headerRow = tableView.lookup(".column-header-background");
+                if (headerRow != null) {
+                    headerRow.setStyle("-fx-background-color: #1e1e1e;");
+                }
+                
+                tableView.lookupAll(".column-header").forEach(node -> {
+                    node.setStyle(
+                        "-fx-background-color: #1e1e1e; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-border-color: #333;"
+                    );
+                });
+                
+                tableView.lookupAll(".column-header .label").forEach(node -> {
+                    ((javafx.scene.control.Labeled) node).setStyle(
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold;"
+                    );
+                });
+            }
+        });
     }
 
     /**

@@ -11,6 +11,9 @@ import br.upe.model.Usuario;
 import br.upe.service.IUsuarioService;
 import br.upe.service.UsuarioService;
 import br.upe.ui.util.StyledAlert;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -24,6 +27,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -99,36 +104,41 @@ public class AdministradorViewController {
             return;
         }
         
-        // Criar Dialog com TextArea estilizado
+        // Criar Dialog
         Dialog<ButtonType> dialog = criarDialogPadrao("Lista de Todos os Usuários", 
             String.format("Total de %d usuário(s) cadastrados", usuarios.size()));
         
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);
-        textArea.setPrefWidth(600);
-        textArea.setPrefHeight(400);
-        textArea.setStyle(
-            "-fx-control-inner-background: #2c2c2c;" +
-            "-fx-background-color: #2c2c2c;" +
-            "-fx-text-fill: #ffb300;" +
-            "-fx-border-color: transparent;" +
-            "-fx-focus-color: transparent;" +
-            "-fx-faint-focus-color: transparent;" +
-            "-fx-padding: 0;"
-        );
-        
-        StringBuilder sb = new StringBuilder();
-        for (Usuario u : usuarios) {
-            sb.append("═══════════════════════════════════════\n");
-            sb.append(String.format("ID: %d%n", u.getId()));
-            sb.append(String.format("Nome: %s%n", u.getNome()));
-            sb.append(String.format("Email: %s%n", u.getEmail()));
-            sb.append(String.format("Tipo: %s%n", u.getTipo()));
-            sb.append("\n");
-        }
-        
-        textArea.setText(sb.toString());
-        dialog.getDialogPane().setContent(textArea);
+        // Criar TableView
+        TableView<Usuario> tableView = new TableView<>();
+        tableView.setItems(FXCollections.observableArrayList(usuarios));
+        tableView.setPrefWidth(700);
+        tableView.setPrefHeight(400);
+
+        // Colunas
+        TableColumn<Usuario, Integer> colId = new TableColumn<>("ID");
+        colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getId()).asObject());
+        colId.setPrefWidth(80);
+        colId.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<Usuario, String> colNome = new TableColumn<>("Nome");
+        colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
+        colNome.setPrefWidth(200);
+
+        TableColumn<Usuario, String> colEmail = new TableColumn<>("Email");
+        colEmail.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEmail()));
+        colEmail.setPrefWidth(250);
+
+        TableColumn<Usuario, String> colTipo = new TableColumn<>("Tipo");
+        colTipo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTipo().toString()));
+        colTipo.setPrefWidth(170);
+        colTipo.setStyle("-fx-alignment: CENTER;");
+
+        tableView.getColumns().addAll(colId, colNome, colEmail, colTipo);
+
+        // Aplicar estilo
+        aplicarEstiloTableView(tableView);
+
+        dialog.getDialogPane().setContent(tableView);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         
         dialog.showAndWait();
@@ -381,5 +391,91 @@ public class AdministradorViewController {
      */
     private void showError(String title, String content) {
         StyledAlert.showErrorAndWait(title, content);
+    }
+
+    private void aplicarEstiloTableView(TableView<?> tableView) {
+        aplicarEstiloTableViewGenerico(tableView);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
+        // Aplicar estilo inline diretamente no TableView
+        tableView.setStyle(
+            "-fx-background-color: #2c2c2c; " +
+            "-fx-control-inner-background: #2c2c2c; " +
+            "-fx-background-insets: 0; " +
+            "-fx-padding: 0; " +
+            "-fx-table-cell-border-color: #333;"
+        );
+        
+        // Aplicar estilo usando setRowFactory para garantir fundo escuro
+        tableView.setRowFactory(tv -> {
+            javafx.scene.control.TableRow<T> row = new javafx.scene.control.TableRow<>();
+            row.setStyle(
+                "-fx-background-color: #2c2c2c; " +
+                "-fx-text-fill: #ffb300; " +
+                "-fx-border-color: #333;"
+            );
+            
+            // Atualizar estilo quando o item mudar
+            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                if (newItem != null) {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            // Estilo de seleção
+            row.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                if (isSelected) {
+                    row.setStyle(
+                        "-fx-background-color: #5A189A; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-color: #333;"
+                    );
+                } else {
+                    row.setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: #333;"
+                    );
+                }
+            });
+            
+            return row;
+        });
+        
+        // Estilizar headers após a tabela ser exibida
+        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                tableView.applyCss();
+                tableView.layout();
+                
+                // Estilizar headers
+                javafx.scene.Node headerRow = tableView.lookup(".column-header-background");
+                if (headerRow != null) {
+                    headerRow.setStyle("-fx-background-color: #1e1e1e;");
+                }
+                
+                tableView.lookupAll(".column-header").forEach(node -> {
+                    node.setStyle(
+                        "-fx-background-color: #1e1e1e; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-border-color: #333;"
+                    );
+                });
+                
+                tableView.lookupAll(".column-header .label").forEach(node -> {
+                    ((javafx.scene.control.Labeled) node).setStyle(
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-font-weight: bold;"
+                    );
+                });
+            }
+        });
     }
 }
