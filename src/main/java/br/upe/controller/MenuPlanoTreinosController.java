@@ -14,25 +14,24 @@ import br.upe.service.ExercicioService;
 import br.upe.service.IExercicioService;
 import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
+import br.upe.ui.util.StyledAlert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 
 /**
  * Controller para a tela do Menu de Planos de Treino.
@@ -114,52 +113,16 @@ public class MenuPlanoTreinosController {
     private void handleCriarPlano() {
         logger.info("Criar Novo Plano de Treino clicado!");
 
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Criar Novo Plano de Treino");
-        dialog.setHeaderText("Preencha o nome do plano:");
+        Dialog<ButtonType> dialog = criarDialogPadrao("Criar Novo Plano de Treino", "Preencha o nome do plano:");
 
-        // Estilo para dialog e header
-        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        dialog.setOnShown(e -> {
-            Node headerPanel = dialog.getDialogPane().lookup(".header-panel");
-            if (headerPanel != null) {
-                headerPanel.setStyle("-fx-background-color: #1e1e1e;");
-            }
-            Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
-            if (headerLabel != null) {
-                headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
-            }
-        });
+        // GridPane padronizado
+        GridPane grid = criarGridPadrao();
 
-        // Criar GridPane estilizado
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20));
-        grid.setStyle("-fx-background-color: #2c2c2c;");
-
-        TextField nomeField = new TextField();
-        nomeField.setPromptText("Nome do plano");
-        nomeField.setStyle(
-            "-fx-control-inner-background: #2c2c2c;" +
-            "-fx-font-size: 14px;" +
-            "-fx-font-family: 'Consolas';" +
-            "-fx-text-fill: #ffb300;" +
-            "-fx-highlight-fill: #ffb30033;" +
-            "-fx-border-color: #1e1e1e;"
-        );
-
-        Label labelNome = new Label("Nome:");
-        labelNome.setStyle("-fx-text-fill: #ffb300; -fx-font-weight: bold;");
-
-        grid.add(labelNome, 0, 0);
+        TextField nomeField = criarCampoTexto("Nome do plano");
+        grid.add(criarLabel("Nome:"), 0, 0);
         grid.add(nomeField, 1, 0);
 
-        VBox vbox = new VBox(grid);
-        vbox.setPadding(new Insets(10));
-        vbox.setStyle("-fx-background-color: #2c2c2c;");
-
-        dialog.getDialogPane().setContent(vbox);
+        dialog.getDialogPane().setContent(grid);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         Optional<ButtonType> resultado = dialog.showAndWait();
@@ -194,36 +157,11 @@ public class MenuPlanoTreinosController {
         }
 
         // Criar o Dialog customizado
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Meus Planos de Treino");
-        dialog.setHeaderText(String.format("Total de %d plano(s) de treino registrado(s)", planos.size()));
-
-        // Estilo do Dialog e cabeçalho
-        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        dialog.setOnShown(e -> {
-            Node headerPanel = dialog.getDialogPane().lookup(".header-panel");
-            if (headerPanel != null) {
-                headerPanel.setStyle("-fx-background-color: #1e1e1e;");
-            }
-            Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
-            if (headerLabel != null) {
-                headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
-            }
-        });
+        Dialog<ButtonType> dialog = criarDialogPadrao("Meus Planos de Treino", 
+            String.format("Total de %d plano(s) de treino registrado(s)", planos.size()));
 
         // TextArea estilizado
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);
-        textArea.setPrefWidth(600);
-        textArea.setPrefHeight(400);
-        textArea.setStyle(
-            "-fx-control-inner-background: #2c2c2c;" +
-            "-fx-font-size: 14px;" +
-            "-fx-font-family: 'Consolas';" +
-            "-fx-text-fill: #ffb300;" +
-            "-fx-highlight-fill: #ffb30033;" +
-            "-fx-border-color: #1e1e1e;"
-        );
+        TextArea textArea = criarTextArea(600, 400);
 
         // Montar o texto a ser exibido
         StringBuilder sb = new StringBuilder();
@@ -236,16 +174,11 @@ public class MenuPlanoTreinosController {
         }
         textArea.setText(sb.toString());
 
-        // VBox de fundo para consistência visual
-        VBox vbox = new VBox(textArea);
-        vbox.setPadding(new Insets(20));
-        vbox.setStyle("-fx-background-color: #2c2c2c;");
-
-        dialog.getDialogPane().setContent(vbox);
+        dialog.getDialogPane().setContent(textArea);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        
         dialog.showAndWait();
     }
-
 
     @FXML
     private void handleEditarPlano() {
@@ -265,55 +198,20 @@ public class MenuPlanoTreinosController {
         }
 
         // Criar Dialog estilizado
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Editar Plano de Treino");
-        dialog.setHeaderText("Edite o plano '" + planoSelecionado.getNome() + "'");
+        Dialog<ButtonType> dialog = criarDialogPadrao("Editar Plano de Treino", 
+            "Edite o plano '" + planoSelecionado.getNome() + "'");
 
-        // Estilo do Dialog e cabeçalho
-        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        dialog.setOnShown(e -> {
-            Node headerPanel = dialog.getDialogPane().lookup(".header-panel");
-            if (headerPanel != null) {
-                headerPanel.setStyle("-fx-background-color: #1e1e1e;");
-            }
-            Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
-            if (headerLabel != null) {
-                headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
-            }
-        });
+        // GridPane padronizado
+        GridPane grid = criarGridPadrao();
 
-        // GridPane para edição, com cores e espaçamento
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20));
-        grid.setStyle("-fx-background-color: #2c2c2c;");
+        TextField nomeField = criarCampoTexto(planoSelecionado.getNome());
+        nomeField.setText(planoSelecionado.getNome());
 
-        Label labelNome = new Label("Novo Nome:");
-        labelNome.setStyle("-fx-text-fill: #ffb300; -fx-font-weight: bold;");
-
-        Label labelHint = new Label("(deixe em branco para não alterar)");
-        labelHint.setStyle("-fx-text-fill: #ffb30099; -fx-font-size: 12px; -fx-font-style: italic;");
-
-        TextField nomeField = new TextField(planoSelecionado.getNome());
-        nomeField.setStyle(
-            "-fx-control-inner-background: #2c2c2c;" +
-            "-fx-font-size: 14px;" +
-            "-fx-font-family: 'Consolas';" +
-            "-fx-text-fill: #ffb300;" +
-            "-fx-highlight-fill: #ffb30033;" +
-            "-fx-border-color: #1e1e1e;"
-        );
-
-        grid.add(labelNome, 0, 0);
+        grid.add(criarLabel("Novo Nome:"), 0, 0);
         grid.add(nomeField, 1, 0);
-        grid.add(labelHint, 0, 1, 2, 1);
+        grid.add(criarLabel("(Deixe em branco para não alterar)"), 0, 1, 2, 1);
 
-        VBox vbox = new VBox(grid);
-        vbox.setPadding(new Insets(10));
-        vbox.setStyle("-fx-background-color: #2c2c2c;");
-
-        dialog.getDialogPane().setContent(vbox);
+        dialog.getDialogPane().setContent(grid);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         Optional<ButtonType> resultado = dialog.showAndWait();
@@ -351,66 +249,25 @@ public class MenuPlanoTreinosController {
             return;
         }
 
-        // Criar o Dialog de confirmação estilizado
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Confirmar Exclusão");
-        dialog.setHeaderText("Deseja realmente deletar o plano '" + planoSelecionado.getNome() + "'?");
-
-        // Estilo do Dialog e do cabeçalho
-        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        dialog.setOnShown(e -> {
-            Node headerPanel = dialog.getDialogPane().lookup(".header-panel");
-            if (headerPanel != null) {
-                headerPanel.setStyle("-fx-background-color: #1e1e1e;");
-            }
-            Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
-            if (headerLabel != null) {
-                headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
+        // Confirmação usando Alert puro (igual ExercicioViewController)
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Confirmar Exclusão");
+        confirmacao.setHeaderText("Deletar: " + planoSelecionado.getNome());
+        confirmacao.setContentText("Tem certeza que deseja deletar este plano de treino?");
+        confirmacao.showAndWait().ifPresent(resp -> {
+            if (resp == ButtonType.OK) {
+                try {
+                    boolean deletado = planoTreinoService.deletarPlano(idUsuarioLogado, planoSelecionado.getNome());
+                    if (deletado) {
+                        showInfo("Sucesso", "Plano '" + planoSelecionado.getNome() + "' deletado com sucesso!");
+                    } else {
+                        showError("Erro", "Plano não encontrado ou não pertence a você.");
+                    }
+                } catch (IllegalArgumentException e) {
+                    showError("Erro", "Erro ao deletar plano: " + e.getMessage());
+                }
             }
         });
-
-        // Mensagem estilizada dentro do Dialog
-        Label mensagem = new Label("Essa ação não poderá ser desfeita.");
-        mensagem.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 14px;");
-
-        VBox vbox = new VBox(mensagem);
-        vbox.setPadding(new Insets(20));
-        vbox.setStyle("-fx-background-color: #2c2c2c;");
-        vbox.setAlignment(Pos.CENTER_LEFT);
-
-        dialog.getDialogPane().setContent(vbox);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        // Estilo dos botões
-        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-        if (okButton != null) {
-            okButton.setText("Deletar");
-            okButton.setStyle(
-                "-fx-background-color: #ffb300; -fx-text-fill: black; " +
-                "-fx-font-weight: bold; -fx-cursor: hand;");
-        }
-        Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-        if (cancelButton != null) {
-            cancelButton.setText("Cancelar");
-            cancelButton.setStyle(
-                "-fx-background-color: #3a3a3a; -fx-text-fill: #ffb300; " +
-                "-fx-font-weight: bold; -fx-cursor: hand;");
-        }
-
-        Optional<ButtonType> resultado = dialog.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            try {
-                boolean deletado = planoTreinoService.deletarPlano(idUsuarioLogado, planoSelecionado.getNome());
-                if (deletado) {
-                    showInfo("Sucesso", "Plano '" + planoSelecionado.getNome() + "' deletado com sucesso!");
-                } else {
-                    showError("Erro", "Plano não encontrado ou não pertence a você.");
-                }
-            } catch (IllegalArgumentException e) {
-                showError("Erro", "Erro ao deletar plano: " + e.getMessage());
-            }
-        }
     }
 
     @FXML
@@ -438,96 +295,71 @@ public class MenuPlanoTreinosController {
             return;
         }
 
-        // Criar ChoiceDialog estilizado para seleção de exercício
+        // Selecionar exercício usando Dialog com ComboBox (igual ExercicioViewController)
         List<String> opcoesExercicios = new ArrayList<>();
         for (Exercicio ex : meusExercicios) {
             opcoesExercicios.add(String.format("%d - %s", ex.getIdExercicio(), ex.getNome()));
         }
 
-        ChoiceDialog<String> dialogExercicio = new ChoiceDialog<>(opcoesExercicios.get(0), opcoesExercicios);
-        dialogExercicio.setTitle("Selecionar Exercício");
-        dialogExercicio.setHeaderText("Selecione o exercício para adicionar ao plano:");
-        dialogExercicio.setContentText("Exercício:");
+        Dialog<ButtonType> dialogExercicio = criarDialogPadrao("Selecionar Exercício", 
+            "Selecione o exercício para adicionar ao plano:");
+        GridPane gridExercicio = criarGridPadrao();
 
-        // Estilo escuro do ChoiceDialog
-        DialogPane dpExercicio = dialogExercicio.getDialogPane();
-        dpExercicio.setStyle("-fx-background-color: #1e1e1e;");
-        dpExercicio.lookup(".content.label").setStyle("-fx-text-fill: #ffb300;");
-        Node headerLabelEx = dpExercicio.lookup(".header-panel .label");
-        if (headerLabelEx != null) {
-            headerLabelEx.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
-        }
+        Label labelExercicio = criarLabel("Exercício:");
+        ComboBox<String> comboBoxExercicio = new ComboBox<>();
+        comboBoxExercicio.getItems().addAll(opcoesExercicios);
+        comboBoxExercicio.getSelectionModel().selectFirst();
 
-        Optional<String> escolhaExercicio = dialogExercicio.showAndWait();
-        if (!escolhaExercicio.isPresent()) {
+        // Estilo do ComboBox
+        comboBoxExercicio.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+                setTextFill(javafx.scene.paint.Color.web("#ffb300"));
+                setStyle("-fx-background-color: #222;");
+            }
+        });
+        comboBoxExercicio.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+                setTextFill(javafx.scene.paint.Color.web("#ffb300"));
+                setStyle("-fx-background-color: #222;");
+            }
+        });
+        comboBoxExercicio.setStyle("-fx-background-color: #222; -fx-text-fill: #ffb300;");
+
+        gridExercicio.add(labelExercicio, 0, 0);
+        gridExercicio.add(comboBoxExercicio, 1, 0);
+
+        dialogExercicio.getDialogPane().setContent(gridExercicio);
+        dialogExercicio.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> resultadoExercicio = dialogExercicio.showAndWait();
+        if (!resultadoExercicio.isPresent() || resultadoExercicio.get() != ButtonType.OK) {
             return;
         }
 
-        int idExercicio = Integer.parseInt(escolhaExercicio.get().split(" - ")[0]);
+        int idExercicio = Integer.parseInt(comboBoxExercicio.getValue().split(" - ")[0]);
 
         // Criar o diálogo final para carga e repetições
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Adicionar Exercício ao Plano");
-        dialog.setHeaderText("Configure o exercício no plano:");
+        Dialog<ButtonType> dialog = criarDialogPadrao("Adicionar Exercício ao Plano", 
+            "Configure o exercício no plano:");
 
-        // Estilo do Dialog e cabeçalho
-        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        dialog.setOnShown(e -> {
-            Node headerPanel = dialog.getDialogPane().lookup(".header-panel");
-            if (headerPanel != null) {
-                headerPanel.setStyle("-fx-background-color: #1e1e1e;");
-            }
-            Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
-            if (headerLabel != null) {
-                headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
-            }
-        });
+        // GridPane padronizado
+        GridPane grid = criarGridPadrao();
 
-        // Grid estilizado
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20));
-        grid.setStyle("-fx-background-color: #2c2c2c;");
+        TextField cargaField = criarCampoTexto("Carga em kg");
+        TextField repeticoesField = criarCampoTexto("Número de repetições");
 
-        // Campos e labels
-        Label labelCarga = new Label("Carga (kg):");
-        Label labelRepeticoes = new Label("Repetições:");
-        labelCarga.setStyle("-fx-text-fill: #ffb300; -fx-font-weight: bold;");
-        labelRepeticoes.setStyle("-fx-text-fill: #ffb300; -fx-font-weight: bold;");
-
-        TextField cargaField = new TextField();
-        cargaField.setPromptText("Carga em kg");
-        cargaField.setStyle(
-            "-fx-control-inner-background: #2c2c2c;" +
-            "-fx-font-size: 14px;" +
-            "-fx-font-family: 'Consolas';" +
-            "-fx-text-fill: #ffb300;" +
-            "-fx-highlight-fill: #ffb30033;" +
-            "-fx-border-color: #1e1e1e;"
-        );
-
-        TextField repeticoesField = new TextField();
-        repeticoesField.setPromptText("Número de repetições");
-        repeticoesField.setStyle(
-            "-fx-control-inner-background: #2c2c2c;" +
-            "-fx-font-size: 14px;" +
-            "-fx-font-family: 'Consolas';" +
-            "-fx-text-fill: #ffb300;" +
-            "-fx-highlight-fill: #ffb30033;" +
-            "-fx-border-color: #1e1e1e;"
-        );
-
-        grid.add(labelCarga, 0, 0);
+        grid.add(criarLabel("Carga (kg):"), 0, 0);
         grid.add(cargaField, 1, 0);
-        grid.add(labelRepeticoes, 0, 1);
+        grid.add(criarLabel("Repetições:"), 0, 1);
         grid.add(repeticoesField, 1, 1);
 
-        VBox vbox = new VBox(grid);
-        vbox.setPadding(new Insets(10));
-        vbox.setStyle("-fx-background-color: #2c2c2c;");
-
-        dialog.getDialogPane().setContent(vbox);
+        dialog.getDialogPane().setContent(grid);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         Optional<ButtonType> resultado = dialog.showAndWait();
@@ -588,90 +420,65 @@ public class MenuPlanoTreinosController {
                 item.getIdExercicio(), nomeExercicio, item.getCargaKg(), item.getRepeticoes()));
         }
 
-        // ChoiceDialog estilizado
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(opcoesExercicios.get(0), opcoesExercicios);
-        dialog.setTitle("Remover Exercício");
-        dialog.setHeaderText("Selecione o exercício para remover:");
-        dialog.setContentText("Exercício:");
+        // Selecionar exercício usando Dialog com ComboBox (igual ExercicioViewController)
+        Dialog<ButtonType> dialogExercicio = criarDialogPadrao("Remover Exercício", 
+            "Selecione o exercício para remover:");
+        GridPane gridExercicio = criarGridPadrao();
 
-        // Estilo do ChoiceDialog
-        DialogPane dp = dialog.getDialogPane();
-        dp.setStyle("-fx-background-color: #1e1e1e;");
-        dp.getContentText();
-        Node headerLabel = dp.lookup(".header-panel .label");
-        if (headerLabel != null) {
-            headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
-        }
+        Label labelExercicio = criarLabel("Exercício:");
+        ComboBox<String> comboBoxExercicio = new ComboBox<>();
+        comboBoxExercicio.getItems().addAll(opcoesExercicios);
+        comboBoxExercicio.getSelectionModel().selectFirst();
 
-        dp.lookup(".content.label").setStyle("-fx-text-fill: #ffb300;");
-        dp.lookup(".combo-box").setStyle(
-            "-fx-background-color: #2c2c2c;" +
-            "-fx-text-fill: #ffb300;" +
-            "-fx-border-color: #1e1e1e;"
-        );
+        // Estilo do ComboBox
+        comboBoxExercicio.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+                setTextFill(javafx.scene.paint.Color.web("#ffb300"));
+                setStyle("-fx-background-color: #222;");
+            }
+        });
+        comboBoxExercicio.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+                setTextFill(javafx.scene.paint.Color.web("#ffb300"));
+                setStyle("-fx-background-color: #222;");
+            }
+        });
+        comboBoxExercicio.setStyle("-fx-background-color: #222; -fx-text-fill: #ffb300;");
 
-        Optional<String> escolha = dialog.showAndWait();
-        if (escolha.isEmpty()) {
+        gridExercicio.add(labelExercicio, 0, 0);
+        gridExercicio.add(comboBoxExercicio, 1, 0);
+
+        dialogExercicio.getDialogPane().setContent(gridExercicio);
+        dialogExercicio.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> resultadoExercicio = dialogExercicio.showAndWait();
+        if (!resultadoExercicio.isPresent() || resultadoExercicio.get() != ButtonType.OK) {
             return;
         }
 
-        int idExercicio = Integer.parseInt(escolha.get().split(" - ")[0]);
+        int idExercicio = Integer.parseInt(comboBoxExercicio.getValue().split(" - ")[0]);
 
-        // Dialogo de confirmação personalizado
-        Dialog<ButtonType> confirmDialog = new Dialog<>();
-        confirmDialog.setTitle("Confirmar Remoção");
-        confirmDialog.setHeaderText("Deseja realmente remover o exercício do plano?");
-        confirmDialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-
-        confirmDialog.setOnShown(e -> {
-            Node headerPanel = confirmDialog.getDialogPane().lookup(".header-panel");
-            if (headerPanel != null) {
-                headerPanel.setStyle("-fx-background-color: #1e1e1e;");
-            }
-            Node headerLabel2 = confirmDialog.getDialogPane().lookup(".header-panel .label");
-            if (headerLabel2 != null) {
-                headerLabel2.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
+        // Confirmação usando Alert puro (igual ExercicioViewController)
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Confirmar Remoção");
+        confirmacao.setHeaderText("Remover exercício do plano");
+        confirmacao.setContentText("Tem certeza que deseja remover este exercício do plano?");
+        confirmacao.showAndWait().ifPresent(resp -> {
+            if (resp == ButtonType.OK) {
+                try {
+                    planoTreinoService.removerExercicioDoPlano(idUsuarioLogado, planoSelecionado.getNome(), idExercicio);
+                    showInfo("Sucesso", "Exercício removido do plano '" + planoSelecionado.getNome() + "' com sucesso!");
+                } catch (IllegalArgumentException e) {
+                    showError("Erro", "Erro ao remover exercício: " + e.getMessage());
+                }
             }
         });
-
-        Label mensagem = new Label("Essa ação não poderá ser desfeita.");
-        mensagem.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 14px;");
-
-        VBox vbox = new VBox(mensagem);
-        vbox.setPadding(new Insets(20));
-        vbox.setStyle("-fx-background-color: #2c2c2c;");
-        vbox.setAlignment(Pos.CENTER_LEFT);
-
-        confirmDialog.getDialogPane().setContent(vbox);
-        confirmDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        Button okButton = (Button) confirmDialog.getDialogPane().lookupButton(ButtonType.OK);
-        if (okButton != null) {
-            okButton.setText("Remover");
-            okButton.setStyle(
-                "-fx-background-color: #ffb300; -fx-text-fill: black; " +
-                "-fx-font-weight: bold; -fx-cursor: hand;"
-            );
-        }
-        Button cancelButton = (Button) confirmDialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-        if (cancelButton != null) {
-            cancelButton.setText("Cancelar");
-            cancelButton.setStyle(
-                "-fx-background-color: #3a3a3a; -fx-text-fill: #ffb300; " +
-                "-fx-font-weight: bold; -fx-cursor: hand;"
-            );
-        }
-
-        Optional<ButtonType> resultado = confirmDialog.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            try {
-                planoTreinoService.removerExercicioDoPlano(idUsuarioLogado, planoSelecionado.getNome(), idExercicio);
-                showInfo("Sucesso", "Exercício removido do plano '" + planoSelecionado.getNome() + "' com sucesso!");
-            } catch (IllegalArgumentException e) {
-                showError("Erro", "Erro ao remover exercício: " + e.getMessage());
-            }
-        }
     }
 
 
@@ -693,36 +500,11 @@ public class MenuPlanoTreinosController {
         }
 
         // Criar dialog customizado
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Detalhes do Plano");
-        dialog.setHeaderText("Informações completas do plano:");
-
-        // Estilo do dialog e cabeçalho
-        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        dialog.setOnShown(e -> {
-            Node headerPanel = dialog.getDialogPane().lookup(".header-panel");
-            if (headerPanel != null) {
-                headerPanel.setStyle("-fx-background-color: #1e1e1e;");
-            }
-            Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
-            if (headerLabel != null) {
-                headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
-            }
-        });
+        Dialog<ButtonType> dialog = criarDialogPadrao("Detalhes do Plano", 
+            "Informações completas do plano:");
 
         // TextArea estilizado
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);
-        textArea.setPrefWidth(650);
-        textArea.setPrefHeight(420);
-        textArea.setStyle(
-            "-fx-control-inner-background: #2c2c2c;" +
-            "-fx-text-fill: #ffb300;" +
-            "-fx-font-size: 14px;" +
-            "-fx-font-family: 'Consolas';" +
-            "-fx-highlight-fill: #ffb30033;" +
-            "-fx-border-color: #1e1e1e;"
-        );
+        TextArea textArea = criarTextArea(650, 420);
 
         // Construir relatório detalhado
         StringBuilder sb = new StringBuilder();
@@ -752,12 +534,7 @@ public class MenuPlanoTreinosController {
         sb.append("\n═══════════════════════════════════════");
         textArea.setText(sb.toString());
 
-        // Layout com fundo escuro
-        VBox vbox = new VBox(textArea);
-        vbox.setPadding(new Insets(20));
-        vbox.setStyle("-fx-background-color: #2c2c2c;");
-
-        dialog.getDialogPane().setContent(vbox);
+        dialog.getDialogPane().setContent(textArea);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
 
         dialog.showAndWait();
@@ -791,15 +568,44 @@ public class MenuPlanoTreinosController {
                 plano.getIdPlano(), plano.getNome(), plano.getItensTreino().size()));
         }
         
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(opcoesPlanos.get(0), opcoesPlanos);
-        dialog.setTitle(titulo);
-        dialog.setHeaderText("Selecione o plano de treino:");
-        dialog.setContentText("Plano:");
-        
-        Optional<String> resultado = dialog.showAndWait();
-        if (resultado.isPresent()) {
-            String escolha = resultado.get();
-            int idPlano = Integer.parseInt(escolha.split(" - ")[0]);
+        Dialog<ButtonType> dialog = criarDialogPadrao(titulo, "Selecione o plano de treino:");
+        GridPane grid = criarGridPadrao();
+
+        Label label = criarLabel("Plano:");
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.getItems().addAll(opcoesPlanos);
+        comboBox.getSelectionModel().selectFirst();
+
+        // Estilo do ComboBox
+        comboBox.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+                setTextFill(javafx.scene.paint.Color.web("#ffb300"));
+                setStyle("-fx-background-color: #222;");
+            }
+        });
+        comboBox.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+                setTextFill(javafx.scene.paint.Color.web("#ffb300"));
+                setStyle("-fx-background-color: #222;");
+            }
+        });
+        comboBox.setStyle("-fx-background-color: #222; -fx-text-fill: #ffb300;");
+
+        grid.add(label, 0, 0);
+        grid.add(comboBox, 1, 0);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> resultado = dialog.showAndWait();
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            int idPlano = Integer.parseInt(comboBox.getValue().split(" - ")[0]);
             return planos.stream()
                 .filter(p -> p.getIdPlano() == idPlano)
                 .findFirst()
@@ -810,39 +616,77 @@ public class MenuPlanoTreinosController {
 
     // --- MÉTODOS AUXILIARES PARA ALERTAS ---
     /**
+     * Cria um Dialog padronizado com estilo escuro.
+     */
+    private Dialog<ButtonType> criarDialogPadrao(String titulo, String cabecalho) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle(titulo);
+        dialog.setHeaderText(cabecalho);
+        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
+        dialog.setOnShown(e -> {
+            Node header = dialog.getDialogPane().lookup(".header-panel");
+            if (header != null) header.setStyle("-fx-background-color: #1e1e1e;");
+            Node label = dialog.getDialogPane().lookup(".header-panel .label");
+            if (label != null) label.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
+        });
+        return dialog;
+    }
+
+    private GridPane criarGridPadrao() {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setStyle("-fx-background-color: #2c2c2c;");
+        return grid;
+    }
+
+    private Label criarLabel(String texto) {
+        Label label = new Label(texto);
+        label.setStyle("-fx-font-weight: bold; -fx-text-fill: #ffb300;");
+        return label;
+    }
+
+    private TextField criarCampoTexto(String placeholder) {
+        TextField field = new TextField();
+        field.setPromptText(placeholder);
+        field.setStyle(
+            "-fx-text-fill: #ffb300;" +
+            "-fx-background-color: #333;" +
+            "-fx-border-color: #1e1e1e;" +
+            "-fx-prompt-text-fill: #888888;"  // Texto do placeholder em cinza
+        );
+        return field;
+    }
+
+    private TextArea criarTextArea(int largura, int altura) {
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+        textArea.setPrefWidth(largura);
+        textArea.setPrefHeight(altura);
+        textArea.setStyle(
+            "-fx-control-inner-background: #2c2c2c;" +
+            "-fx-background-color: #2c2c2c;" +
+            "-fx-text-fill: #ffb300;" +
+            "-fx-border-color: transparent;" +
+            "-fx-focus-color: transparent;" +
+            "-fx-faint-focus-color: transparent;" +
+            "-fx-padding: 0;"
+        );
+        return textArea;
+    }
+
+    /**
      * Exibe uma caixa de diálogo de informação.
      */
     private void showInfo(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        StyledAlert.showInformationAndWait(title, content);
     }
 
     /**
      * Exibe uma caixa de diálogo de erro.
      */
     private void showError(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    /**
-     * Exibe uma caixa de diálogo de confirmação e retorna a resposta do usuário.
-     *
-     * @return true se o usuário confirmar, false caso contrário
-     */
-    private boolean showConfirmation(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-
-        Optional<ButtonType> resultado = alert.showAndWait();
-        return resultado.isPresent() && resultado.get() == ButtonType.OK;
+        StyledAlert.showErrorAndWait(title, content);
     }
 }

@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import br.upe.model.Usuario;
 import br.upe.model.TipoUsuario;
+import br.upe.model.Usuario;
 import br.upe.service.UsuarioService;
+import br.upe.ui.util.StyledAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -139,10 +140,14 @@ public class LoginController {
      * Exibe uma caixa de diálogo para feedback do usuário.
      */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
+        if (tipo == Alert.AlertType.ERROR) {
+            StyledAlert.showErrorAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.INFORMATION) {
+            StyledAlert.showInformationAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.WARNING) {
+            StyledAlert.showWarningAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.CONFIRMATION) {
+            StyledAlert.showConfirmationAndWait(titulo, mensagem);
+        }
     }
 }

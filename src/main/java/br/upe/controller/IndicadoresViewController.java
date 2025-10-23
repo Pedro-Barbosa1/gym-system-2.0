@@ -11,10 +11,12 @@ import java.util.logging.Logger;
 import br.upe.model.IndicadorBiomedico;
 import br.upe.service.IIndicadorBiomedicoService;
 import br.upe.service.IndicadorBiomedicoService;
+import br.upe.ui.util.StyledAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -27,9 +29,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 
 public class IndicadoresViewController {
@@ -302,10 +303,14 @@ public class IndicadoresViewController {
      * @param mensagem Mensagem a ser exibida
      */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
+        if (tipo == Alert.AlertType.ERROR) {
+            StyledAlert.showErrorAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.INFORMATION) {
+            StyledAlert.showInformationAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.WARNING) {
+            StyledAlert.showWarningAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.CONFIRMATION) {
+            StyledAlert.showConfirmationAndWait(titulo, mensagem);
+        }
     }
 }

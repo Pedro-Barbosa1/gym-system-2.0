@@ -17,6 +17,7 @@ import br.upe.service.IExercicioService;
 import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.service.SessaoTreinoService;
+import br.upe.ui.util.StyledAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +46,7 @@ public class TreinoViewController {
     private final IPlanoTreinoService planoTreinoService;
     private final IExercicioService exercicioService;
     
-    private int idUsuarioLogado = 1; // TODO: Integrar com sistema de login
+    private int idUsuarioLogado = 1; 
 
     @FXML
     private ImageView ITreino;
@@ -344,13 +345,10 @@ public class TreinoViewController {
                 sugestao.cargaPlanejada(), sugestao.cargaRealizada()
             );
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Atualizar Plano de Treino");
-            alert.setHeaderText("Sugestão de Atualização");
-            alert.setContentText(mensagem);
+            boolean confirmado = StyledAlert.showConfirmationAndWait("Atualizar Plano de Treino", 
+                "Sugestão de Atualização\n\n" + mensagem);
 
-            Optional<ButtonType> resultado = alert.showAndWait();
-            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            if (confirmado) {
                 sessaoTreinoService.aplicarAtualizacoesNoPlano(planoBase.getIdPlano(), 
                         sugestao.idExercicio(), sugestao.repRealizadas(), sugestao.cargaRealizada());
                 logger.info("Plano atualizado para " + sugestao.nomeExercicio());
@@ -384,10 +382,14 @@ public class TreinoViewController {
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
+        if (tipo == Alert.AlertType.ERROR) {
+            StyledAlert.showErrorAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.INFORMATION) {
+            StyledAlert.showInformationAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.WARNING) {
+            StyledAlert.showWarningAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.CONFIRMATION) {
+            StyledAlert.showConfirmationAndWait(titulo, mensagem);
+        }
     }
 }

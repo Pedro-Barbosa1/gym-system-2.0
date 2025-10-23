@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import br.upe.ui.util.StyledAlert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -146,10 +147,14 @@ public class MenuUsuarioLogadoController {
      * @param mensagem Mensagem a ser exibida
      */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
+        if (tipo == Alert.AlertType.ERROR) {
+            StyledAlert.showErrorAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.INFORMATION) {
+            StyledAlert.showInformationAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.WARNING) {
+            StyledAlert.showWarningAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.CONFIRMATION) {
+            StyledAlert.showConfirmationAndWait(titulo, mensagem);
+        }
     }
 }

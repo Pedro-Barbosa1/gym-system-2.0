@@ -4,19 +4,24 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import br.upe.service.IndicadorBiomedicoService;
 import br.upe.service.RelatorioDiferencaIndicadores;
+import br.upe.ui.util.StyledAlert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -239,15 +244,14 @@ public class MenuRelatoriosController {
 
     /** Mostra alertas com o mesmo tema visual. */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        alert.setOnShown(e -> {
-            alert.getDialogPane().lookupAll(".label").forEach(node ->
-                    node.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 14px;"));
-        });
-        alert.showAndWait();
+        if (tipo == Alert.AlertType.ERROR) {
+            StyledAlert.showErrorAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.INFORMATION) {
+            StyledAlert.showInformationAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.WARNING) {
+            StyledAlert.showWarningAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.CONFIRMATION) {
+            StyledAlert.showConfirmationAndWait(titulo, mensagem);
+        }
     }
 }

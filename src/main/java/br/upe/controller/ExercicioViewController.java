@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import br.upe.model.Exercicio;
 import br.upe.service.ExercicioService;
 import br.upe.service.IExercicioService;
+import br.upe.ui.util.StyledAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -347,15 +348,14 @@ public class ExercicioViewController {
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        alert.setOnShown(e ->
-                alert.getDialogPane().lookupAll(".label")
-                        .forEach(node -> node.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 14px;"))
-        );
-        alert.showAndWait();
+        if (tipo == Alert.AlertType.ERROR) {
+            StyledAlert.showErrorAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.INFORMATION) {
+            StyledAlert.showInformationAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.WARNING) {
+            StyledAlert.showWarningAndWait(titulo, mensagem);
+        } else if (tipo == Alert.AlertType.CONFIRMATION) {
+            StyledAlert.showConfirmationAndWait(titulo, mensagem);
+        }
     }
 }
