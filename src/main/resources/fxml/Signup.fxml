@@ -14,17 +14,9 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.RegisterController">
    <center>
-      <AnchorPane prefHeight="637.0" prefWidth="574.0" BorderPane.alignment="CENTER">
-         <children>
-            <ImageView fitHeight="700.0" fitWidth="900.0" pickOnBounds="true">
-               <image>
-                  <Image url="@../../images/behang-met-dumbells-en-gewichten.png" />
-               </image>
-            </ImageView>
-            <AnchorPane layoutX="225.0" layoutY="-2.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #515151;">
-               <children>
+      <AnchorPane prefHeight="637.0" prefWidth="574.0" style="-fx-background-color: #2c2c2c;" BorderPane.alignment="CENTER">
+            <AnchorPane layoutX="225.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #2C2C2C;">
                   <Pane layoutX="35.0" layoutY="192.0" prefHeight="438.0" prefWidth="379.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
-                     <children>
                         <Label layoutX="36.0" layoutY="94.0" prefHeight="28.0" prefWidth="90.0" text="Nome completo" />
                         <Label layoutX="36.0" layoutY="156.0" prefHeight="28.0" prefWidth="90.0" text="E-mail" />
                         <TextField fx:id="emailTextField" layoutX="36.0" layoutY="184.0" prefHeight="26.0" prefWidth="307.0" promptText="E-mail" />
@@ -32,32 +24,32 @@
                         <Label layoutX="36.0" layoutY="278.0" prefHeight="28.0" prefWidth="106.0" text="Confirme a senha" />
                         <PasswordField fx:id="setSenhaField" layoutX="36.0" layoutY="244.0" prefHeight="26.0" prefWidth="307.0" promptText="Senha" />
                         <PasswordField fx:id="senhaTextField" layoutX="36.0" layoutY="306.0" prefHeight="26.0" prefWidth="307.0" promptText="Confirme a senha" />
-                        <Button fx:id="cadastroBotao" layoutX="122.0" layoutY="350.0" mnemonicParsing="false" onAction="#onCadastrar" prefHeight="26.0" prefWidth="134.0" style="-fx-background-color: #FFDE21;" text="Cadastrar" textFill="WHITE">
+                        <Button fx:id="cadastroBotao" layoutX="122.0" layoutY="350.0" mnemonicParsing="false" onAction="#onCadastrar" prefHeight="26.0" prefWidth="134.0" style="-fx-background-color: #e5a000;" text="Cadastrar" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Button>
-                        <Button fx:id="voltarBotao" layoutX="163.0" layoutY="385.0" mnemonicParsing="false" onAction="#onVoltar" prefHeight="26.0" prefWidth="53.0" style="-fx-background-color: #5A189A;" text="Voltar" textFill="#f7f7f7">
+                        <Button fx:id="voltarBotao" layoutX="163.0" layoutY="385.0" mnemonicParsing="false" onAction="#onVoltar" prefHeight="26.0" prefWidth="53.0" style="-fx-background-color: #5A189A; -fx-border-radius: 5;" text="Voltar" textFill="#f7f7f7">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Button>
                         <TextField fx:id="nomeCompletoTextField" layoutX="36.0" layoutY="122.0" prefHeight="26.0" prefWidth="307.0" promptText="Nome" />
-                        <Text layoutX="96.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System" textAlignment="CENTER" wrappingWidth="186.93673706054688">
+                        <Text fill="#5a189a" layoutX="96.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cadastro" textAlignment="CENTER" wrappingWidth="186.93673706054688">
                            <font>
-                              <Font size="33.0" />
+                              <Font name="System Bold" size="24.0" />
                            </font>
                         </Text>
-                     </children>
                   </Pane>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="150.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../images/dumbbells.png" />
-                     </image>
+                  <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="185.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@../images/logo_app.png" />
                   </ImageView>
-               </children>
+                  <Text fill="#e5a000" layoutX="138.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System">
+                     <font>
+                        <Font name="System Bold" size="30.0" />
+                     </font>
+                  </Text>
             </AnchorPane>
-         </children>
       </AnchorPane>
    </center>
 </BorderPane>

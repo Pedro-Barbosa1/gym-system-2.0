@@ -1,10 +1,11 @@
 package br.upe.repository.impl;
 
-import br.upe.model.ItemPlanoTreino;
-import br.upe.model.PlanoTreino;
-import br.upe.repository.IPlanoTreinoRepository;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -14,6 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import br.upe.model.ItemPlanoTreino;
+import br.upe.model.PlanoTreino;
+import br.upe.repository.IPlanoTreinoRepository;
 
 public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
 

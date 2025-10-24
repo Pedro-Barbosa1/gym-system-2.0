@@ -1,14 +1,18 @@
 package br.upe.util;
 
-public class CalculadoraIMC {
+public final class CalculadoraIMC {
 
-    // Metodo para verificar as condições
-    // Adicionado um comentário para forçar a recompilação
+    private CalculadoraIMC() {
+        throw new IllegalStateException("Classe utilitária");
+    }
+
     public static double calcular(double pesoKg, double alturaCm) {
         if (alturaCm <= 0) {
             throw new IllegalArgumentException("Altura deve ser maior que zero para calcular o IMC.");
         }
-        // Calcula o IMC
+        if (pesoKg <= 0) {
+            throw new IllegalArgumentException("Peso deve ser maior que zero para calcular o IMC.");
+        }
         double alturaMetros = alturaCm / 100.0;
         return pesoKg / (alturaMetros * alturaMetros);
     }

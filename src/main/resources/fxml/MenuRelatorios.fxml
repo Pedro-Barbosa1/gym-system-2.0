@@ -2,70 +2,54 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.controller.MenuRelatoriosController">
-   <children>
-      <StackPane prefHeight="700.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <VBox alignment="CENTER" prefHeight="700.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0">
-         <children>
-            <HBox alignment="CENTER" prefHeight="272.0" prefWidth="900.0">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/dumbbells%201.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets left="10.0" right="200.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/Design%20sem%20nome%20(5)%202.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets right="200.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <AnchorPane prefHeight="138.0" prefWidth="150.0">
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="165.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="34.0">
-                           <image>
-                              <Image url="@../images/Design%20sem%20nome%20(6)%201.png" />
-                           </image>
-                        </ImageView>
-                        <Button fx:id="sairB" layoutX="3.0" layoutY="38.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="142.0" prefWidth="143.0" style="-fx-background-color: transparent;" text="" />
-                     </children>
-                  </AnchorPane>
-               </children>
-               <padding>
-                  <Insets bottom="40.0" />
-               </padding>
-            </HBox>
-            <Button fx:id="exportarRelatorioB" minHeight="90.0" minWidth="500.0" mnemonicParsing="false" prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório Por Data" textFill="#e5a000">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.MenuRelatoriosController">
+      <AnchorPane layoutX="775.0" layoutY="-17.0" prefHeight="138.0" prefWidth="150.0">
+            <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="35.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="29.0">
+                  <Image url="@../images/sair.png" />
+            </ImageView>
+            <Button fx:id="sairB" layoutX="30.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
+      </AnchorPane>
+      <AnchorPane prefHeight="700.0" prefWidth="317.0">
+            <Button fx:id="exportarRelatorioB" layoutX="66.0" layoutY="191.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório Por Data" textFill="#e5a000">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
-               <VBox.margin>
-                  <Insets bottom="50.0" />
-               </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
-            <Button fx:id="exportarRelatorioDeDiferencaB" minHeight="90.0" minWidth="500.0" mnemonicParsing="false" prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório De Diferença" textFill="#e5a000">
+            <Button fx:id="exportarRelatorioDeDiferencaB" layoutX="66.0" layoutY="261.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório De Diferença" textFill="#e5a000">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
-               <VBox.margin>
-                  <Insets bottom="220.0" />
-               </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </Button>
-         </children>
-      </VBox>
-   </children>
+            <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/salvar.png" />
+            </ImageView>
+            <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="3.0" />
+            <Separator layoutY="107.0" prefHeight="7.0" prefWidth="320.0" />
+            <Text fill="#9c27b0" layoutX="98.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Relatórios">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="45.0" fitWidth="32.0" layoutX="14.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/calendario.png" />
+            </ImageView>
+            <ImageView fitHeight="56.0" fitWidth="32.0" layoutX="14.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../images/calendario-diferenca.png" />
+            </ImageView>
+      </AnchorPane>
    <opaqueInsets>
       <Insets bottom="80.0" top="80.0" />
    </opaqueInsets>
