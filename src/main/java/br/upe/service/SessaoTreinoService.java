@@ -1,18 +1,22 @@
 package br.upe.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import br.upe.model.Exercicio;
+import br.upe.model.ItemPlanoTreino;
+import br.upe.model.ItemSessaoTreino;
+import br.upe.model.PlanoTreino;
+import br.upe.model.SessaoTreino;
 import br.upe.repository.IExercicioRepository;
 import br.upe.repository.IPlanoTreinoRepository;
 import br.upe.repository.ISessaoTreinoRepository;
 import br.upe.repository.impl.ExercicioRepositoryImpl;
 import br.upe.repository.impl.PlanoTreinoRepositoryImpl;
 import br.upe.repository.impl.SessaoTreinoRepositoryImpl;
-import br.upe.model.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SessaoTreinoService {
 

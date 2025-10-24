@@ -1,10 +1,11 @@
 package br.upe.repository.impl;
 
-import br.upe.model.ItemSessaoTreino;
-import br.upe.model.SessaoTreino;
-import br.upe.repository.ISessaoTreinoRepository;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -13,9 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import br.upe.model.ItemSessaoTreino;
+import br.upe.model.SessaoTreino;
+import br.upe.repository.ISessaoTreinoRepository;
 
 public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
 

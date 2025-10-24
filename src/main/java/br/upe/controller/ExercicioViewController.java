@@ -30,7 +30,7 @@ public class ExercicioViewController {
 
     private static final Logger logger = Logger.getLogger(ExercicioViewController.class.getName());
     private final IExercicioService exercicioService;
-    private int idUsuarioLogado = 1; // TODO: integrar com login real
+    private int idUsuarioLogado = 1; 
 
     @FXML private Button BCadastrarEX;
     @FXML private Button BDetalhesEX;

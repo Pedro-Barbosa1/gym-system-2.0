@@ -27,7 +27,6 @@ import javafx.stage.Stage;
 
 /**
  * Controller para o menu de relatórios.
- * Mantém o mesmo estilo visual dos pop-ups do IndicadoresViewController.
  */
 public class MenuRelatoriosController {
 

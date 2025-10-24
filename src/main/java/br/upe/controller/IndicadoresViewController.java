@@ -43,7 +43,7 @@ public class IndicadoresViewController {
 
     private final IIndicadorBiomedicoService indicadorService;
     
-    private int idUsuarioLogado = 1; // TODO: Integrar com sistema de login
+    private int idUsuarioLogado = 1; 
 
     @FXML
     private Button BCadastrarIN;

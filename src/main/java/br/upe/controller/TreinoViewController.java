@@ -30,18 +30,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.TextArea;
-import javafx.scene.text.Font;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class TreinoViewController {
 
@@ -214,7 +212,6 @@ public class TreinoViewController {
         dialog.showAndWait();
     }
 
-    // Classe auxiliar para dados do histórico
     private static class HistoricoSessaoData {
         private final String data;
         private final int idPlano;
@@ -273,7 +270,6 @@ public class TreinoViewController {
                 }
                 });
 
-                // Para o texto mostrado quando um item é selecionado
                 planoCombo.setButtonCell(new ListCell<String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
@@ -307,7 +303,6 @@ public class TreinoViewController {
         return null;
     }
 
-    // NOVO METODO DE REGISTRO DOS EXERCÍCIOS
     private boolean registrarExerciciosComDialog(SessaoTreino sessaoAtual, PlanoTreino planoBase) {
         logger.info("--- Registrando Exercícios ---");
 

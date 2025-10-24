@@ -33,13 +33,10 @@ public class RelatorioDiferencaIndicadores {
 
     public void calcularDiferencas() {
         if (indicadorInicial != null && indicadorFinal != null) {
-            IndicadorBiomedico inicial = indicadorInicial;
-            IndicadorBiomedico finalObj = indicadorFinal;
-
-            this.diferencaPeso = finalObj.getPesoKg() - inicial.getPesoKg();
-            this.diferencaPercentualGordura = finalObj.getPercentualGordura() - inicial.getPercentualGordura();
-            this.diferencaPercentualMassaMagra = finalObj.getPercentualMassaMagra() - inicial.getPercentualMassaMagra();
-            this.diferencaImc = finalObj.getImc() - inicial.getImc();
+            this.diferencaPeso = indicadorFinal.getPesoKg() - indicadorInicial.getPesoKg();
+            this.diferencaPercentualGordura = indicadorFinal.getPercentualGordura() - indicadorInicial.getPercentualGordura();
+            this.diferencaPercentualMassaMagra = indicadorFinal.getPercentualMassaMagra() - indicadorInicial.getPercentualMassaMagra();
+            this.diferencaImc = indicadorFinal.getImc() - indicadorInicial.getImc();
         } else {
             logger.warning(MSG_INDICADORES_NAO_DEFINIDOS);
         }

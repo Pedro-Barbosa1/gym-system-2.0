@@ -38,14 +38,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-/**
- * Controller para a tela do Menu de Planos de Treino.
- *
- * Responsabilidades:
- * - Gerenciar ações dos botões da tela de planos de treino.
- * - Abrir telas correspondentes para criar, listar, editar, deletar planos.
- * - Exibir mensagens de informação, erro ou confirmação ao usuário.
- */
 public class MenuPlanoTreinosController {
 
     // Logger para registrar informações e erros do controller
@@ -56,9 +48,8 @@ public class MenuPlanoTreinosController {
     private IExercicioService exercicioService;
 
     // ID do usuário logado
-    private int idUsuarioLogado = 1; // TODO: Integrar com sistema de login
-
-    // --- VARIÁVEIS VINCULADAS AOS BOTÕES DO FXML ---
+    private int idUsuarioLogado = 1; 
+   
     @FXML
     private Button sairB; // Botão para voltar ao menu anterior
 
@@ -83,11 +74,6 @@ public class MenuPlanoTreinosController {
     @FXML
     private Button verDetalhesDePlanoB; // Botão para visualizar detalhes de um plano
 
-    // --- MÉTODO DE INICIALIZAÇÃO ---
-    /**
-     * Chamado automaticamente pelo JavaFX após o carregamento do FXML.
-     * Aqui configuramos as ações dos botões.
-     */
     @FXML
     public void initialize() {
         this.planoTreinoService = new PlanoTreinoService();
@@ -109,11 +95,7 @@ public class MenuPlanoTreinosController {
         sairB.setOnAction(e -> handleSair());
     }
 
-    // --- MÉTODOS DE TRATAMENTO DOS BOTÕES ---
-    /**
-     * Executado ao clicar em "Criar Novo Plano de Treino".
-     * Abre dialog com campo para nome do plano.
-     */
+
     @FXML
     private void handleCriarPlano() {
         logger.info("Criar Novo Plano de Treino clicado!");

@@ -1,11 +1,12 @@
 package br.upe.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 class CalculadoraIMCTest {
 
-    CalculadoraIMC calculadoraIMC = new CalculadoraIMC();
+    //@CalculadoraIMC calculadoraIMC = new CalculadoraIMC();
 
     @Test
     void testCalcularImcComValoresValidos() {

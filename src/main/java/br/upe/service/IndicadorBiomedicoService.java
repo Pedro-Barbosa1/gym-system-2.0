@@ -1,16 +1,18 @@
 package br.upe.service;
 
-import br.upe.model.IndicadorBiomedico;
-import br.upe.repository.IIndicadorBiomedicoRepository;
-import br.upe.repository.impl.IndicadorBiomedicoRepositoryImpl;
-import br.upe.util.CalculadoraIMC;
-
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import br.upe.model.IndicadorBiomedico;
+import br.upe.repository.IIndicadorBiomedicoRepository;
+import br.upe.repository.impl.IndicadorBiomedicoRepositoryImpl;
+import br.upe.util.CalculadoraIMC;
 
 public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
 
