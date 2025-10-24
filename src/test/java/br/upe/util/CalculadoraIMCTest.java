@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 
 class CalculadoraIMCTest {
 
-    //@CalculadoraIMC calculadoraIMC = new CalculadoraIMC();
-
     @Test
     void testCalcularImcComValoresValidos() {
         double imc = CalculadoraIMC.calcular(70.0, 175.0); // 70kg, 1.75m
