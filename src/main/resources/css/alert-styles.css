@@ -1,0 +1,74 @@
+/* Estilos para Alerts do Sistema */
+/* Cores: Roxo #5A189A, Laranja #e5a000, Vermelho #dc3545, Cinza #6c757d */
+
+/* Dialog Pane - Base */
+.dialog-pane {
+    -fx-background-color: white;
+    -fx-font-family: 'System';
+    -fx-font-size: 14px;
+}
+
+/* Header Panel - Cores variáveis por tipo */
+.dialog-pane.information > .header-panel {
+    -fx-background-color: #5A189A;
+    -fx-padding: 15;
+}
+
+.dialog-pane.error > .header-panel {
+    -fx-background-color: #dc3545;
+    -fx-padding: 15;
+}
+
+.dialog-pane.warning > .header-panel,
+.dialog-pane.confirmation > .header-panel {
+    -fx-background-color: #e5a000;
+    -fx-padding: 15;
+}
+
+/* Header Text */
+.dialog-pane > .header-panel > .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+
+/* Content Area */
+.dialog-pane > .content {
+    -fx-background-color: white;
+    -fx-padding: 20;
+}
+
+.dialog-pane > .content .label {
+    -fx-text-fill: #2C2C2C;
+    -fx-font-size: 14px;
+}
+
+/* Buttons - Default (OK, Yes) */
+.dialog-pane > .button-bar > .container > .button {
+    -fx-background-color: #5A189A;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+    -fx-min-width: 80px;
+}
+
+.dialog-pane > .button-bar > .container > .button:hover {
+    -fx-background-color: derive(#5A189A, -10%);
+}
+
+/* Cancel/No Buttons */
+.dialog-pane .button.cancel-button,
+.dialog-pane .button[text="Cancelar"],
+.dialog-pane .button[text="Não"] {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+}
+
+.dialog-pane .button.cancel-button:hover,
+.dialog-pane .button[text="Cancelar"]:hover,
+.dialog-pane .button[text="Não"]:hover {
+    -fx-background-color: derive(#6c757d, -10%);
+}

@@ -1,16 +1,18 @@
 package br.upe.service;
 
-import br.upe.model.IndicadorBiomedico;
-import br.upe.repository.IIndicadorBiomedicoRepository;
-import br.upe.repository.impl.IndicadorBiomedicoRepositoryImpl;
-import br.upe.util.CalculadoraIMC;
-
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import br.upe.model.IndicadorBiomedico;
+import br.upe.repository.IIndicadorBiomedicoRepository;
+import br.upe.repository.impl.IndicadorBiomedicoRepositoryImpl;
+import br.upe.util.CalculadoraIMC;
 
 public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
 
@@ -60,7 +62,12 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         if (dataInicio.isAfter(dataFim)) {
             throw new IllegalArgumentException("Data de início não pode ser posterior à data de fim.");
         }
-        List<IndicadorBiomedico> resultados = indicadorRepository.buscarPorPeriodo(idUsuario, dataInicio, dataFim);
+
+        List<IndicadorBiomedico> resultadosOriginais = indicadorRepository.buscarPorPeriodo(idUsuario, dataInicio, dataFim);
+
+        // cria cópia mutável
+        List<IndicadorBiomedico> resultados = new java.util.ArrayList<>(resultadosOriginais);
+
         resultados.sort(Comparator.comparing(IndicadorBiomedico::getData));
         return resultados;
     }
@@ -75,21 +82,28 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
             throw new IllegalArgumentException("Data de início não pode ser posterior à data de fim.");
         }
 
-        List<IndicadorBiomedico> indicadoresNoPeriodo = indicadorRepository.buscarPorPeriodo(idUsuario, dataInicio, dataFim);
+        // 🔒 Cria cópia mutável da lista para evitar UnsupportedOperationException
+        List<IndicadorBiomedico> indicadoresNoPeriodo = new java.util.ArrayList<>(
+                indicadorRepository.buscarPorPeriodo(idUsuario, dataInicio, dataFim)
+        );
+
+        // Ordena pela data (do mais antigo ao mais recente)
         indicadoresNoPeriodo.sort(Comparator.comparing(IndicadorBiomedico::getData));
 
+        // Cria o relatório e define o período
         RelatorioDiferencaIndicadores relatorio = new RelatorioDiferencaIndicadores();
         relatorio.setDataInicio(dataInicio);
         relatorio.setDataFim(dataFim);
 
+        // Se houver dados, calcula as diferenças
         if (!indicadoresNoPeriodo.isEmpty()) {
             relatorio.setIndicadorInicial(indicadoresNoPeriodo.get(0));
             relatorio.setIndicadorFinal(indicadoresNoPeriodo.get(indicadoresNoPeriodo.size() - 1));
             relatorio.calcularDiferencas();
-        }else{
+        } else {
             logger.log(Level.WARNING, "Nenhum indicador encontrado no período.");
-            return relatorio;
         }
+
         return relatorio;
     }
 
