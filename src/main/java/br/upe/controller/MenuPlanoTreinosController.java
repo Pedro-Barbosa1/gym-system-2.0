@@ -593,7 +593,7 @@ public class MenuPlanoTreinosController {
     @FXML
     private void handleSair() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuUsuarioLogado.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuUsuarioLogado.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) sairB.getScene().getWindow();
             stage.setScene(new Scene(root));

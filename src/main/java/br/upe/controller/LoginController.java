@@ -61,10 +61,10 @@ public class LoginController {
                 String titulo;
 
                 if (usuario.getTipo() == TipoUsuario.ADMIN) {
-                    caminhoFXML = "/fxml/AdministradorView.fxml";
+                    caminhoFXML = "/ui/AdministradorView.fxml";
                     titulo = "Gym System - Painel do Administrador";
                 } else {
-                    caminhoFXML = "/fxml/MenuUsuarioLogado.fxml";
+                    caminhoFXML = "/ui/MenuUsuarioLogado.fxml";
                     titulo = "Gym System - Painel do Usuário";
                 }
 
@@ -101,7 +101,7 @@ public class LoginController {
     @FXML
     void onCadastrase(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Signup.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Signup.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) cadastreseBotao.getScene().getWindow();
@@ -120,7 +120,7 @@ public class LoginController {
     @FXML
     void onVoltar(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPrincipal.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuPrincipal.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) voltarBotao.getScene().getWindow();

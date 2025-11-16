@@ -21,7 +21,7 @@
                </font>
             </Button>
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/coracao.png" />
+                  <Image url="@images/coracao.png" />
             </ImageView>
             <Separator layoutY="109.0" prefHeight="7.0" prefWidth="320.0" />
             <Separator layoutX="320.0" layoutY="-2.0" orientation="VERTICAL" prefHeight="706.0" prefWidth="0.0" />
@@ -31,15 +31,15 @@
                </font>
             </Text>
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/ver.png" />
+                  <Image url="@images/ver.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="28.0" layoutX="17.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/ferramenta-lapis.png" />
+                  <Image url="@images/ferramenta-lapis.png" />
             </ImageView>
       </AnchorPane>
       <AnchorPane layoutX="786.0" layoutY="-21.0" prefHeight="140.0" prefWidth="130.0">
             <ImageView fx:id="IFechar" fitHeight="80.0" fitWidth="100.0" layoutX="25.0" layoutY="30.0" onMouseClicked="#voltar" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="30.0">
-                  <Image url="@../images/sair.png" />
+                  <Image url="@images/sair.png" />
             </ImageView>
             <Button fx:id="sairB" layoutX="15.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
       </AnchorPane>

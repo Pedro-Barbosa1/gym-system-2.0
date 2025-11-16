@@ -42,7 +42,7 @@
                </Text>
                 </Pane>
                 <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="187.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@../images/logo_app.png" />
+                    <Image url="@images/logo_app.png" />
                 </ImageView>
             <Button fx:id="voltarBotao" layoutX="195.0" layoutY="611.0" mnemonicParsing="false" onAction="#onVoltar" prefHeight="27.0" prefWidth="60.0" style="-fx-border-radius: 6; -fx-background-radius: 6; -fx-background-color: #978e8e;" text="Voltar" textFill="#515151">
                <font>

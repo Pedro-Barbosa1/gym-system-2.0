@@ -403,7 +403,7 @@ public class TreinoViewController {
     @FXML
     void fecharTela(ActionEvent event) {
         logger.info("Ícone 'Fechar' clicado! Retornando ao menu principal...");
-        carregarNovaTela("/fxml/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
+        carregarNovaTela("/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
     }
 
     private void carregarNovaTela(String fxmlFile, String titulo) {

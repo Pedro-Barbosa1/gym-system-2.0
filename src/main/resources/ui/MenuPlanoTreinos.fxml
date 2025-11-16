@@ -12,7 +12,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.MenuPlanoTreinosController">
       <AnchorPane layoutX="772.0" layoutY="-17.0" prefHeight="138.0" prefWidth="150.0">
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="35.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="29.0">
-                  <Image url="@../images/sair.png" />
+                  <Image url="@images/sair.png" />
             </ImageView>
             <Button fx:id="sairB" layoutX="37.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
       </AnchorPane>
@@ -75,29 +75,29 @@
             </Button>
             <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="0.0" />
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/ver.png" />
+                  <Image url="@images/ver.png" />
             </ImageView>
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="17.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/halter_pequeno.png" />
+                  <Image url="@images/halter_pequeno.png" />
             </ImageView>
             <Separator layoutY="113.0" prefHeight="3.0" prefWidth="320.0" />
             <ImageView fitHeight="50.0" fitWidth="28.0" layoutX="17.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/ferramenta-lapis.png" />
+                  <Image url="@images/ferramenta-lapis.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="35.0" layoutX="14.0" layoutY="313.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/editar.png" />
+                  <Image url="@images/editar.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="376.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/excluir.png" />
+                  <Image url="@images/excluir.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="438.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/ver.png" />
+                  <Image url="@images/ver.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="501.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/criar.png" />
+                  <Image url="@images/criar.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="563.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/excluir.png" />
+                  <Image url="@images/excluir.png" />
             </ImageView>
             <Text fill="#9c27b0" layoutX="97.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plano de Treinos">
                <font>

@@ -279,7 +279,7 @@ public class ExercicioViewController {
             logger.info("Abrindo visualizador para o exercício: " + exercicioSelecionado.getNome());
             
             // Carregar o FXML do visualizador
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/visualizador.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/visualizador.fxml"));
             Parent root = loader.load();
             
             // Obter o controller e passar os dados do exercício
@@ -304,7 +304,7 @@ public class ExercicioViewController {
 
     @FXML
     void handleAbrirMenu(ActionEvent event) {
-        carregarNovaTela("/fxml/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
+        carregarNovaTela("/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
     }
 
     // ============================================================

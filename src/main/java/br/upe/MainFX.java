@@ -16,7 +16,7 @@ public class MainFX extends Application {
 
     @Override
     public void start(Stage stage) {
-        abrirTela(stage, "fxml/MenuPrincipal.fxml", "SysFit - Menu Principal");
+        abrirTela(stage, "ui/MenuPrincipal.fxml", "SysFit - Menu Principal");
     }
 
     public void abrirTela(Stage stage, String caminhoFXML, String tituloJanela) {

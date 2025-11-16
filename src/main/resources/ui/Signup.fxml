@@ -42,7 +42,7 @@
                         </Text>
                   </Pane>
                   <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="185.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../images/logo_app.png" />
+                        <Image url="@images/logo_app.png" />
                   </ImageView>
                   <Text fill="#e5a000" layoutX="138.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System">
                      <font>
