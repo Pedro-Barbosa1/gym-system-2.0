@@ -65,7 +65,7 @@ public class MenuUsuarioLogadoController {
      */
     private void abrirMeusTreinos() {
         logger.info("Botão 'Meus Treinos' clicado!");
-        carregarNovaTela("/fxml/TreinoView.fxml", "Gym System - Meus Treinos");
+        carregarNovaTela("/ui/TreinoView.fxml", "Gym System - Meus Treinos");
     }
 
     /**
@@ -74,7 +74,7 @@ public class MenuUsuarioLogadoController {
      */
     private void abrirMeusIndicadores() {
         logger.info("Botão 'Meus Indicadores' clicado!");
-        carregarNovaTela("/fxml/IndicadoresView.fxml", "Gym System - Meus Indicadores");
+        carregarNovaTela("/ui/IndicadoresView.fxml", "Gym System - Meus Indicadores");
     }
 
     /**
@@ -83,7 +83,7 @@ public class MenuUsuarioLogadoController {
      */
     private void abrirGerenciarPlanoDeTreino() {
         logger.info("Botão 'Gerenciar Plano de Treino' clicado!");
-        carregarNovaTela("/fxml/MenuPlanoTreinos.fxml", "Gym System - Planos de Treino");
+        carregarNovaTela("/ui/MenuPlanoTreinos.fxml", "Gym System - Planos de Treino");
     }
 
     /**
@@ -92,7 +92,7 @@ public class MenuUsuarioLogadoController {
      */
     private void abrirGerenciarExercicios() {
         logger.info("Botão 'Gerenciar Exercícios' clicado!");
-        carregarNovaTela("/fxml/ExercicioView.fxml", "Gym System - Gerenciar Exercícios");
+        carregarNovaTela("/ui/ExercicioView.fxml", "Gym System - Gerenciar Exercícios");
     }
 
     /**
@@ -101,7 +101,7 @@ public class MenuUsuarioLogadoController {
      */
     private void abrirExportarRelatorios() {
         logger.info("Botão 'Exportar Relatórios' clicado!");
-        carregarNovaTela("/fxml/MenuRelatorios.fxml", "Gym System - Relatórios");
+        carregarNovaTela("/ui/MenuRelatorios.fxml", "Gym System - Relatórios");
     }
 
     /**
@@ -111,7 +111,7 @@ public class MenuUsuarioLogadoController {
     @FXML
     void handleSair() {
         logger.info("Botão 'Sair' clicado! Voltando para a tela de login...");
-        carregarNovaTela("/fxml/MenuPrincipal.fxml", "Gym System - Login");
+        carregarNovaTela("/ui/MenuPrincipal.fxml", "Gym System - Login");
     }
 
 

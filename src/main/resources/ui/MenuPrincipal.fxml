@@ -30,7 +30,7 @@
          <viewport>
             <Rectangle2D />
          </viewport>
-            <Image url="@../images/logo_app.png" />
+            <Image url="@images/logo_app.png" />
       </ImageView>
       <Text fill="#e5a000" layoutX="138.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System" wrappingWidth="168.0">
          <font>
@@ -49,13 +49,13 @@
          </font>
       </Text>
       <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="697.0" layoutY="350.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../images/muque.png" />
+            <Image url="@images/muque.png" />
       </ImageView>
       <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="410.0" layoutY="350.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../images/logo_registro.png" />
+            <Image url="@images/logo_registro.png" />
       </ImageView>
       <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="112.0" layoutY="350.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../images/halter_pequeno.png" />
+            <Image url="@images/halter_pequeno.png" />
       </ImageView>
       <Text fill="#978e8e" layoutX="55.0" layoutY="448.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Treinos personalizados" wrappingWidth="194.0">
          <font>

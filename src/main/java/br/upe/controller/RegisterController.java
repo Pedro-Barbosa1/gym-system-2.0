@@ -70,7 +70,7 @@ public class RegisterController {
 
             try {
             // Carrega a tela de login
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPrincipal.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuPrincipal.fxml"));
             Parent root = loader.load();
 
             // Obtém a janela atual e substitui a cena
@@ -99,7 +99,7 @@ public class RegisterController {
     void onVoltar(ActionEvent event) {
         try {
             // Carrega a tela de menu principal
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MenuPrincipal.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuPrincipal.fxml"));
             Parent root = loader.load();
 
             // Obtém a janela atual e substitui a cena

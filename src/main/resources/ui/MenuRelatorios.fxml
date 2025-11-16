@@ -12,7 +12,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.MenuRelatoriosController">
       <AnchorPane layoutX="775.0" layoutY="-17.0" prefHeight="138.0" prefWidth="150.0">
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="35.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="29.0">
-                  <Image url="@../images/sair.png" />
+                  <Image url="@images/sair.png" />
             </ImageView>
             <Button fx:id="sairB" layoutX="30.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
       </AnchorPane>
@@ -34,7 +34,7 @@
                </font>
             </Button>
             <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/salvar.png" />
+                  <Image url="@images/salvar.png" />
             </ImageView>
             <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="3.0" />
             <Separator layoutY="107.0" prefHeight="7.0" prefWidth="320.0" />
@@ -44,10 +44,10 @@
                </font>
             </Text>
             <ImageView fitHeight="45.0" fitWidth="32.0" layoutX="14.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/calendario.png" />
+                  <Image url="@images/calendario.png" />
             </ImageView>
             <ImageView fitHeight="56.0" fitWidth="32.0" layoutX="14.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/calendario-diferenca.png" />
+                  <Image url="@images/calendario-diferenca.png" />
             </ImageView>
       </AnchorPane>
    <opaqueInsets>

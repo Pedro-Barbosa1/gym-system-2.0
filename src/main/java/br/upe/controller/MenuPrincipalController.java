@@ -42,7 +42,7 @@ public class MenuPrincipalController {
     private void handleLogin() {
         logger.info("Botão ENTRAR clicado!");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) loginB.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -57,7 +57,7 @@ public class MenuPrincipalController {
     private void handleRegister() {
         logger.info("Botão CADASTRAR clicado!");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Signup.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Signup.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) registerB.getScene().getWindow();
             stage.setScene(new Scene(root));

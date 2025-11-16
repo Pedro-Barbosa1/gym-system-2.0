@@ -261,7 +261,7 @@ public class IndicadoresViewController {
     @FXML
     void handleSair(ActionEvent event) {
         logger.info("Botão 'Sair' clicado! Retornando ao menu principal...");
-        carregarNovaTela("/fxml/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
+        carregarNovaTela("/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
     }
 
     /**
@@ -271,7 +271,7 @@ public class IndicadoresViewController {
     @FXML
     void voltar(MouseEvent event) {
         logger.info("Ícone 'Fechar' clicado! Retornando ao menu principal...");
-        carregarNovaTela("/fxml/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
+        carregarNovaTela("/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
     }
 
     /**

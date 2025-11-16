@@ -29,7 +29,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -86,7 +85,7 @@ public class AdministradorViewController {
     @FXML
     public void handleSair() {
         logger.info("Botão 'Sair' clicado. Retornando ao menu principal...");
-        carregarNovaTela("/fxml/MenuPrincipal.fxml", "Gym System - Menu Principal");
+        carregarNovaTela("/ui/MenuPrincipal.fxml", "Gym System - Menu Principal");
     }
 
     /**

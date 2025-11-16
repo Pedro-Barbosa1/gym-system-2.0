@@ -75,22 +75,22 @@
          </font>
       </Button>
             <ImageView fx:id="IMenu" fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/muque.png" />
+                  <Image url="@images/muque.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="17.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/ver.png" />
+                  <Image url="@images/ver.png" />
             </ImageView>
             <ImageView fitHeight="40.0" fitWidth="28.0" layoutX="19.0" layoutY="242.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/ferramenta-lapis.png" />
+                  <Image url="@images/ferramenta-lapis.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="35.0" layoutX="15.0" layoutY="307.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/editar.png" />
+                  <Image url="@images/editar.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="372.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/excluir.png" />
+                  <Image url="@images/excluir.png" />
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="17.0" layoutY="438.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../images/ver.png" />
+                  <Image url="@images/ver.png" />
             </ImageView>
             <Separator layoutX="316.0" layoutY="1.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="14.0" />
             <Separator layoutY="107.0" prefHeight="7.0" prefWidth="320.0" />
@@ -101,7 +101,7 @@
             </Text>
       <ImageView fitHeight="50.0" fitWidth="35.0" layoutX="16.0" layoutY="497.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/play-alt.png" />
+            <Image url="@images/play-alt.png" />
          </image>
       </ImageView>
       </AnchorPane>
@@ -109,7 +109,7 @@
          <Button fx:id="IFechar" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleAbrirMenu" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;">
             <graphic>
                <ImageView fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                     <Image url="@../images/sair.png" />
+                     <Image url="@images/sair.png" />
                </ImageView>
             </graphic>
          </Button>
