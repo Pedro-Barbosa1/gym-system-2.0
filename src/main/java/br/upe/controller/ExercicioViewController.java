@@ -41,8 +41,12 @@ public class ExercicioViewController {
     @FXML private Button IFechar;
     @FXML private ImageView IMenu;
 
+    public ExercicioViewController(IExercicioService service) {
+        this.exercicioService = service;
+    }
+
     public ExercicioViewController() {
-        this.exercicioService = new ExercicioService();
+        this(new ExercicioService());
     }
 
     // ============================================================
