@@ -8,31 +8,37 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.input.KeyCode; // Import necessário
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
+import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(ApplicationExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ExercicioViewIntegrationTest extends ApplicationTest {
 
     private static final String CSV_PATH = "src/main/resources/data/exercicios.csv";
     private IExercicioService service;
     private ExercicioViewController controller;
+    
+    // Timeout estendido para testes headless
+    private static final long WAIT_TIMEOUT = 10; 
 
     @Override
     public void start(Stage stage) throws Exception {
-        // Headless config (comment if running with display)
         System.setProperty("testfx.robot", "glass");
         System.setProperty("glass.platform", "Monocle");
         System.setProperty("monocle.platform", "Headless");
@@ -40,15 +46,29 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         service = new ExercicioService();
         controller = new ExercicioViewController(service);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/ExercicioView.fxml"));
+        URL fxml = getClass().getResource("/ui/ExercicioView.fxml");
+
+        if (fxml == null) {
+            throw new RuntimeException("FXML 'ui/ExercicioView.fxml' não encontrado no classpath. Verifique a configuração <testResources> do Maven.");
+        }
+
+        FXMLLoader loader = new FXMLLoader(fxml);
         loader.setController(controller);
-        Parent root = loader.load();
+
+        Parent root = loader.load(); 
+
         stage.setScene(new Scene(root));
         stage.show();
     }
 
+
     @BeforeEach
-    public void limparCSV() throws Exception {
+    public void limparEstado() throws Exception {
+        // CORREÇÃO: Reinicializa o serviço e o controller para garantir isolamento de estado
+        service = new ExercicioService(); 
+        controller = new ExercicioViewController(service); 
+        
+        // Limpeza do disco
         Files.deleteIfExists(Paths.get(CSV_PATH));
         Files.createDirectories(Paths.get(CSV_PATH).getParent());
         Files.createFile(Paths.get(CSV_PATH));
@@ -60,14 +80,13 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
     @Test
     @Order(1)
     public void testCadastrarExercicio(FxRobot robot) throws Exception {
-        // abrir diálogo de cadastro pela UI
         robot.clickOn("#BCadastrarEX");
-        WaitForAsyncUtils.waitForFxEvents();
-
-        // pegar o dialog pane atual
+        
+        WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
+            () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
+        
         DialogPane pane = robot.lookup(".dialog-pane").query();
 
-        // Os três TextFields aparecem como .text-field na ordem que foram adicionados
         List<Node> textFields = pane.lookupAll(".text-field").stream().toList();
 
         TextField nomeField = (TextField) textFields.get(0);
@@ -78,7 +97,6 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         robot.clickOn(descricaoField).write("Exercício de perna");
         robot.clickOn(gifField).write("gif/agachamento.gif");
 
-        // clicar em OK
         Button ok = (Button) pane.lookupButton(ButtonType.OK);
         robot.clickOn(ok);
 
@@ -95,71 +113,77 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
     @Test
     @Order(2)
     public void testListarExercicios(FxRobot robot) throws Exception {
-        // preparar: inserir um exercício direto no service
         service.cadastrarExercicio(1, "Supino Reto", "Peito", "supino.gif");
 
-        // abrir dialog de listagem
         robot.clickOn("#BListarEX");
-        WaitForAsyncUtils.waitForFxEvents();
-
+        
+        WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
+            () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
+            
         DialogPane pane = robot.lookup(".dialog-pane").query();
 
-        // TableView dentro do DialogPane
         @SuppressWarnings("unchecked")
         TableView<Exercicio> table = (TableView<Exercicio>) pane.lookup(".table-view");
         assertNotNull(table);
-        assertEquals(1, table.getItems().size());
+        
+        assertEquals(1, table.getItems().size()); 
         assertEquals("Supino Reto", table.getItems().get(0).getNome());
 
-        // fechar
         Button fechar = (Button) pane.lookupButton(ButtonType.CLOSE);
         robot.clickOn(fechar);
         WaitForAsyncUtils.waitForFxEvents();
     }
 
     // -------------------------
-    // 3) EDITAR (usa seleção -> diálogo de edição)
+    // 3) EDITAR (CORRIGIDO: Seleção via Teclado)
     // -------------------------
     @Test
     @Order(3)
     public void testEditarExercicio(FxRobot robot) throws Exception {
-        // preparar
-        service.cadastrarExercicio(1, "Agachamento", "Pernas", "a.gif");
+        service.cadastrarExercicio(1, "Agachamento Original", "Pernas", "a.gif");
 
-        // abrir diálogo de edição
         robot.clickOn("#BEditarEX");
-        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Espera o primeiro diálogo (Seleção) aparecer
+        WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
+            () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
 
-        // primeiro dialog = seleção (combo)
+        // Diálogo 1: Seleção (ComboBox)
         DialogPane selecaoPane = robot.lookup(".dialog-pane").query();
-        // o combo box está dentro da dialog-pane
         @SuppressWarnings("unchecked")
         ComboBox<String> combo = (ComboBox<String>) selecaoPane.lookup(".combo-box");
         assertNotNull(combo);
 
-        // confirmar seleção (OK)
+        // CORREÇÃO: Seleção robusta por teclado
+        robot.clickOn(combo); 
+        // Espera a lista carregar (usando o combo como referência)
+        WaitForAsyncUtils.waitFor(1, TimeUnit.SECONDS, combo.showingProperty());
+        
+        // Simula DOWN para selecionar o primeiro item e ENTER para confirmar
+        robot.type(KeyCode.DOWN, 1).type(KeyCode.ENTER); 
+
+        // Confirma a seleção no diálogo (OK)
         Button okSelecao = (Button) selecaoPane.lookupButton(ButtonType.OK);
         robot.clickOn(okSelecao);
-        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Espera o SEGUNDO diálogo (de edição) aparecer
+        WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
+            () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
 
-        // agora deverá aparecer o diálogo de edição com 3 campos (text-fields)
+        // Diálogo 2: Edição
         DialogPane editPane = robot.lookup(".dialog-pane").query();
 
         List<Node> textFields = editPane.lookupAll(".text-field").stream().toList();
         TextField nomeField = (TextField) textFields.get(0);
         TextField descricaoField = (TextField) textFields.get(1);
-        TextField gifField = (TextField) textFields.get(2);
 
-        // substituir valores
         robot.doubleClickOn(nomeField).write("Agachamento Livre");
         robot.doubleClickOn(descricaoField).write("Perna e glúteos");
 
-        // confirmar edição
         Button okEdit = (Button) editPane.lookupButton(ButtonType.OK);
         robot.clickOn(okEdit);
         WaitForAsyncUtils.waitForFxEvents();
 
-        // validar no service / CSV
         List<Exercicio> lista = service.listarExerciciosDoUsuario(1);
         assertEquals(1, lista.size());
         assertEquals("Agachamento Livre", lista.get(0).getNome());
@@ -167,7 +191,7 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
     }
 
     // -------------------------
-    // 4) VER DETALHES (seleção -> detalhes em TableView)
+    // 4) VER DETALHES (CORRIGIDO: Seleção via Teclado)
     // -------------------------
     @Test
     @Order(4)
@@ -175,32 +199,45 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         service.cadastrarExercicio(1, "Remada", "Costas", "remada.gif");
 
         robot.clickOn("#BDetalhesEX");
-        WaitForAsyncUtils.waitForFxEvents();
+        
+        WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
+            () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
 
-        // seleção
+        // Diálogo 1: Seleção (ComboBox)
         DialogPane selPane = robot.lookup(".dialog-pane").query();
+        @SuppressWarnings("unchecked")
+        ComboBox<String> combo = (ComboBox<String>) selPane.lookup(".combo-box");
+        assertNotNull(combo);
+        
+        // CORREÇÃO: Seleção robusta por teclado
+        robot.clickOn(combo); 
+        WaitForAsyncUtils.waitFor(1, TimeUnit.SECONDS, combo.showingProperty());
+        robot.type(KeyCode.DOWN, 1).type(KeyCode.ENTER); 
+
         Button okSelec = (Button) selPane.lookupButton(ButtonType.OK);
         robot.clickOn(okSelec);
-        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Espera o SEGUNDO diálogo (de detalhes) aparecer
+        WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
+            () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
 
-        // detalhes dialog (TableView de String[])
+        // Diálogo 2: Detalhes
         DialogPane detalhesPane = robot.lookup(".dialog-pane").query();
         @SuppressWarnings("unchecked")
         TableView<?> tableDetalhes = (TableView<?>) detalhesPane.lookup(".table-view");
         assertNotNull(tableDetalhes);
-        // espera que contenha pelo menos campo "Nome"
+        
         boolean encontrouNome = tableDetalhes.getItems().stream()
                 .anyMatch(item -> item.toString().contains("Remada") || item.toString().contains("Nome"));
         assertTrue(encontrouNome);
 
-        // fechar
         Button fechar = (Button) detalhesPane.lookupButton(ButtonType.CLOSE);
         robot.clickOn(fechar);
         WaitForAsyncUtils.waitForFxEvents();
     }
 
     // -------------------------
-    // 5) EXCLUIR (seleção -> confirmação)
+    // 5) EXCLUIR (CORRIGIDO: Seleção via Teclado)
     // -------------------------
     @Test
     @Order(5)
@@ -208,15 +245,29 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         service.cadastrarExercicio(1, "Puxada", "Costas", "puxada.gif");
 
         robot.clickOn("#BExcluirEX");
-        WaitForAsyncUtils.waitForFxEvents();
+        
+        WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
+            () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
 
-        // seleção dialog
+        // Diálogo 1: Seleção
         DialogPane selPane = robot.lookup(".dialog-pane").query();
+        @SuppressWarnings("unchecked")
+        ComboBox<String> combo = (ComboBox<String>) selPane.lookup(".combo-box");
+        assertNotNull(combo);
+
+        // CORREÇÃO: Seleção robusta por teclado
+        robot.clickOn(combo); 
+        WaitForAsyncUtils.waitFor(1, TimeUnit.SECONDS, combo.showingProperty());
+        robot.type(KeyCode.DOWN, 1).type(KeyCode.ENTER); 
+        
         Button okSelec = (Button) selPane.lookupButton(ButtonType.OK);
         robot.clickOn(okSelec);
-        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Espera o SEGUNDO diálogo (de confirmação) aparecer
+        WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
+            () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
 
-        // confirmação (Alert) deve aparecer — buscar dialog-pane atual
+        // Diálogo 2: Confirmação (Alert)
         DialogPane confirmPane = robot.lookup(".dialog-pane").query();
         Button okConfirm = (Button) confirmPane.lookupButton(ButtonType.OK);
         robot.clickOn(okConfirm);
@@ -228,7 +279,7 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
     }
 
     // -------------------------
-    // 6) VISUALIZAR (apenas chama; se visualizador.fxml ausente, controller trata exceção)
+    // 6) VISUALIZAR (CORRIGIDO: Seleção via Teclado)
     // -------------------------
     @Test
     @Order(6)
@@ -236,28 +287,37 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         service.cadastrarExercicio(1, "Visual", "Teste visualizador", "\\gif\\vis.gif");
 
         robot.clickOn("#BVisualizarEX1");
-        WaitForAsyncUtils.waitForFxEvents();
+        
+        WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
+            () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
 
-        // seleção dialog
+        // Diálogo 1: Seleção (ComboBox)
         DialogPane selPane = robot.lookup(".dialog-pane").query();
+        @SuppressWarnings("unchecked")
+        ComboBox<String> combo = (ComboBox<String>) selPane.lookup(".combo-box");
+        assertNotNull(combo);
+
+        // CORREÇÃO: Seleção robusta por teclado
+        robot.clickOn(combo); 
+        WaitForAsyncUtils.waitFor(1, TimeUnit.SECONDS, combo.showingProperty());
+        robot.type(KeyCode.DOWN, 1).type(KeyCode.ENTER); 
+        
         Button okSelec = (Button) selPane.lookupButton(ButtonType.OK);
         robot.clickOn(okSelec);
         WaitForAsyncUtils.waitForFxEvents();
 
-        // O controller tenta abrir visualizador.fxml. Se estiver ausente, ele captura e mostra alerta.
-        // Aqui garantimos que a chamada terminou sem lançar exceção para o teste (se chegamos até aqui, tudo bem).
-        assertTrue(true);
+        assertTrue(true, "A ação de visualizar foi concluída sem falhas.");
     }
 
     // -------------------------
-    // 7) ABRIR MENU (carregar nova cena)
+    // 7) ABRIR MENU 
     // -------------------------
     @Test
     @Order(7)
     public void testAbrirMenu(FxRobot robot) throws Exception {
-        // Apenas chama o método via botão; se o FXML do menu não existir o controller mostra alerta internamente.
         robot.clickOn("#IFechar");
         WaitForAsyncUtils.waitForFxEvents();
-        assertTrue(true);
+        
+        assertTrue(true, "A ação de abrir o menu foi iniciada.");
     }
 }

@@ -95,6 +95,21 @@
   </dependencies>
 
   <build>
+    <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+        </resource>
+    </resources>
+    
+    <testResources>
+        <testResource>
+            <directory>src/main/resources</directory>
+        </testResource>
+        <testResource>
+            <directory>src/test/resources</directory>
+        </testResource>
+    </testResources>
+    
     <plugins>
       <!-- Plugin de compilação -->
       <plugin>
