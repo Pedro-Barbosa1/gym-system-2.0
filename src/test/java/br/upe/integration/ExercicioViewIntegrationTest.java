@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.input.KeyCode; // Import necessário
+import javafx.scene.input.KeyCode; 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +35,6 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
     private IExercicioService service;
     private ExercicioViewController controller;
     
-    // Timeout estendido para testes headless
     private static final long WAIT_TIMEOUT = 10; 
 
     @Override
@@ -64,14 +64,14 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
 
     @BeforeEach
     public void limparEstado() throws Exception {
-        // CORREÇÃO: Reinicializa o serviço e o controller para garantir isolamento de estado
-        service = new ExercicioService(); 
-        controller = new ExercicioViewController(service); 
-        
-        // Limpeza do disco
+        // Limpa o disco primeiro para garantir que novas instâncias leiam um arquivo vazio
         Files.deleteIfExists(Paths.get(CSV_PATH));
         Files.createDirectories(Paths.get(CSV_PATH).getParent());
-        Files.createFile(Paths.get(CSV_PATH));
+        Files.write(Paths.get(CSV_PATH), new byte[0]); 
+        
+        // Reinicializa o service e controller
+        service = new ExercicioService(); 
+        controller = new ExercicioViewController(service); 
     }
 
     // -------------------------
@@ -87,13 +87,13 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         
         DialogPane pane = robot.lookup(".dialog-pane").query();
 
-        List<Node> textFields = pane.lookupAll(".text-field").stream().toList();
+        List<Node> textFields = pane.lookupAll(".text-field").stream().collect(Collectors.toList());
 
         TextField nomeField = (TextField) textFields.get(0);
         TextField descricaoField = (TextField) textFields.get(1);
         TextField gifField = (TextField) textFields.get(2);
 
-        robot.clickOn(nomeField).write("Agachamento");
+        robot.clickOn(nomeField).write("Agachamento Teste Cadastrar"); 
         robot.clickOn(descricaoField).write("Exercício de perna");
         robot.clickOn(gifField).write("gif/agachamento.gif");
 
@@ -103,22 +103,25 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
 
         String conteudo = Files.readString(Paths.get(CSV_PATH));
-        assertTrue(conteudo.contains("Agachamento"));
+        assertTrue(conteudo.contains("Agachamento Teste Cadastrar"));
         assertTrue(conteudo.contains("Exercício de perna"));
     }
 
     // -------------------------
-    // 2) LISTAR via TableView num Dialog
+    // 2) LISTAR via TableView num Dialog (Resolve a falha de Asserção)
     // -------------------------
     @Test
     @Order(2)
     public void testListarExercicios(FxRobot robot) throws Exception {
-        service.cadastrarExercicio(1, "Supino Reto", "Peito", "supino.gif");
+        service.cadastrarExercicio(1, "Supino Reto Teste Listar", "Peito", "supino.gif");
 
         robot.clickOn("#BListarEX");
         
         WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
             () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
+            
+        // PAUSA DE SINC. INTERNA
+        WaitForAsyncUtils.waitForFxEvents();
             
         DialogPane pane = robot.lookup(".dialog-pane").query();
 
@@ -126,8 +129,13 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         TableView<Exercicio> table = (TableView<Exercicio>) pane.lookup(".table-view");
         assertNotNull(table);
         
-        assertEquals(1, table.getItems().size()); 
-        assertEquals("Supino Reto", table.getItems().get(0).getNome());
+        // A lista deve conter apenas 1 item
+        assertEquals(1, table.getItems().size(), "A lista deve conter apenas 1 exercício após a limpeza."); 
+        
+        // Verifica se o item correto está na lista (Resolve expected: <Supino Reto> but was: <Agachamento>)
+        assertTrue(table.getItems().stream()
+                       .anyMatch(e -> e.getNome().equals("Supino Reto Teste Listar")), 
+                       "O Supino Reto deve estar na lista.");
 
         Button fechar = (Button) pane.lookupButton(ButtonType.CLOSE);
         robot.clickOn(fechar);
@@ -135,18 +143,20 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
     }
 
     // -------------------------
-    // 3) EDITAR (CORRIGIDO: Seleção via Teclado)
+    // 3) EDITAR (Resolve a falha de Asserção)
     // -------------------------
     @Test
     @Order(3)
     public void testEditarExercicio(FxRobot robot) throws Exception {
-        service.cadastrarExercicio(1, "Agachamento Original", "Pernas", "a.gif");
+        service.cadastrarExercicio(1, "Agachamento Original Teste Edit", "Pernas", "a.gif"); 
 
         robot.clickOn("#BEditarEX");
         
-        // Espera o primeiro diálogo (Seleção) aparecer
         WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
             () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
+            
+        // PAUSA DE SINC. INTERNA
+        WaitForAsyncUtils.waitForFxEvents();
 
         // Diálogo 1: Seleção (ComboBox)
         DialogPane selecaoPane = robot.lookup(".dialog-pane").query();
@@ -154,15 +164,11 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         ComboBox<String> combo = (ComboBox<String>) selecaoPane.lookup(".combo-box");
         assertNotNull(combo);
 
-        // CORREÇÃO: Seleção robusta por teclado
+        // Seleção robusta por teclado
         robot.clickOn(combo); 
-        // Espera a lista carregar (usando o combo como referência)
         WaitForAsyncUtils.waitFor(1, TimeUnit.SECONDS, combo.showingProperty());
-        
-        // Simula DOWN para selecionar o primeiro item e ENTER para confirmar
         robot.type(KeyCode.DOWN, 1).type(KeyCode.ENTER); 
 
-        // Confirma a seleção no diálogo (OK)
         Button okSelecao = (Button) selecaoPane.lookupButton(ButtonType.OK);
         robot.clickOn(okSelecao);
         
@@ -173,35 +179,42 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         // Diálogo 2: Edição
         DialogPane editPane = robot.lookup(".dialog-pane").query();
 
-        List<Node> textFields = editPane.lookupAll(".text-field").stream().toList();
+        List<Node> textFields = editPane.lookupAll(".text-field").stream().collect(Collectors.toList());
         TextField nomeField = (TextField) textFields.get(0);
         TextField descricaoField = (TextField) textFields.get(1);
 
-        robot.doubleClickOn(nomeField).write("Agachamento Livre");
+        robot.doubleClickOn(nomeField).write("Agachamento Livre Editado");
         robot.doubleClickOn(descricaoField).write("Perna e glúteos");
 
         Button okEdit = (Button) editPane.lookupButton(ButtonType.OK);
         robot.clickOn(okEdit);
         WaitForAsyncUtils.waitForFxEvents();
 
-        List<Exercicio> lista = service.listarExerciciosDoUsuario(1);
-        assertEquals(1, lista.size());
-        assertEquals("Agachamento Livre", lista.get(0).getNome());
-        assertTrue(Files.readString(Paths.get(CSV_PATH)).contains("Agachamento Livre"));
+        // Novo Service para forçar recarregamento do CSV para a asserção
+        IExercicioService tempService = new ExercicioService();
+        List<Exercicio> lista = tempService.listarExerciciosDoUsuario(1);
+        
+        // Asserção corrigida
+        assertEquals(1, lista.size(), "Após a edição, apenas o item editado deve existir.");
+        assertEquals("Agachamento Livre Editado", lista.get(0).getNome());
+        assertTrue(Files.readString(Paths.get(CSV_PATH)).contains("Agachamento Livre Editado"));
     }
 
     // -------------------------
-    // 4) VER DETALHES (CORRIGIDO: Seleção via Teclado)
+    // 4) VER DETALHES (Resolve a falha de Asserção)
     // -------------------------
     @Test
     @Order(4)
     public void testVerDetalhesExercicio(FxRobot robot) throws Exception {
-        service.cadastrarExercicio(1, "Remada", "Costas", "remada.gif");
+        service.cadastrarExercicio(1, "Remada Teste Detalhes", "Costas", "remada.gif");
 
         robot.clickOn("#BDetalhesEX");
         
         WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
             () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
+            
+        // PAUSA DE SINC. INTERNA
+        WaitForAsyncUtils.waitForFxEvents();
 
         // Diálogo 1: Seleção (ComboBox)
         DialogPane selPane = robot.lookup(".dialog-pane").query();
@@ -209,7 +222,7 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         ComboBox<String> combo = (ComboBox<String>) selPane.lookup(".combo-box");
         assertNotNull(combo);
         
-        // CORREÇÃO: Seleção robusta por teclado
+        // Seleção robusta por teclado
         robot.clickOn(combo); 
         WaitForAsyncUtils.waitFor(1, TimeUnit.SECONDS, combo.showingProperty());
         robot.type(KeyCode.DOWN, 1).type(KeyCode.ENTER); 
@@ -221,15 +234,19 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
             () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
 
+        // PAUSA DE SINC. INTERNA
+        WaitForAsyncUtils.waitForFxEvents();
+        
         // Diálogo 2: Detalhes
         DialogPane detalhesPane = robot.lookup(".dialog-pane").query();
         @SuppressWarnings("unchecked")
         TableView<?> tableDetalhes = (TableView<?>) detalhesPane.lookup(".table-view");
         assertNotNull(tableDetalhes);
         
+        // Asserção corrigida
         boolean encontrouNome = tableDetalhes.getItems().stream()
-                .anyMatch(item -> item.toString().contains("Remada") || item.toString().contains("Nome"));
-        assertTrue(encontrouNome);
+                .anyMatch(item -> item.toString().contains("Remada Teste Detalhes") || item.toString().contains("Nome"));
+        assertTrue(encontrouNome, "O item 'Remada Teste Detalhes' ou o cabeçalho 'Nome' deve estar presente na tabela de detalhes.");
 
         Button fechar = (Button) detalhesPane.lookupButton(ButtonType.CLOSE);
         robot.clickOn(fechar);
@@ -237,17 +254,20 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
     }
 
     // -------------------------
-    // 5) EXCLUIR (CORRIGIDO: Seleção via Teclado)
+    // 5) EXCLUIR (Resolve a falha de Asserção)
     // -------------------------
     @Test
     @Order(5)
     public void testExcluirExercicio(FxRobot robot) throws Exception {
-        service.cadastrarExercicio(1, "Puxada", "Costas", "puxada.gif");
+        service.cadastrarExercicio(1, "Puxada Teste Excluir", "Costas", "puxada.gif");
 
         robot.clickOn("#BExcluirEX");
         
         WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
             () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
+            
+        // PAUSA DE SINC. INTERNA
+        WaitForAsyncUtils.waitForFxEvents();
 
         // Diálogo 1: Seleção
         DialogPane selPane = robot.lookup(".dialog-pane").query();
@@ -255,7 +275,7 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         ComboBox<String> combo = (ComboBox<String>) selPane.lookup(".combo-box");
         assertNotNull(combo);
 
-        // CORREÇÃO: Seleção robusta por teclado
+        // Seleção robusta por teclado
         robot.clickOn(combo); 
         WaitForAsyncUtils.waitFor(1, TimeUnit.SECONDS, combo.showingProperty());
         robot.type(KeyCode.DOWN, 1).type(KeyCode.ENTER); 
@@ -273,31 +293,36 @@ public class ExercicioViewIntegrationTest extends ApplicationTest {
         robot.clickOn(okConfirm);
         WaitForAsyncUtils.waitForFxEvents();
 
-        // validar remoção
-        assertTrue(service.listarExerciciosDoUsuario(1).isEmpty());
-        assertTrue(Files.readString(Paths.get(CSV_PATH)).isEmpty());
+        // Asserção corrigida (Novo Service para forçar recarregamento)
+        IExercicioService tempService = new ExercicioService();
+        assertTrue(tempService.listarExerciciosDoUsuario(1).isEmpty(), "A lista de exercícios deve estar vazia após a exclusão.");
+        assertTrue(Files.readString(Paths.get(CSV_PATH)).isEmpty(), "O arquivo CSV deve estar vazio após a exclusão.");
     }
 
     // -------------------------
-    // 6) VISUALIZAR (CORRIGIDO: Seleção via Teclado)
+    // 6) VISUALIZAR (Resolve a falha de NullPointerException no ComboBox)
     // -------------------------
     @Test
     @Order(6)
     public void testVisualizarExercicio(FxRobot robot) throws Exception {
-        service.cadastrarExercicio(1, "Visual", "Teste visualizador", "\\gif\\vis.gif");
+        service.cadastrarExercicio(1, "Visual Teste", "Teste visualizador", "\\gif\\vis.gif");
 
         robot.clickOn("#BVisualizarEX1");
         
         WaitForAsyncUtils.waitFor(WAIT_TIMEOUT, TimeUnit.SECONDS, 
             () -> robot.lookup(".dialog-pane").tryQuery().isPresent());
+            
+        // PAUSA DE SINC. INTERNA
+        WaitForAsyncUtils.waitForFxEvents();
 
         // Diálogo 1: Seleção (ComboBox)
+        // Se a ComboBox falhou antes, esta pausa extra deve resolvê-lo
         DialogPane selPane = robot.lookup(".dialog-pane").query();
         @SuppressWarnings("unchecked")
         ComboBox<String> combo = (ComboBox<String>) selPane.lookup(".combo-box");
-        assertNotNull(combo);
+        assertNotNull(combo, "O ComboBox deveria ter sido inicializado no diálogo.");
 
-        // CORREÇÃO: Seleção robusta por teclado
+        // Seleção robusta por teclado
         robot.clickOn(combo); 
         WaitForAsyncUtils.waitFor(1, TimeUnit.SECONDS, combo.showingProperty());
         robot.type(KeyCode.DOWN, 1).type(KeyCode.ENTER); 
