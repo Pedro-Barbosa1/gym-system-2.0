@@ -66,7 +66,7 @@ public class IndicadoresViewController {
 
 
     @FXML
-    void cadastrarNovoIndicador(ActionEvent event) {
+    public void cadastrarNovoIndicador(ActionEvent event) {
     logger.info("Abrindo dialog para cadastrar novo indicador...");
     
     Dialog<ButtonType> dialog = new Dialog<>();
@@ -174,7 +174,7 @@ public class IndicadoresViewController {
     }
 
     @FXML
-    void listarMeusIndicadores(ActionEvent event) {
+    public void listarMeusIndicadores(ActionEvent event) {
     logger.info("Listando indicadores do usuário...");
         
         List<IndicadorBiomedico> meusIndicadores = indicadorService.listarTodosDoUsuario(idUsuarioLogado);

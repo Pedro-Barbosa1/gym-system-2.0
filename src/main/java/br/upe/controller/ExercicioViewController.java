@@ -32,14 +32,14 @@ public class ExercicioViewController {
     private final IExercicioService exercicioService;
     private int idUsuarioLogado = 1; 
 
-    @FXML private Button BCadastrarEX;
-    @FXML private Button BDetalhesEX;
-    @FXML private Button BEditarEX;
-    @FXML private Button BExcluirEX;
-    @FXML private Button BListarEX;
-    @FXML private Button BVisualizarEX1;
-    @FXML private Button IFechar;
-    @FXML private ImageView IMenu;
+    @FXML public Button BCadastrarEX;
+    @FXML public Button BDetalhesEX;
+    @FXML public Button BEditarEX;
+    @FXML public Button BExcluirEX;
+    @FXML public Button BListarEX;
+    @FXML public Button BVisualizarEX1;
+    @FXML public Button IFechar;
+    @FXML public ImageView IMenu;
 
     public ExercicioViewController() {
         this.exercicioService = new ExercicioService();
@@ -50,7 +50,7 @@ public class ExercicioViewController {
     // ============================================================
 
     @FXML
-    void handleCadastrarExercicio(ActionEvent event) {
+    public void handleCadastrarExercicio(ActionEvent event) {
         logger.info("Abrindo diálogo para cadastrar novo exercício...");
 
         Dialog<ButtonType> dialog = criarDialogPadrao("Cadastrar Novo Exercício", "Preencha os dados do exercício");
@@ -94,7 +94,7 @@ public class ExercicioViewController {
     }
 
     @FXML
-    void handleListarExercicios(ActionEvent event) {
+    public void handleListarExercicios(ActionEvent event) {
         List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sem Exercícios", "Você ainda não cadastrou nenhum exercício.");
@@ -142,7 +142,7 @@ public class ExercicioViewController {
     }
 
     @FXML
-    void handleEditarExercicio(ActionEvent event) {
+    public void handleEditarExercicio(ActionEvent event) {
         List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Exercícios", "Você não possui exercícios para editar.");
@@ -186,7 +186,7 @@ public class ExercicioViewController {
     }
 
     @FXML
-    void handleExcluirExercicio(ActionEvent event) {
+    public void handleExcluirExercicio(ActionEvent event) {
         List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Exercícios", "Você não possui exercícios para excluir.");
@@ -209,7 +209,7 @@ public class ExercicioViewController {
     }
 
     @FXML
-    void handleVerDetalhesExercicio(ActionEvent event) {
+    public void handleVerDetalhesExercicio(ActionEvent event) {
         List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Exercícios", "Você não possui exercícios cadastrados.");
@@ -258,7 +258,7 @@ public class ExercicioViewController {
     }
 
     @FXML
-    void handleVisualizarExercicio(ActionEvent event) {
+    public void handleVisualizarExercicio(ActionEvent event) {
         List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Exercícios", "Você não possui exercícios cadastrados.");
@@ -303,7 +303,7 @@ public class ExercicioViewController {
     }
 
     @FXML
-    void handleAbrirMenu(ActionEvent event) {
+    public void handleAbrirMenu(ActionEvent event) {
         carregarNovaTela("/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
     }
 
@@ -511,4 +511,10 @@ public class ExercicioViewController {
             StyledAlert.showConfirmationAndWait(titulo, mensagem);
         }
     }
+
+    public void setExercicioService(IExercicioService exercicioService) {
+        // Método para injeção de dependência em testes
+        throw new UnsupportedOperationException("Injeção de dependência não suportada no construtor padrão.");
+    }
+
 }
