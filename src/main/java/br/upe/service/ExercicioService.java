@@ -133,10 +133,4 @@ public class ExercicioService implements IExercicioService {
         }
     }
 
-
-    public void limparDados() {
-        if (exercicioRepository instanceof ExercicioRepositoryImpl exercicioRepositoryImpl) {
-            exercicioRepositoryImpl.limpar();
-        }
-    }
 }

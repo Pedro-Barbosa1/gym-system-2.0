@@ -116,7 +116,7 @@ public class SessaoTreinoRepositoryImpl implements ISessaoTreinoRepository {
                             int idExercicio = Integer.parseInt(itemPartes[0]);
                             int repeticoesRealizadas = Integer.parseInt(itemPartes[1]);
                             double cargaRealizada = Double.parseDouble(itemPartes[2]);
-                            itensExecutados.add(new ItemSessaoTreino(idExercicio, repeticoesRealizadas, cargaRealizada));
+                            itensExecutados.add(new ItemSessaoTreino(idSessao, idExercicio, repeticoesRealizadas, cargaRealizada));
                         } else {
                             logger.log(Level.SEVERE, "Formato inválido de item de sessão de treino: {0}", itemStr);
                         }

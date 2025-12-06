@@ -1,22 +1,51 @@
 package br.upe.model;
 
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@Table(name = "exercicios")
 public class Exercicio {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idExercicio;
-    private int idUsuario;
+
+    @ManyToOne()
+    @JoinColumn(name = "idUsuario")
+    private Usuario usuario;
+
+    @OneToOne()
+    @JoinColumn(name="item_plano_id")
+    private ItemPlanoTreino itemPlanoTreino;
+
     private String nome;
+
     private String descricao;
+
     private String caminhoGif;
 
-    public Exercicio(int idExercicio, int idUsuario, String nome, String descricao, String caminhoGif) {
-        this.idExercicio = idExercicio;
-        this.idUsuario = idUsuario;
+    // construtor vazio exigido pelo JPA
+    public Exercicio() {
+
+    }
+
+    public Exercicio(int idUsuario, String nome, String descricao, String caminhoGif) {
+        this.usuario = new Usuario();
+        this.usuario.setId(idUsuario);
         this.nome = nome;
         this.descricao = descricao;
         this.caminhoGif = caminhoGif;
     }
 
-    public Exercicio(int idUsuario, String nome, String descricao, String caminhoGif) {
-        this.idUsuario = idUsuario;
+    public Exercicio(int idUsuario, int idExercicio, String nome, String descricao, String caminhoGif) {
+        this.usuario = new Usuario();
+        this.usuario.setId(idUsuario);
+        this.usuario.setId(idExercicio);
+        this.idExercicio = idExercicio;
         this.nome = nome;
         this.descricao = descricao;
         this.caminhoGif = caminhoGif;
@@ -30,14 +59,6 @@ public class Exercicio {
         this.idExercicio = idExercicio;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
     public String getNome() {
         return nome;
     }
@@ -48,6 +69,10 @@ public class Exercicio {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public int getIdUsuario(){
+        return usuario.getId();
     }
 
     public void setDescricao(String descricao) {
@@ -66,4 +91,5 @@ public class Exercicio {
     public String toString() {
         return String.format("ID: %d | Nome: %s | Descrição: %s | GIF: %s", idExercicio, nome, descricao, caminhoGif);
     }
+
 }
