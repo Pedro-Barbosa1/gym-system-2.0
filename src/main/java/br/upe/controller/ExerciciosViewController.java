@@ -15,10 +15,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
+import java.io.IOException;
 
 public class ExerciciosViewController {
 
@@ -30,7 +35,7 @@ public class ExerciciosViewController {
     @FXML private TableColumn<Exercicio, Integer> colId;
     @FXML private TableColumn<Exercicio, String> colNome;
     @FXML private TableColumn<Exercicio, String> colDescricao;
-    @FXML private TableColumn<Exercicio, String> colGif;
+    // coluna GIF removida (agora usamos botão Visualizar)
     @FXML private TableColumn<Exercicio, Void> colAcoes;
     @FXML private Button BAddExercicio;
     @FXML private Label totalLabel;
@@ -45,24 +50,37 @@ public class ExerciciosViewController {
         colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdExercicio()).asObject());
         colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
         colDescricao.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescricao()));
-        colGif.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCaminhoGif()));
 
         // ações (editar / remover)
         adicionarColunaAcoes();
+
+        // forçar ajuste das colunas à largura da tabela (sem altura fixa de linha)
+        tableExercicios.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // carregar dados
         loadExercicios();
     }
 
     private void adicionarColunaAcoes() {
-        colAcoes.setCellFactory(col -> new TableCell<>() {
+        colAcoes.setCellFactory(col -> new TableCell<Exercicio, Void>() {
+            private final Button btnVisualizar = new Button("Visualizar");
             private final Button btnEditar = new Button("Editar");
             private final Button btnRemover = new Button("Remover");
-            private final HBox container = new HBox(6, btnEditar, btnRemover);
+            private final HBox container = new HBox(8, btnVisualizar, btnEditar, btnRemover);
 
             {
+                btnVisualizar.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
                 btnEditar.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
                 btnRemover.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+
+                btnVisualizar.setPrefWidth(90);
+                btnEditar.setPrefWidth(70);
+                btnRemover.setPrefWidth(70);
+
+                btnVisualizar.setOnAction(e -> {
+                    Exercicio ex = getTableView().getItems().get(getIndex());
+                    abrirVisualizadorExercicio(ex);
+                });
 
                 btnEditar.setOnAction(e -> {
                     Exercicio ex = getTableView().getItems().get(getIndex());
@@ -87,11 +105,40 @@ public class ExerciciosViewController {
         });
     }
 
+    private void abrirVisualizadorExercicio(Exercicio exercicio) {
+        try {
+            String caminhoGif = exercicio.getCaminhoGif();
+            if (caminhoGif == null) caminhoGif = "";
+            caminhoGif = caminhoGif.replace("\\", "/");
+            caminhoGif = caminhoGif.replaceFirst("^/gif/", "");
+            caminhoGif = caminhoGif.replaceFirst("^gif/", "");
+            caminhoGif = "/gif/" + caminhoGif;
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/visualizador.fxml"));
+            Parent root = loader.load();
+            VisualizadorExercicioController controller = loader.getController();
+            controller.exibirExercicio(caminhoGif, exercicio.getNome(), exercicio.getDescricao());
+
+            Stage stage = new Stage();
+            stage.setTitle("Visualizar Exercício - " + exercicio.getNome());
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir o visualizador do exercício.");
+            logger.log(Level.SEVERE, "Erro ao abrir visualizador de exercício", e);
+        } catch (Exception e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Erro ao carregar o exercício: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro ao carregar dados do exercício", e);
+        }
+    }
+
     private void loadExercicios() {
         List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
         tableExercicios.setItems(FXCollections.observableArrayList(exercicios));
         if (totalLabel != null) {
-            totalLabel.setText(String.format("Total de %d Exercicios", exercicios.size()));
+            totalLabel.setText(String.format("Total de %d exercício(s) cadastrados", exercicios.size()));
         }
         aplicarEstiloTableView(tableExercicios);
     }
@@ -234,19 +281,15 @@ public class ExerciciosViewController {
         return field;
     }
 
-    private void aplicarEstiloTableView(TableView<?> tableView) {
+    private void aplicarEstiloTableView(TableView<Exercicio> tableView) {
         // Reaproveita estilo simples usado no outro controller
         tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
-        tableView.setRowFactory(tv -> {
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            javafx.scene.control.TableRow row = new javafx.scene.control.TableRow() {
-                @Override
-                protected void updateItem(Object item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (!empty) setStyle("-fx-background-color: #2c2c2c; -fx-text-fill: #ffb300;");
-                }
-            };
-            return row;
+        tableView.setRowFactory(tv -> new javafx.scene.control.TableRow<Exercicio>() {
+            @Override
+            protected void updateItem(Exercicio item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) setStyle("-fx-background-color: #2c2c2c; -fx-text-fill: #ffb300;");
+            }
         });
     }
 
