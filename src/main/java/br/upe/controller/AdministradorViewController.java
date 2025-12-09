@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import br.upe.model.Usuario;
 import br.upe.service.IUsuarioService;
 import br.upe.service.UsuarioService;
@@ -29,7 +28,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -96,28 +94,28 @@ public class AdministradorViewController {
     @FXML
     public void handleListarUsuarios() {
         logger.info("Botão 'Listar Usuários' clicado!");
-        
+
         List<Usuario> usuarios = usuarioService.listarTodosUsuarios();
-        
+
         if (usuarios.isEmpty()) {
             showInfo("Lista de Usuários", "Nenhum usuário cadastrado no sistema.");
             return;
         }
-        
-        // Criar Dialog
-        Dialog<ButtonType> dialog = criarDialogPadrao("Lista de Todos os Usuários", 
-            String.format("Total de %d usuário(s) cadastrados", usuarios.size()));
-        
-        // Criar TableView
+
+        Dialog<ButtonType> dialog = criarDialogPadrao(
+                "Lista de Usuários",
+                String.format("Total de %d usuário(s) cadastrados", usuarios.size())
+        );
+
         TableView<Usuario> tableView = new TableView<>();
         tableView.setItems(FXCollections.observableArrayList(usuarios));
-        tableView.setPrefWidth(700);
-        tableView.setPrefHeight(400);
+        tableView.setPrefWidth(900);
+        tableView.setPrefHeight(450);
 
         // Colunas
         TableColumn<Usuario, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getId()).asObject());
-        colId.setPrefWidth(80);
+        colId.setPrefWidth(60);
         colId.setStyle("-fx-alignment: CENTER;");
 
         TableColumn<Usuario, String> colNome = new TableColumn<>("Nome");
@@ -126,21 +124,72 @@ public class AdministradorViewController {
 
         TableColumn<Usuario, String> colEmail = new TableColumn<>("Email");
         colEmail.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEmail()));
-        colEmail.setPrefWidth(250);
+        colEmail.setPrefWidth(240);
 
         TableColumn<Usuario, String> colTipo = new TableColumn<>("Tipo");
         colTipo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTipo().toString()));
-        colTipo.setPrefWidth(170);
+        colTipo.setPrefWidth(100);
         colTipo.setStyle("-fx-alignment: CENTER;");
 
-        tableView.getColumns().addAll(colId, colNome, colEmail, colTipo);
+        // 👉 Nova coluna de ações
+        TableColumn<Usuario, Void> colAcoes = new TableColumn<>("Ações");
+        colAcoes.setPrefWidth(250);
 
-        // Aplicar estilo
+        colAcoes.setCellFactory(param -> new javafx.scene.control.TableCell<>() {
+
+            private final Button btnPromover = new Button("Promover");
+            private final Button btnRebaixar = new Button("Rebaixar");
+            private final Button btnRemover  = new Button("Remover");
+
+            {
+                btnPromover.setStyle("-fx-background-color: #2D6A4F; -fx-text-fill: white;");
+                btnRebaixar.setStyle("-fx-background-color: #9D0208; -fx-text-fill: white;");
+                btnRemover.setStyle("-fx-background-color: #6A040F; -fx-text-fill: white;");
+
+                btnPromover.setOnAction(event -> {
+                    Usuario usuario = getTableView().getItems().get(getIndex());
+                    confirmarPromocao(usuario, tableView);
+                });
+
+                btnRebaixar.setOnAction(event -> {
+                    Usuario usuario = getTableView().getItems().get(getIndex());
+                    confirmarRebaixamento(usuario, tableView);
+                });
+
+                btnRemover.setOnAction(event -> {
+                    Usuario usuario = getTableView().getItems().get(getIndex());
+                    confirmarRemocao(usuario, tableView);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Usuario usuario = getTableView().getItems().get(getIndex());
+
+                    boolean isAdmin = usuario.getTipo().toString().equalsIgnoreCase("ADMIN");
+
+                    btnPromover.setDisable(isAdmin);
+                    btnRebaixar.setDisable(!isAdmin);
+
+                    javafx.scene.layout.HBox hbox = new javafx.scene.layout.HBox(10, btnPromover, btnRebaixar, btnRemover);
+                    hbox.setStyle("-fx-alignment: CENTER;");
+
+                    setGraphic(hbox);
+                }
+            }
+        });
+
+        tableView.getColumns().addAll(colId, colNome, colEmail, colTipo, colAcoes);
+
         aplicarEstiloTableView(tableView);
 
         dialog.getDialogPane().setContent(tableView);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        
         dialog.showAndWait();
     }
 
@@ -282,7 +331,7 @@ public class AdministradorViewController {
         comboBox.getSelectionModel().selectFirst();
 
         // Estilo do ComboBox
-        comboBox.setCellFactory(lv -> new ListCell<String>() {
+        comboBox.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -291,7 +340,7 @@ public class AdministradorViewController {
                 setStyle("-fx-background-color: #222;");
             }
         });
-        comboBox.setButtonCell(new ListCell<String>() {
+        comboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -475,6 +524,77 @@ public class AdministradorViewController {
                         "-fx-font-weight: bold;"
                     );
                 });
+            }
+        });
+    }
+    private void confirmarPromocao(Usuario usuario, TableView<Usuario> tableView) {
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Confirmar Promoção");
+        confirmacao.setHeaderText("Promover: " + usuario.getNome());
+        confirmacao.setContentText("Deseja promover este usuário a Administrador?");
+
+        confirmacao.showAndWait().ifPresent(resp -> {
+            if (resp == ButtonType.OK) {
+                try {
+                    usuarioService.promoverUsuarioAAdmin(usuario.getId());
+                    showInfo("Sucesso", "Usuário promovido com sucesso!");
+
+                    // Atualizar tabela
+                    atualizarTabelaUsuarios(tableView);
+
+                } catch (Exception e) {
+                    showError("Erro", e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void confirmarRebaixamento(Usuario usuario, TableView<Usuario> tableView) {
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Confirmar Rebaixamento");
+        confirmacao.setHeaderText("Rebaixar: " + usuario.getNome());
+        confirmacao.setContentText("Deseja rebaixar este usuário a Comum?");
+
+        confirmacao.showAndWait().ifPresent(resp -> {
+            if (resp == ButtonType.OK) {
+                try {
+                    usuarioService.rebaixarUsuarioAComum(usuario.getId());
+                    showInfo("Sucesso", "Usuário rebaixado com sucesso!");
+
+                    // Atualizar tabela
+                    atualizarTabelaUsuarios(tableView);
+
+                } catch (Exception e) {
+                    showError("Erro", e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void atualizarTabelaUsuarios(TableView<Usuario> tableView) {
+        List<Usuario> atualizados = usuarioService.listarTodosUsuarios();
+        tableView.setItems(FXCollections.observableArrayList(atualizados));
+        tableView.refresh();
+    }
+    private void confirmarRemocao(Usuario usuario, TableView<Usuario> tableView) {
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Confirmar Remoção");
+        confirmacao.setHeaderText("Remover: " + usuario.getNome());
+        confirmacao.setContentText(
+                "ATENÇÃO: Esta ação é irreversível!\n\nDeseja realmente excluir este usuário?"
+        );
+
+        confirmacao.showAndWait().ifPresent(resp -> {
+            if (resp == ButtonType.OK) {
+                try {
+                    usuarioService.removerUsuario(usuario.getId());
+                    showInfo("Sucesso", "Usuário removido com sucesso!");
+
+                    atualizarTabelaUsuarios(tableView);
+
+                } catch (Exception e) {
+                    showError("Erro", e.getMessage());
+                }
             }
         });
     }
