@@ -4,39 +4,78 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
 
-<VBox prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.AdministradorViewController">
+<BorderPane minHeight="700.0" minWidth="900.0"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="br.upe.controller.AdministradorViewController"
+            style="-fx-background-color: #2c2c2c;">
 
-      <AnchorPane style="-fx-background-color: #2c2c2c;" VBox.vgrow="ALWAYS">
-            <AnchorPane prefHeight="701.0" prefWidth="317.0">
-                  <Button fx:id="BListarUsuarios" layoutX="67.0" layoutY="189.0" mnemonicParsing="false" onAction="#handleListarUsuarios" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1e1e1e;" text="Gerenciar Usuários" textFill="#e5a000">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
-                  <Separator layoutX="311.0" layoutY="1.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="21.0" />
-                  <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="22.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../images/ver.png" />
-                  </ImageView>
-                  <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="20.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../images/logo_app.png" />
-                  </ImageView>
-                  <Separator layoutY="116.0" prefHeight="3.0" prefWidth="322.0" />
-                  <Text fill="#e5a000" layoutX="117.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Text>
-            </AnchorPane>
-            <AnchorPane layoutX="781.0" layoutY="-6.0" prefHeight="80.0" prefWidth="100.0">
-                  <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="15.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="22.0">
-                        <Image url="@../images/sair.png" />
-                  </ImageView>
-                  <Button fx:id="BSairDoApp" layoutX="5.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
-            </AnchorPane>
-      </AnchorPane>
-</VBox>
+
+    <left>
+        <VBox minWidth="320"
+              prefWidth="320"
+              spacing="12"
+              alignment="TOP_CENTER"
+              style="-fx-background-color: #2c2c2c;"
+              xmlns:fx="http://javafx.com/fxml">
+
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+
+            <!-- Wrapper que força centralização -->
+            <HBox alignment="CENTER" prefWidth="320">
+                <ImageView fitHeight="80" preserveRatio="true" pickOnBounds="true" smooth="true">
+                    <Image url="/images/logo_app.png"/>
+                </ImageView>
+            </HBox>
+
+            <HBox alignment="CENTER" prefWidth="320">
+                <Text fill="#e5a000" text="Gym System" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Text>
+            </HBox>
+
+            <HBox alignment="CENTER" prefWidth="320">
+                <Separator prefWidth="260"/>
+            </HBox>
+
+            <HBox alignment="CENTER" prefWidth="320">
+                <Button fx:id="BListarUsuarios"
+                        text="Gerenciar Usuários"
+                        onAction="#handleListarUsuarios"
+                        prefWidth="260"
+                        prefHeight="40"
+                        style="-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;"/>
+            </HBox>
+
+        </VBox>
+    </left>
+
+    <!-- TOPO DIREITO (BOTÃO SAIR) -->
+    <top>
+        <HBox alignment="TOP_RIGHT" spacing="10"
+              style="-fx-padding: 20; -fx-background-color: transparent;">
+            <Button fx:id="BSairDoApp"
+                    onAction="#handleSair"
+                    style="-fx-background-color: transparent;"
+                    graphicTextGap="0">
+                <graphic>
+                    <ImageView fitHeight="60" preserveRatio="true">
+                        <Image url="/images/sair.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+    </top>
+
+</BorderPane>
