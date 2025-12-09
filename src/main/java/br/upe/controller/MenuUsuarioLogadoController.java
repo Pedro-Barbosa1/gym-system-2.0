@@ -92,7 +92,7 @@ public class MenuUsuarioLogadoController {
      */
     private void abrirGerenciarExercicios() {
         logger.info("Botão 'Gerenciar Exercícios' clicado!");
-        carregarNovaTela("/ui/ExercicioView.fxml", "Gym System - Gerenciar Exercícios");
+        carregarNovaTela("/ui/ExerciciosView.fxml", "Gym System - Gerenciar Exercícios");
     }
 
     /**
