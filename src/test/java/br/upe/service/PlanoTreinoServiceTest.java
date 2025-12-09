@@ -16,8 +16,6 @@ class PlanoTreinoServiceTest {
     void setUp() {
         exercicioRepository = new ExercicioRepositoryImpl();
         planoTreinoService = new PlanoTreinoService();
-        planoTreinoService.limparDados();
-        exercicioRepository.carregarDoCsv(); 
     }
 
     @Test

@@ -18,6 +18,7 @@ import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.service.SessaoTreinoService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.UserSession;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -77,7 +78,7 @@ public class TreinoViewController {
     void iniciarNovaSessao(ActionEvent event) {
         logger.info("Iniciando nova sessão de treino...");
         
-        List<PlanoTreino> meusPlanos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+        List<PlanoTreino> meusPlanos = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
 
         if (meusPlanos.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Planos", 
@@ -98,7 +99,7 @@ public class TreinoViewController {
         }
 
         try {
-            SessaoTreino sessaoAtual = sessaoTreinoService.iniciarSessao(idUsuarioLogado, planoEscolhido.getIdPlano());
+            SessaoTreino sessaoAtual = sessaoTreinoService.iniciarSessao(UserSession.getInstance().getIdUsuarioLogado(), planoEscolhido.getIdPlano());
             logger.info("Sessão iniciada para o plano: " + planoEscolhido.getNome() + " em " + sessaoAtual.getDataSessao());
 
             boolean concluido = registrarExerciciosComDialog(sessaoAtual, planoEscolhido);
@@ -133,7 +134,7 @@ public class TreinoViewController {
     void verHistoricoSessoes(ActionEvent event) {
         logger.info("Botão 'Ver Histórico de Sessões' clicado!");
 
-        List<SessaoTreino> historico = sessaoTreinoService.listarSessoesPorUsuario(idUsuarioLogado);
+        List<SessaoTreino> historico = sessaoTreinoService.listarSessoesPorUsuario(UserSession.getInstance().getIdUsuarioLogado());
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Meu Histórico de Treinos");

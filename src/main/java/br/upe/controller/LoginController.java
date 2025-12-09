@@ -8,6 +8,7 @@ import br.upe.model.TipoUsuario;
 import br.upe.model.Usuario;
 import br.upe.service.UsuarioService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,8 +55,8 @@ public class LoginController {
             Usuario usuario = usuarioService.autenticarUsuario(email, senha);
 
             if (usuario != null) {
-
-                int idUsuarioLogado = usuario.getId();
+                // Define o usuário na sessão global
+                UserSession.getInstance().setUsuarioLogado(usuario);
 
                 String caminhoFXML;
                 String titulo;
@@ -70,14 +71,6 @@ public class LoginController {
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(caminhoFXML));
                 Parent root = loader.load();
-
-                // PEGA O CONTROLLER DA TELA DESTINO
-                Object controller = loader.getController();
-
-                // ENVIA O ID
-                if (controller instanceof MenuUsuarioLogadoController) {
-                    ((MenuUsuarioLogadoController) controller).setIdUsuarioLogado(idUsuarioLogado);
-                }
 
                 Stage stage = (Stage) entrarBotao.getScene().getWindow();
                 stage.setScene(new Scene(root));

@@ -11,6 +11,7 @@ import br.upe.model.Exercicio;
 import br.upe.service.ExercicioService;
 import br.upe.service.IExercicioService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.UserSession;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -30,7 +31,6 @@ public class ExercicioViewController {
 
     private static final Logger logger = Logger.getLogger(ExercicioViewController.class.getName());
     private final IExercicioService exercicioService;
-    private int idUsuarioLogado = 1; 
 
     @FXML private Button BCadastrarEX;
     @FXML private Button BDetalhesEX;
@@ -82,7 +82,7 @@ public class ExercicioViewController {
                         return;
                     }
 
-                    Exercicio novo = exercicioService.cadastrarExercicio(idUsuarioLogado, nome, descricao, caminhoGif);
+                    Exercicio novo = exercicioService.cadastrarExercicio(UserSession.getInstance().getIdUsuarioLogado(), nome, descricao, caminhoGif);
                     mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Exercício '" + novo.getNome() + "' cadastrado com sucesso!");
 
                 } catch (Exception e) {
@@ -95,7 +95,7 @@ public class ExercicioViewController {
 
     @FXML
     void handleListarExercicios(ActionEvent event) {
-        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
+        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(UserSession.getInstance().getIdUsuarioLogado());
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sem Exercícios", "Você ainda não cadastrou nenhum exercício.");
             return;
@@ -143,7 +143,7 @@ public class ExercicioViewController {
 
     @FXML
     void handleEditarExercicio(ActionEvent event) {
-        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
+        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(UserSession.getInstance().getIdUsuarioLogado());
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Exercícios", "Você não possui exercícios para editar.");
             return;
@@ -174,7 +174,7 @@ public class ExercicioViewController {
         dialog.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 exercicioService.atualizarExercicio(
-                        idUsuarioLogado,
+                        UserSession.getInstance().getIdUsuarioLogado(),
                         exercicioSelecionado.getNome(),
                         nomeField.getText().isEmpty() ? null : nomeField.getText(),
                         descricaoField.getText().isEmpty() ? null : descricaoField.getText(),
@@ -187,7 +187,7 @@ public class ExercicioViewController {
 
     @FXML
     void handleExcluirExercicio(ActionEvent event) {
-        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
+        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(UserSession.getInstance().getIdUsuarioLogado());
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Exercícios", "Você não possui exercícios para excluir.");
             return;
@@ -202,7 +202,7 @@ public class ExercicioViewController {
         confirmacao.setContentText("Tem certeza que deseja excluir este exercício?");
         confirmacao.showAndWait().ifPresent(resp -> {
             if (resp == ButtonType.OK) {
-                exercicioService.deletarExercicioPorNome(idUsuarioLogado, exercicioSelecionado.getNome());
+                exercicioService.deletarExercicioPorNome(UserSession.getInstance().getIdUsuarioLogado(), exercicioSelecionado.getNome());
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Exercício excluído com sucesso!");
             }
         });
@@ -210,7 +210,7 @@ public class ExercicioViewController {
 
     @FXML
     void handleVerDetalhesExercicio(ActionEvent event) {
-        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
+        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(UserSession.getInstance().getIdUsuarioLogado());
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Exercícios", "Você não possui exercícios cadastrados.");
             return;
@@ -259,7 +259,7 @@ public class ExercicioViewController {
 
     @FXML
     void handleVisualizarExercicio(ActionEvent event) {
-        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
+        List<Exercicio> exercicios = exercicioService.listarExerciciosDoUsuario(UserSession.getInstance().getIdUsuarioLogado());
         if (exercicios.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Exercícios", "Você não possui exercícios cadastrados.");
             return;

@@ -15,6 +15,7 @@ import br.upe.service.IExercicioService;
 import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.UserSession;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -46,9 +47,6 @@ public class MenuPlanoTreinosController {
     // Services
     private IPlanoTreinoService planoTreinoService;
     private IExercicioService exercicioService;
-
-    // ID do usuário logado
-    private int idUsuarioLogado = 1; 
    
     @FXML
     private Button sairB; // Botão para voltar ao menu anterior
@@ -123,7 +121,7 @@ public class MenuPlanoTreinosController {
             }
 
             try {
-                PlanoTreino novoPlano = planoTreinoService.criarPlano(idUsuarioLogado, nome);
+                PlanoTreino novoPlano = planoTreinoService.criarPlano(UserSession.getInstance().getIdUsuarioLogado(), nome);
                 showInfo("Sucesso", "Plano de Treino '" + novoPlano.getNome() + "' criado com sucesso!\nID: " + novoPlano.getIdPlano());
             } catch (IllegalArgumentException e) {
                 showError("Erro", "Erro ao criar plano: " + e.getMessage());
@@ -136,7 +134,7 @@ public class MenuPlanoTreinosController {
     private void handleListarPlanos() {
         logger.info("Listar Meus Planos de Treino clicado!");
 
-        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
 
         if (planos.isEmpty()) {
             showInfo("Meus Planos", "Nenhum plano de treino cadastrado por você ainda.");
@@ -185,7 +183,7 @@ public class MenuPlanoTreinosController {
     private void handleEditarPlano() {
         logger.info("Editar Plano de Treino clicado!");
 
-        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
 
         if (planos.isEmpty()) {
             showInfo("Editar Plano", "Você não possui planos de treino cadastrados.");
@@ -222,7 +220,7 @@ public class MenuPlanoTreinosController {
 
             try {
                 planoTreinoService.editarPlano(
-                    idUsuarioLogado,
+                    UserSession.getInstance().getIdUsuarioLogado(),
                     planoSelecionado.getNome(),
                     novoNome.isEmpty() ? null : novoNome
                 );
@@ -237,7 +235,7 @@ public class MenuPlanoTreinosController {
     private void handleDeletarPlano() {
         logger.info("Deletar Plano de Treino clicado!");
 
-        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
 
         if (planos.isEmpty()) {
             showInfo("Deletar Plano", "Você não possui planos de treino cadastrados.");
@@ -258,7 +256,7 @@ public class MenuPlanoTreinosController {
         confirmacao.showAndWait().ifPresent(resp -> {
             if (resp == ButtonType.OK) {
                 try {
-                    boolean deletado = planoTreinoService.deletarPlano(idUsuarioLogado, planoSelecionado.getNome());
+                    boolean deletado = planoTreinoService.deletarPlano(UserSession.getInstance().getIdUsuarioLogado(), planoSelecionado.getNome());
                     if (deletado) {
                         showInfo("Sucesso", "Plano '" + planoSelecionado.getNome() + "' deletado com sucesso!");
                     } else {
@@ -275,7 +273,7 @@ public class MenuPlanoTreinosController {
     private void handleAdicionarExercicio() {
         logger.info("Adicionar Exercício ao Plano clicado!");
 
-        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
 
         if (planos.isEmpty()) {
             showInfo("Adicionar Exercício", "Você não possui planos de treino cadastrados.");
@@ -289,7 +287,7 @@ public class MenuPlanoTreinosController {
         }
 
         // Listar exercícios do usuário
-        List<Exercicio> meusExercicios = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
+        List<Exercicio> meusExercicios = exercicioService.listarExerciciosDoUsuario(UserSession.getInstance().getIdUsuarioLogado());
 
         if (meusExercicios.isEmpty()) {
             showError("Erro", "Você não possui exercícios cadastrados. Cadastre um exercício primeiro.");
@@ -371,7 +369,7 @@ public class MenuPlanoTreinosController {
                 int repeticoes = Integer.parseInt(repeticoesField.getText().trim());
 
                 planoTreinoService.adicionarExercicioAoPlano(
-                    idUsuarioLogado,
+                    UserSession.getInstance().getIdUsuarioLogado(),
                     planoSelecionado.getNome(),
                     idExercicio,
                     carga,
@@ -391,7 +389,7 @@ public class MenuPlanoTreinosController {
     private void handleRemoverExercicio() {
         logger.info("Remover Exercício do Plano clicado!");
 
-        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
 
         if (planos.isEmpty()) {
             showInfo("Remover Exercício", "Você não possui planos de treino cadastrados.");
@@ -414,7 +412,7 @@ public class MenuPlanoTreinosController {
         for (ItemPlanoTreino item : planoSelecionado.getItensTreino()) {
             Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio());
             String nomeExercicio = "Desconhecido";
-            if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == idUsuarioLogado) {
+            if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == UserSession.getInstance().getIdUsuarioLogado()) {
                 nomeExercicio = exercicioOpt.get().getNome();
             }
             opcoesExercicios.add(String.format("%d - %s (Carga: %dkg, Reps: %d)", 
@@ -473,7 +471,7 @@ public class MenuPlanoTreinosController {
         confirmacao.showAndWait().ifPresent(resp -> {
             if (resp == ButtonType.OK) {
                 try {
-                    planoTreinoService.removerExercicioDoPlano(idUsuarioLogado, planoSelecionado.getNome(), idExercicio);
+                    planoTreinoService.removerExercicioDoPlano(UserSession.getInstance().getIdUsuarioLogado(), planoSelecionado.getNome(), idExercicio);
                     showInfo("Sucesso", "Exercício removido do plano '" + planoSelecionado.getNome() + "' com sucesso!");
                 } catch (IllegalArgumentException e) {
                     showError("Erro", "Erro ao remover exercício: " + e.getMessage());
@@ -487,7 +485,7 @@ public class MenuPlanoTreinosController {
     private void handleVerDetalhes() {
         logger.info("Ver Detalhes do Plano clicado!");
 
-        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
 
         if (planos.isEmpty()) {
             showInfo("Ver Detalhes", "Você não possui planos de treino cadastrados.");
@@ -517,7 +515,7 @@ public class MenuPlanoTreinosController {
             for (ItemPlanoTreino item : planoSelecionado.getItensTreino()) {
                 Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio());
                 String nomeExercicio = "Desconhecido";
-                if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == idUsuarioLogado) {
+                if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == UserSession.getInstance().getIdUsuarioLogado()) {
                     nomeExercicio = exercicioOpt.get().getNome();
                 }
                 dadosTabela.add(new ExercicioPlanoData(

@@ -12,6 +12,7 @@ import br.upe.model.IndicadorBiomedico;
 import br.upe.service.IIndicadorBiomedicoService;
 import br.upe.service.IndicadorBiomedicoService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.UserSession;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -149,7 +150,7 @@ public class IndicadoresViewController {
 
                     // Cadastrar indicador
                     IndicadorBiomedico novo = indicadorService.cadastrarIndicador(
-                        idUsuarioLogado, data, peso, altura, gordura, massaMagra
+                        UserSession.getInstance().getIdUsuarioLogado(), data, peso, altura, gordura, massaMagra
                     );
 
                     mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", 
@@ -177,7 +178,7 @@ public class IndicadoresViewController {
     void listarMeusIndicadores(ActionEvent event) {
     logger.info("Listando indicadores do usuário...");
         
-        List<IndicadorBiomedico> meusIndicadores = indicadorService.listarTodosDoUsuario(idUsuarioLogado);
+        List<IndicadorBiomedico> meusIndicadores = indicadorService.listarTodosDoUsuario(UserSession.getInstance().getIdUsuarioLogado());
         
         if (meusIndicadores.isEmpty()) {
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sem Indicadores", 
