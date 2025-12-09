@@ -33,17 +33,15 @@ public class Exercicio {
 
     }
 
-    public Exercicio(int idUsuario, String nome, String descricao, String caminhoGif) {
-        this.usuario = new Usuario();
-        this.usuario.setId(idUsuario);
+    public Exercicio(Usuario usuario, String nome, String descricao, String caminhoGif) {
+        this.usuario = usuario;
         this.nome = nome;
         this.descricao = descricao;
         this.caminhoGif = caminhoGif;
     }
 
-    public Exercicio(int idUsuario, int idExercicio, String nome, String descricao, String caminhoGif) {
-        this.usuario = new Usuario();
-        this.usuario.setId(idUsuario);
+    public Exercicio(Usuario usuario, int idExercicio, String nome, String descricao, String caminhoGif) {
+        this.usuario = usuario;
         this.usuario.setId(idExercicio);
         this.idExercicio = idExercicio;
         this.nome = nome;
@@ -71,8 +69,16 @@ public class Exercicio {
         return descricao;
     }
 
-    public int getIdUsuario(){
-        return usuario.getId();
+    public int getIdUsuario() {
+        return (this.usuario != null) ? this.usuario.getId() : 0;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public void setDescricao(String descricao) {
