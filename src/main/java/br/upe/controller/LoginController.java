@@ -44,6 +44,18 @@ public class LoginController {
      * Metodo chamado ao clicar no botão "Entrar".
      * Redireciona para a tela conforme o tipo do usuário (ADMIN ou COMUM).
      */
+
+    @FXML
+    public void initialize() {
+        entrarBotao.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                Stage stage = (Stage) newScene.getWindow();
+                stage.setMinWidth(900);
+                stage.setMinHeight(700);
+            }
+        });
+    }
+
     @FXML
     void onEntrar(ActionEvent event) {
         String email = emailTextField.getText();
