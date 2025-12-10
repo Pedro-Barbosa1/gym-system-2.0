@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -56,11 +57,15 @@ public class ExerciciosViewController {
         // ações (editar / remover)
         adicionarColunaAcoes();
 
-        // forçar ajuste das colunas à largura da tabela (sem altura fixa de linha)
+        // forçar ajuste das colunas à largura da tabela
         tableExercicios.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        // definir um tamanho fixo por linha para evitar sobreposição visual
+        tableExercicios.setFixedCellSize(56);
 
         // carregar dados
         loadExercicios();
+        // listeners para redimensionamento / mudanças de itens
+        setupResizeListeners();
     }
 
     private void adicionarColunaAcoes() {
@@ -81,7 +86,15 @@ public class ExerciciosViewController {
 
                 // centralizar e padronizar margens (vertical = horizontal spacing)
                 container.setAlignment(Pos.CENTER);
-                container.setPadding(new Insets(8));
+                container.setPadding(new Insets(6, 4, 6, 4));
+                // garantir altura do container para combinar com a altura fixa da linha
+                container.setPrefHeight(48);
+                container.setMinHeight(48);
+
+                // forçar altura dos botões para manter alinhamento vertical
+                btnVisualizar.setPrefHeight(28);
+                btnEditar.setPrefHeight(28);
+                btnRemover.setPrefHeight(28);
 
                 btnVisualizar.setOnAction(e -> {
                     Exercicio ex = getTableView().getItems().get(getIndex());
@@ -147,6 +160,12 @@ public class ExerciciosViewController {
         if (totalLabel != null) {
             totalLabel.setText(String.format("Total de %d exercício(s) cadastrados", exercicios.size()));
         }
+        // ajustar altura preferencial da tabela para que cada item ocupe uma linha
+        double fixed = tableExercicios.getFixedCellSize();
+        if (fixed <= 0) fixed = 56;
+        int rowsToShow = Math.max(6, exercicios.size());
+        double header = 30; // estimativa para a altura do cabeçalho
+        tableExercicios.setPrefHeight(fixed * rowsToShow + header);
         aplicarEstiloTableView(tableExercicios);
     }
 
@@ -307,12 +326,47 @@ public class ExerciciosViewController {
         // Reaproveita estilo simples usado no outro controller
         tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
         tableView.setRowFactory(tv -> new javafx.scene.control.TableRow<Exercicio>() {
+            {
+                // forçar prefHeight por linha (combinado com fixedCellSize)
+                setPrefHeight(56);
+                setMinHeight(56);
+            }
+
             @Override
             protected void updateItem(Exercicio item, boolean empty) {
                 super.updateItem(item, empty);
-                if (!empty) setStyle("-fx-background-color: #2c2c2c; -fx-text-fill: #ffb300;");
+                if (empty) {
+                    setStyle("");
+                } else {
+                    // fundo escuro + borda inferior para demarcar separação de linhas
+                    setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: transparent transparent #e6e6e6 transparent; " +
+                        "-fx-border-width: 0 0 1 0; " +
+                        "-fx-border-style: solid; " +
+                        "-fx-border-insets: 0;"
+                    );
+                }
             }
         });
+    }
+
+    private void setupResizeListeners() {
+        Runnable recompute = () -> Platform.runLater(() -> {
+            double fixed = tableExercicios.getFixedCellSize();
+            if (fixed <= 0) fixed = 56;
+            int rowsToShow = Math.max(6, tableExercicios.getItems() == null ? 0 : tableExercicios.getItems().size());
+            double header = 30;
+            tableExercicios.setPrefHeight(fixed * rowsToShow + header);
+            tableExercicios.refresh();
+        });
+
+        tableExercicios.widthProperty().addListener((obs, old, nw) -> recompute.run());
+        tableExercicios.sceneProperty().addListener((obs, old, nw) -> { if (nw != null) recompute.run(); });
+        for (TableColumn<Exercicio, ?> c : tableExercicios.getColumns()) {
+            c.widthProperty().addListener((obs, old, nw) -> recompute.run());
+        }
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
