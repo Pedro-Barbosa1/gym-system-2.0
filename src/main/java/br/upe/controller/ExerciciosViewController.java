@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -38,6 +39,7 @@ public class ExerciciosViewController {
     // coluna GIF removida (agora usamos botão Visualizar)
     @FXML private TableColumn<Exercicio, Void> colAcoes;
     @FXML private Button BAddExercicio;
+    @FXML private Button BVoltar;
     @FXML private Label totalLabel;
 
     public ExerciciosViewController() {
@@ -77,6 +79,10 @@ public class ExerciciosViewController {
                 btnEditar.setPrefWidth(70);
                 btnRemover.setPrefWidth(70);
 
+                // centralizar e padronizar margens (vertical = horizontal spacing)
+                container.setAlignment(Pos.CENTER);
+                container.setPadding(new Insets(8));
+
                 btnVisualizar.setOnAction(e -> {
                     Exercicio ex = getTableView().getItems().get(getIndex());
                     abrirVisualizadorExercicio(ex);
@@ -100,6 +106,7 @@ public class ExerciciosViewController {
                     setGraphic(null);
                 } else {
                     setGraphic(container);
+                    setAlignment(Pos.CENTER);
                 }
             }
         });
@@ -184,6 +191,21 @@ public class ExerciciosViewController {
                 }
             }
         });
+    }
+
+    @FXML
+    private void handleVoltar(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuUsuarioLogado.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) BAddExercicio.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Gym System - Menu do Usuário");
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível voltar para a tela anterior.");
+            logger.log(Level.SEVERE, "Erro ao voltar para MenuUsuarioLogado", e);
+        }
     }
 
     private void abrirDialogEditar(Exercicio exercicio) {
