@@ -171,45 +171,54 @@ public class ExerciciosViewController {
 
     @FXML
     private void handleAdicionarExercicio(ActionEvent event) {
-        Dialog<ButtonType> dialog = criarDialogPadrao("Cadastrar Novo Exercício", "Preencha os dados do exercício");
-        GridPane grid = criarGridPadrao();
+        // Reabrir o diálogo em branco (com placeholders) até o usuário cancelar
+        while (true) {
+            Dialog<ButtonType> dialog = criarDialogPadrao("Cadastrar Novo Exercício", "Preencha os dados do exercício");
+            GridPane grid = criarGridPadrao();
 
-        TextField nomeField = criarCampoTexto("Ex: Supino Reto");
-        TextField descricaoField = criarCampoTexto("Ex: Exercício para peito");
-        TextField gifField = criarCampoTexto("Ex: supino.gif");
+            TextField nomeField = criarCampoTexto("Ex: Supino Reto");
+            TextField descricaoField = criarCampoTexto("Ex: Exercício para peito");
+            TextField gifField = criarCampoTexto("Ex: supino.gif");
 
-        grid.add(criarLabel("Nome do Exercício:"), 0, 0);
-        grid.add(nomeField, 1, 0);
-        grid.add(criarLabel("Descrição:"), 0, 1);
-        grid.add(descricaoField, 1, 1);
-        grid.add(criarLabel("Caminho do GIF:"), 0, 2);
-        grid.add(gifField, 1, 2);
+            grid.add(criarLabel("Nome do Exercício:"), 0, 0);
+            grid.add(nomeField, 1, 0);
+            grid.add(criarLabel("Descrição:"), 0, 1);
+            grid.add(descricaoField, 1, 1);
+            grid.add(criarLabel("Caminho do GIF:"), 0, 2);
+            grid.add(gifField, 1, 2);
 
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            dialog.getDialogPane().setContent(grid);
+            dialog.getDialogPane().getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
 
-        dialog.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                try {
-                    String nome = nomeField.getText().trim();
-                    String descricao = descricaoField.getText().trim();
-                    String caminhoGif = gifField.getText().trim();
-
-                    if (nome.isEmpty() || descricao.isEmpty()) {
-                        mostrarAlerta(Alert.AlertType.WARNING, "Campos obrigatórios", "Nome e descrição são obrigatórios.");
-                        return;
-                    }
-
-                    exercicioService.cadastrarExercicio(idUsuarioLogado, nome, descricao, caminhoGif);
-                    mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Exercício cadastrado com sucesso!");
-                    loadExercicios();
-
-                } catch (Exception e) {
-                    mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Erro ao cadastrar exercício: " + e.getMessage());
-                    logger.log(Level.WARNING, "Erro ao cadastrar exercício", e);
-                }
+            java.util.Optional<ButtonType> opt = dialog.showAndWait();
+            if (opt.isEmpty() || opt.get() == ButtonType.CANCEL) {
+                // usuário cancelou — encerra
+                break;
             }
-        });
+
+            // usuário clicou OK — tenta cadastrar e sempre notifica o resultado
+            try {
+                String nome = nomeField.getText().trim();
+                String descricao = descricaoField.getText().trim();
+                String caminhoGif = gifField.getText().trim();
+
+                if (nome.isEmpty() || descricao.isEmpty()) {
+                    mostrarAlerta(Alert.AlertType.WARNING, "Campos obrigatórios", "Nome e descrição são obrigatórios.");
+                    // reabrir pop-up em branco (continua loop)
+                    continue;
+                }
+
+                exercicioService.cadastrarExercicio(idUsuarioLogado, nome, descricao, caminhoGif);
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Exercício cadastrado com sucesso!");
+                loadExercicios();
+                // reabrir pop-up em branco (continua loop)
+
+            } catch (Exception e) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Erro ao cadastrar exercício: " + e.getMessage());
+                logger.log(Level.WARNING, "Erro ao cadastrar exercício", e);
+                // reabrir pop-up em branco
+            }
+        }
     }
 
     @FXML
