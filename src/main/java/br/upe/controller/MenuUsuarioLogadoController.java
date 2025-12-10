@@ -12,6 +12,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import br.upe.session. SessaoUsuario; //adicionado recentemente para resolver a issue de converter a lógica do usuario logado
+
+
 
 public class MenuUsuarioLogadoController {
 
@@ -111,6 +114,7 @@ public class MenuUsuarioLogadoController {
     @FXML
     void handleSair() {
         logger.info("Botão 'Sair' clicado! Voltando para a tela de login...");
+        SessaoUsuario.limparSessao();//limpa a sessão ao sair
         carregarNovaTela("/ui/MenuPrincipal.fxml", "Gym System - Login");
     }
 

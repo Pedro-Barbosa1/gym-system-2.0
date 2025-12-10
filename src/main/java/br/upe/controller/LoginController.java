@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import br.upe.session. SessaoUsuario; //adicionado recentemente para resolver a issue de converter a lógica do usuario logado
 
 public class LoginController {
 
@@ -51,6 +52,7 @@ public class LoginController {
 
         try {
             Usuario usuario = usuarioService.autenticarUsuario(email, senha);
+            SessaoUsuario.setUsuarioLogado(usuario); //salva o usuário logado na sessão
 
             if (usuario != null) {
                 logger.info(() -> "Usuário autenticado: " + usuario.getEmail() +
