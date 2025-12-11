@@ -1,14 +1,14 @@
 package br.upe.service;
 
-import br.upe.model.TipoUsuario;
-import br.upe.model.Usuario;
-import br.upe.repository.IUsuarioRepository;
-import br.upe.repository.impl.UsuarioRepositoryImpl;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import br.upe.model.TipoUsuario;
+import br.upe.model.Usuario;
+import br.upe.repository.IUsuarioRepository;
+import br.upe.repository.impl.UsuarioRepositoryImpl;
 
 public class UsuarioService implements IUsuarioService {
 

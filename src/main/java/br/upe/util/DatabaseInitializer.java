@@ -1,12 +1,12 @@
 package br.upe.util;
 
+import java.util.Optional;
+import java.util.logging.Logger;
+
 import br.upe.model.TipoUsuario;
 import br.upe.model.Usuario;
 import br.upe.service.IUsuarioService;
 import br.upe.service.UsuarioService;
-
-import java.util.Optional;
-import java.util.logging.Logger;
 
 /**
  * Classe responsável por inicializar dados padrão no banco de dados,

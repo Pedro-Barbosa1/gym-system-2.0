@@ -1,14 +1,15 @@
 package br.upe.util;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+
 import br.upe.model.TipoUsuario;
 import br.upe.model.Usuario;
 import br.upe.service.IUsuarioService;
 import br.upe.service.UsuarioService;
-import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DatabaseInitializerTest {
 

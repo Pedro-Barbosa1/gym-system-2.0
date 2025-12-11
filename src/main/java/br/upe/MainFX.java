@@ -8,7 +8,6 @@ import br.upe.util.DatabaseConnectionTester;
 import br.upe.util.DatabaseInitializer;
 import br.upe.util.JPAUtil;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

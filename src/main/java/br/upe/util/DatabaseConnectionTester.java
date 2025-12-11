@@ -1,10 +1,11 @@
 package br.upe.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DatabaseConnectionTester {
     
