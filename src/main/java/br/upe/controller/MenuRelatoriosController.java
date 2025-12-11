@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MenuRelatoriosController {
@@ -36,6 +37,9 @@ public class MenuRelatoriosController {
     @FXML private Button exportarRelatorioDeDiferencaB;
 
     @FXML private GridPane calendarioGrid;
+    @FXML private Button btnMesAnterior;
+    @FXML private Button btnMesProximo;
+    @FXML private Text txtMesAno;
 
     private List<LocalDate> datasSelecionadas = new ArrayList<>();
     private YearMonth mesAtual = YearMonth.now();
@@ -45,6 +49,17 @@ public class MenuRelatoriosController {
         this.indicadorService = new IndicadorBiomedicoService();
         logger.info("Menu Relatórios inicializado.");
         configurarAcoes();
+
+        // Navegação do calendário
+        btnMesAnterior.setOnAction(e -> {
+            mesAtual = mesAtual.minusMonths(1);
+            montarCalendario(mesAtual);
+        });
+        btnMesProximo.setOnAction(e -> {
+            mesAtual = mesAtual.plusMonths(1);
+            montarCalendario(mesAtual);
+        });
+
         montarCalendario(mesAtual);
     }
 
@@ -111,6 +126,11 @@ public class MenuRelatoriosController {
             int linha = (dia + primeiroDia.getDayOfWeek().getValue() - 2) / 7;
             calendarioGrid.add(diaButton, coluna, linha);
         }
+
+        // Atualiza o texto do mês e ano
+        txtMesAno.setText(mes.getMonth().name() + " " + mes.getYear());
+
+        atualizarVisualizacaoCalendario();
     }
 
     private void handleClickData(LocalDate data) {
