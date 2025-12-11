@@ -26,6 +26,7 @@ public class MainFX extends Application {
 
             stage.setTitle(tituloJanela);
             stage.setScene(new Scene(root));
+            stage.setResizable(false);
             stage.show();
 
             logger.info(() -> "Tela carregada com sucesso: " + caminhoFXML);
