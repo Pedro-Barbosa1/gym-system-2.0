@@ -39,9 +39,14 @@ public class UsuarioService implements IUsuarioService {
         if (nome == null || nome.trim().isEmpty() || email == null || email.trim().isEmpty() || senha == null || senha.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome, email e senha não podem ser vazios.");
         }
-        if (!email.contains("@") || !email.contains(".")) {
+        
+        // Permite o email "ADM" para o usuário administrador padrão
+        boolean isAdminPadrao = "ADM".equalsIgnoreCase(email.trim());
+        
+        if (!isAdminPadrao && (!email.contains("@") || !email.contains("."))) {
             throw new IllegalArgumentException("Email inválido.");
         }
+        
         Optional<Usuario> existente = usuarioRepository.buscarPorEmail(email.trim());
         if (existente.isPresent()) {
             throw new IllegalArgumentException("Já existe um usuário com este email.");

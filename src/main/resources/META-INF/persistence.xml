@@ -12,7 +12,7 @@
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/academia"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="gio123"/>
+            <property name="jakarta.persistence.jdbc.password" value="3950"/>
 
             <!-- Hibernate -->
             <property name="hibernate.hbm2ddl.auto" value="update"/>
