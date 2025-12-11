@@ -59,8 +59,7 @@ public class MenuPlanoTreinosController {
     @FXML
     private Button ListarPlanoB; // Botão para listar planos existentes
 
-    @FXML
-    private Button editarPlanoB; // Botão para editar um plano existente
+    // 'Editar Plano de Treino' button removed from UI; handler kept if needed
 
     @FXML
     private Button deletarPlanoB; // Botão para deletar um plano existente
@@ -87,7 +86,6 @@ public class MenuPlanoTreinosController {
     private void configurarAcoes() {
         criarPlanoB.setOnAction(e -> handleCriarPlano());
         ListarPlanoB.setOnAction(e -> handleListarPlanos());
-        editarPlanoB.setOnAction(e -> handleEditarPlano());
         deletarPlanoB.setOnAction(e -> handleDeletarPlano());
         adicionarExercicioAoPlanoB.setOnAction(e -> handleAdicionarExercicio());
         removerExercíciodoPlanoB.setOnAction(e -> handleRemoverExercicio());
@@ -181,57 +179,7 @@ public class MenuPlanoTreinosController {
         dialog.showAndWait();
     }
 
-    @FXML
-    private void handleEditarPlano() {
-        logger.info("Editar Plano de Treino clicado!");
-
-        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
-
-        if (planos.isEmpty()) {
-            showInfo("Editar Plano", "Você não possui planos de treino cadastrados.");
-            return;
-        }
-
-        // Selecionar plano existente
-        PlanoTreino planoSelecionado = exibirDialogSelecaoPlano(planos, "Editar Plano");
-        if (planoSelecionado == null) {
-            return;
-        }
-
-        // Criar Dialog estilizado
-        Dialog<ButtonType> dialog = criarDialogPadrao("Editar Plano de Treino", 
-            "Edite o plano '" + planoSelecionado.getNome() + "'");
-
-        // GridPane padronizado
-        GridPane grid = criarGridPadrao();
-
-        TextField nomeField = criarCampoTexto(planoSelecionado.getNome());
-        nomeField.setText(planoSelecionado.getNome());
-
-        grid.add(criarLabel("Novo Nome:"), 0, 0);
-        grid.add(nomeField, 1, 0);
-        grid.add(criarLabel("(Deixe em branco para não alterar)"), 0, 1, 2, 1);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        Optional<ButtonType> resultado = dialog.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            String novoNome = nomeField.getText().trim();
-
-            try {
-                planoTreinoService.editarPlano(
-                    idUsuarioLogado,
-                    planoSelecionado.getNome(),
-                    novoNome.isEmpty() ? null : novoNome
-                );
-                showInfo("Sucesso", "Plano '" + planoSelecionado.getNome() + "' atualizado com sucesso!");
-            } catch (IllegalArgumentException e) {
-                showError("Erro", "Erro ao editar plano: " + e.getMessage());
-            }
-        }
-    }
+    // 'Editar Plano' action removed — method deleted because UI no longer exposes it.
 
     @FXML
     private void handleDeletarPlano() {
