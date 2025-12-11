@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.AdministradorViewController">
+
+      <AnchorPane style="-fx-background-color: #2c2c2c;" VBox.vgrow="ALWAYS">
+            <AnchorPane prefHeight="701.0" prefWidth="317.0">
+                  <Button fx:id="BListarUsuarios" layoutX="67.0" layoutY="189.0" mnemonicParsing="false" onAction="#handleListarUsuarios" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1e1e1e;" text="Listar Usuários" textFill="#e5a000">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="BPromoverUsuario" layoutX="67.0" layoutY="256.0" mnemonicParsing="false" onAction="#handlePromoverUsuario" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1e1e1e;" text="Promover Usuário a Admin" textFill="#e5a000">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="BRebaixarUsuario" layoutX="67.0" layoutY="323.0" mnemonicParsing="false" onAction="#handleRebaixarUsuario" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1e1e1e;" text="Rebaixar Usuário a Comum" textFill="#e5a000">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="BRemoverUsuario" layoutX="67.0" layoutY="388.0" mnemonicParsing="false" onAction="#handleRemoverUsuario" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1e1e1e;" text="Remover Usuário" textFill="#e5a000">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Separator layoutX="311.0" layoutY="1.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="21.0" />
+                  <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="22.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@images/ver.png" />
+                  </ImageView>
+                  <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="20.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@images/logo_app.png" />
+                  </ImageView>
+                  <Separator layoutY="116.0" prefHeight="3.0" prefWidth="322.0" />
+                  <Text fill="#e5a000" layoutX="117.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Text>
+                  <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="23.0" layoutY="260.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@images/promover.png" />
+                  </ImageView>
+                  <ImageView fitHeight="56.0" fitWidth="37.0" layoutX="20.0" layoutY="325.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@images/rebaixar.png" />
+                  </ImageView>
+                  <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="22.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@images/excluir.png" />
+                  </ImageView>
+            </AnchorPane>
+            <AnchorPane layoutX="781.0" layoutY="-6.0" prefHeight="80.0" prefWidth="100.0">
+                  <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="15.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="22.0">
+                        <Image url="@images/sair.png" />
+                  </ImageView>
+                  <Button fx:id="BSairDoApp" layoutX="5.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
+            </AnchorPane>
+      </AnchorPane>
+</VBox>
