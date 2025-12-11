@@ -21,6 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -80,6 +81,8 @@ public class MenuPlanoTreinosController {
         
         logger.info("Menu Plano Treinos inicializado com sucesso!");
         configurarAcoes(); // Associa métodos aos botões
+        // Ao abrir a tela, já listar os planos automaticamente (comportamento solicitado)
+        Platform.runLater(() -> handleListarPlanos());
     }
 
     // --- MÉTODO AUXILIAR PARA CONFIGURAR BOTÕES ---
@@ -170,12 +173,81 @@ public class MenuPlanoTreinosController {
 
         tableView.getColumns().addAll(colId, colNome, colExercicios);
 
+        // Coluna de ações (Detalhes / Excluir)
+        TableColumn<PlanoTreino, Void> colAcoes = new TableColumn<>("Ações");
+        colAcoes.setPrefWidth(220);
+        colAcoes.setCellFactory(tc -> new javafx.scene.control.TableCell<PlanoTreino, Void>() {
+            private final Button btnDetalhes = new Button("Detalhes");
+            private final Button btnExcluir = new Button("Excluir");
+            private final javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(8, btnDetalhes, btnExcluir);
+
+            {
+                btnDetalhes.setOnAction(e -> {
+                    PlanoTreino plano = getTableView().getItems().get(getIndex());
+                    showDetalhesPlano(plano);
+                });
+
+                btnExcluir.setOnAction(e -> {
+                    PlanoTreino plano = getTableView().getItems().get(getIndex());
+                    Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmacao.setTitle("Confirmar Exclusão");
+                    confirmacao.setHeaderText("Deletar: " + plano.getNome());
+                    confirmacao.setContentText("Tem certeza que deseja deletar este plano de treino?");
+                    confirmacao.showAndWait().ifPresent(resp -> {
+                        if (resp == ButtonType.OK) {
+                            try {
+                                boolean deletado = planoTreinoService.deletarPlano(idUsuarioLogado, plano.getNome());
+                                if (deletado) {
+                                    getTableView().getItems().remove(plano);
+                                    showInfo("Sucesso", "Plano '" + plano.getNome() + "' deletado com sucesso!");
+                                } else {
+                                    showError("Erro", "Plano não encontrado ou não pertence a você.");
+                                }
+                            } catch (IllegalArgumentException ex) {
+                                showError("Erro", "Erro ao deletar plano: " + ex.getMessage());
+                            }
+                        }
+                    });
+                });
+                box.setStyle("-fx-alignment: CENTER_LEFT; -fx-padding: 4;");
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(box);
+                }
+            }
+        });
+
+        tableView.getColumns().add(colAcoes);
+
         // Aplicar estilo dark theme
         aplicarEstiloTableView(tableView);
 
-        dialog.getDialogPane().setContent(tableView);
+        // Criar layout com botão 'Adicionar' acima e 'Voltar' abaixo
+        javafx.scene.control.Button btnAdicionar = new javafx.scene.control.Button("Adicionar");
+        btnAdicionar.setOnAction(e -> {
+            handleCriarPlano();
+            // Atualizar lista após possível criação
+            List<PlanoTreino> atualizados = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+            tableView.setItems(FXCollections.observableArrayList(atualizados));
+        });
+
+        javafx.scene.control.Button btnVoltar = new javafx.scene.control.Button("Voltar");
+        btnVoltar.setOnAction(e -> dialog.close());
+
+        javafx.scene.layout.VBox container = new javafx.scene.layout.VBox(8);
+        container.setPadding(new Insets(10));
+        container.getChildren().addAll(btnAdicionar, tableView, btnVoltar);
+
+        dialog.getDialogPane().setContent(container);
+        // Mantemos o botão CLOSE apenas como redundância padrão
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        
+
         dialog.showAndWait();
     }
 
@@ -505,6 +577,73 @@ public class MenuPlanoTreinosController {
             tableView.getColumns().addAll(colId, colNome, colCarga, colRepeticoes);
 
             // Aplicar estilo
+            aplicarEstiloTableView(tableView);
+
+            dialog.getDialogPane().setContent(tableView);
+        }
+
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.showAndWait();
+    }
+
+    /**
+     * Mostra os detalhes do plano fornecido (versão que recebe o PlanoTreino diretamente).
+     */
+    private void showDetalhesPlano(PlanoTreino planoSelecionado) {
+        if (planoSelecionado == null) return;
+
+        Dialog<ButtonType> dialog = criarDialogPadrao("Detalhes do Plano", 
+            String.format("Plano: %s (ID: %d) | %d exercício(s)", 
+                planoSelecionado.getNome(), 
+                planoSelecionado.getIdPlano(), 
+                planoSelecionado.getItensTreino().size()));
+
+        if (planoSelecionado.getItensTreino().isEmpty()) {
+            TextArea textArea = criarTextArea(650, 420);
+            textArea.setText("Nenhum exercício adicionado ainda ao plano \"" + planoSelecionado.getNome() + "\".");
+            dialog.getDialogPane().setContent(textArea);
+        } else {
+            List<ExercicioPlanoData> dadosTabela = new ArrayList<>();
+            for (ItemPlanoTreino item : planoSelecionado.getItensTreino()) {
+                Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio());
+                String nomeExercicio = "Desconhecido";
+                if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == idUsuarioLogado) {
+                    nomeExercicio = exercicioOpt.get().getNome();
+                }
+                dadosTabela.add(new ExercicioPlanoData(
+                    item.getIdExercicio(),
+                    nomeExercicio,
+                    item.getCargaKg(),
+                    item.getRepeticoes()
+                ));
+            }
+
+            TableView<ExercicioPlanoData> tableView = new TableView<>();
+            tableView.setItems(FXCollections.observableArrayList(dadosTabela));
+            tableView.setPrefWidth(650);
+            tableView.setPrefHeight(420);
+
+            TableColumn<ExercicioPlanoData, Integer> colId = new TableColumn<>("ID");
+            colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdExercicio()).asObject());
+            colId.setPrefWidth(80);
+            colId.setStyle("-fx-alignment: CENTER;");
+
+            TableColumn<ExercicioPlanoData, String> colNome = new TableColumn<>("Exercício");
+            colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
+            colNome.setPrefWidth(320);
+
+            TableColumn<ExercicioPlanoData, Integer> colCarga = new TableColumn<>("Carga (kg)");
+            colCarga.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaKg()).asObject());
+            colCarga.setPrefWidth(120);
+            colCarga.setStyle("-fx-alignment: CENTER;");
+
+            TableColumn<ExercicioPlanoData, Integer> colRepeticoes = new TableColumn<>("Repetições");
+            colRepeticoes.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRepeticoes()).asObject());
+            colRepeticoes.setPrefWidth(130);
+            colRepeticoes.setStyle("-fx-alignment: CENTER;");
+
+            tableView.getColumns().addAll(colId, colNome, colCarga, colRepeticoes);
+
             aplicarEstiloTableView(tableView);
 
             dialog.getDialogPane().setContent(tableView);
