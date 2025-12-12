@@ -67,4 +67,5 @@ public class ItemPlanoTreino {
     public void setPlanoTreino(PlanoTreino planoTreino) {
         this.planoTreino = planoTreino;
     }
+
 }
