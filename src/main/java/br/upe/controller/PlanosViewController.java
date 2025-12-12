@@ -375,11 +375,13 @@ public class PlanosViewController {
         TableView<ExercicioPlanoData> tableView = new TableView<>();
         tableView.setPrefWidth(650);
         tableView.setPrefHeight(360);
+        // Remover barra de rolagem horizontal
+        tableView.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         TableColumn<ExercicioPlanoData, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdExercicio()).asObject());
         colId.setPrefWidth(80);
-        colId.setStyle("-fx-alignment: CENTER;");
+        colId.setStyle("-fx-alignment: TOP_LEFT;");
 
         TableColumn<ExercicioPlanoData, String> colNome = new TableColumn<>("Exercício");
         colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
@@ -388,12 +390,12 @@ public class PlanosViewController {
         TableColumn<ExercicioPlanoData, Integer> colCarga = new TableColumn<>("Carga (kg)");
         colCarga.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaKg()).asObject());
         colCarga.setPrefWidth(120);
-        colCarga.setStyle("-fx-alignment: CENTER;");
+        colCarga.setStyle("-fx-alignment: TOP_LEFT;");
 
         TableColumn<ExercicioPlanoData, Integer> colRepeticoes = new TableColumn<>("Repetições");
         colRepeticoes.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRepeticoes()).asObject());
         colRepeticoes.setPrefWidth(120);
-        colRepeticoes.setStyle("-fx-alignment: CENTER;");
+        colRepeticoes.setStyle("-fx-alignment: TOP_LEFT;");
 
         TableColumn<ExercicioPlanoData, Void> colAcoes = new TableColumn<>("Ações");
         colAcoes.setPrefWidth(130);
@@ -403,6 +405,19 @@ public class PlanosViewController {
             private final javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(6, btnVisualizar, btnRemover);
 
             {
+                // Estilizar botões exatamente como na tabela principal
+                btnVisualizar.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+                btnRemover.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+                
+                btnVisualizar.setPrefWidth(80);
+                btnRemover.setPrefWidth(70);
+                btnVisualizar.setPrefHeight(28);
+                btnRemover.setPrefHeight(28);
+                
+                box.setAlignment(javafx.geometry.Pos.CENTER);
+                box.setPadding(new Insets(6, 4, 6, 4));
+                box.setPrefHeight(48);
+
                 btnVisualizar.setOnAction(e -> {
                     ExercicioPlanoData data = getTableView().getItems().get(getIndex());
                     Optional<Exercicio> exOpt = exercicioService.buscarExercicioPorIdGlobal(data.getIdExercicio());
@@ -454,8 +469,6 @@ public class PlanosViewController {
                         }
                     });
                 });
-
-                box.setStyle("-fx-alignment: CENTER; -fx-padding: 4;");
             }
 
             @Override
