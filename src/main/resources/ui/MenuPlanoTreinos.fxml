@@ -33,14 +33,6 @@
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="editarPlanoB" layoutX="63.0" layoutY="310.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Editar Plano de Treino" textFill="#e5a000">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
             <Button fx:id="deletarPlanoB" layoutX="63.0" layoutY="372.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Deletar Plano de Treino" textFill="#e5a000">
                <opaqueInsets>
                   <Insets />
@@ -84,9 +76,7 @@
             <ImageView fitHeight="50.0" fitWidth="28.0" layoutX="17.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
                   <Image url="@images/ferramenta-lapis.png" />
             </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="35.0" layoutX="14.0" layoutY="313.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/editar.png" />
-            </ImageView>
+            <!-- 'Editar Plano de Treino' button removed as requested -->
             <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="376.0" pickOnBounds="true" preserveRatio="true">
                   <Image url="@images/excluir.png" />
             </ImageView>

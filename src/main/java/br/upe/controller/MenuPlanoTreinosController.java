@@ -3,6 +3,7 @@ package br.upe.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,12 +16,14 @@ import br.upe.service.IExercicioService;
 import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.ui.util.StyledAlert;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,9 +40,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.stage.Window;
 
 public class MenuPlanoTreinosController {
-
     // Logger para registrar informações e erros do controller
     private static final Logger logger = Logger.getLogger(MenuPlanoTreinosController.class.getName());
 
@@ -59,8 +63,7 @@ public class MenuPlanoTreinosController {
     @FXML
     private Button ListarPlanoB; // Botão para listar planos existentes
 
-    @FXML
-    private Button editarPlanoB; // Botão para editar um plano existente
+    // 'Editar Plano de Treino' button removed from UI; handler kept if needed
 
     @FXML
     private Button deletarPlanoB; // Botão para deletar um plano existente
@@ -87,7 +90,6 @@ public class MenuPlanoTreinosController {
     private void configurarAcoes() {
         criarPlanoB.setOnAction(e -> handleCriarPlano());
         ListarPlanoB.setOnAction(e -> handleListarPlanos());
-        editarPlanoB.setOnAction(e -> handleEditarPlano());
         deletarPlanoB.setOnAction(e -> handleDeletarPlano());
         adicionarExercicioAoPlanoB.setOnAction(e -> handleAdicionarExercicio());
         removerExercíciodoPlanoB.setOnAction(e -> handleRemoverExercicio());
@@ -143,9 +145,11 @@ public class MenuPlanoTreinosController {
             return;
         }
 
-        // Criar o Dialog customizado
-        Dialog<ButtonType> dialog = criarDialogPadrao("Meus Planos de Treino", 
-            String.format("Total de %d plano(s) de treino registrado(s)", planos.size()));
+        // Header para a janela de listagem
+        javafx.scene.control.Label header = new javafx.scene.control.Label(
+            String.format("Meus Planos de Treino — Total: %d", planos.size())
+        );
+        header.setStyle("-fx-text-fill: #ffb300; -fx-font-weight: bold; -fx-font-size: 16px;");
 
         // Criar TableView
         TableView<PlanoTreino> tableView = new TableView<>();
@@ -172,66 +176,106 @@ public class MenuPlanoTreinosController {
 
         tableView.getColumns().addAll(colId, colNome, colExercicios);
 
+        // Coluna de ações (Detalhes / Excluir)
+        TableColumn<PlanoTreino, Void> colAcoes = new TableColumn<>("Ações");
+        colAcoes.setPrefWidth(220);
+        colAcoes.setCellFactory(tc -> new javafx.scene.control.TableCell<PlanoTreino, Void>() {
+            private final Button btnDetalhes = new Button("Detalhes");
+            private final Button btnExcluir = new Button("Excluir");
+            private final javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(8, btnDetalhes, btnExcluir);
+
+            {
+                btnDetalhes.setOnAction(e -> {
+                    PlanoTreino plano = getTableView().getItems().get(getIndex());
+                    showDetalhesPlano(plano);
+                });
+
+                btnExcluir.setOnAction(e -> {
+                    PlanoTreino plano = getTableView().getItems().get(getIndex());
+                    Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmacao.setTitle("Confirmar Exclusão");
+                    confirmacao.setHeaderText("Deletar: " + plano.getNome());
+                    confirmacao.setContentText("Tem certeza que deseja deletar este plano de treino?");
+                    confirmacao.showAndWait().ifPresent(resp -> {
+                        if (resp == ButtonType.OK) {
+                            try {
+                                boolean deletado = planoTreinoService.deletarPlano(idUsuarioLogado, plano.getNome());
+                                if (deletado) {
+                                    getTableView().getItems().remove(plano);
+                                    showInfo("Sucesso", "Plano '" + plano.getNome() + "' deletado com sucesso!");
+                                } else {
+                                    showError("Erro", "Plano não encontrado ou não pertence a você.");
+                                }
+                            } catch (IllegalArgumentException ex) {
+                                showError("Erro", "Erro ao deletar plano: " + ex.getMessage());
+                            }
+                        }
+                    });
+                });
+                box.setStyle("-fx-alignment: CENTER_LEFT; -fx-padding: 4;");
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(box);
+                }
+            }
+        });
+
+        tableView.getColumns().add(colAcoes);
+
         // Aplicar estilo dark theme
         aplicarEstiloTableView(tableView);
 
-        dialog.getDialogPane().setContent(tableView);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        
-        dialog.showAndWait();
-    }
+        // Criar layout com botão 'Adicionar' acima e 'Voltar' abaixo
+        javafx.scene.control.Button btnAdicionar = new javafx.scene.control.Button("Adicionar");
+        btnAdicionar.setOnAction(e -> {
+            handleCriarPlano();
+            // Atualizar lista após possível criação
+            List<PlanoTreino> atualizados = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+            tableView.setItems(FXCollections.observableArrayList(atualizados));
+        });
 
-    @FXML
-    private void handleEditarPlano() {
-        logger.info("Editar Plano de Treino clicado!");
+        javafx.scene.control.Button btnVoltar = new javafx.scene.control.Button("Voltar");
+        // O handler será associado ao Stage criado adiante (fechará a janela)
 
-        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+        javafx.scene.layout.VBox container = new javafx.scene.layout.VBox(8);
+        container.setPadding(new Insets(10));
+        container.getChildren().addAll(btnAdicionar, tableView, btnVoltar);
 
-        if (planos.isEmpty()) {
-            showInfo("Editar Plano", "Você não possui planos de treino cadastrados.");
-            return;
-        }
-
-        // Selecionar plano existente
-        PlanoTreino planoSelecionado = exibirDialogSelecaoPlano(planos, "Editar Plano");
-        if (planoSelecionado == null) {
-            return;
-        }
-
-        // Criar Dialog estilizado
-        Dialog<ButtonType> dialog = criarDialogPadrao("Editar Plano de Treino", 
-            "Edite o plano '" + planoSelecionado.getNome() + "'");
-
-        // GridPane padronizado
-        GridPane grid = criarGridPadrao();
-
-        TextField nomeField = criarCampoTexto(planoSelecionado.getNome());
-        nomeField.setText(planoSelecionado.getNome());
-
-        grid.add(criarLabel("Novo Nome:"), 0, 0);
-        grid.add(nomeField, 1, 0);
-        grid.add(criarLabel("(Deixe em branco para não alterar)"), 0, 1, 2, 1);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        Optional<ButtonType> resultado = dialog.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            String novoNome = nomeField.getText().trim();
-
-            try {
-                planoTreinoService.editarPlano(
-                    idUsuarioLogado,
-                    planoSelecionado.getNome(),
-                    novoNome.isEmpty() ? null : novoNome
-                );
-                showInfo("Sucesso", "Plano '" + planoSelecionado.getNome() + "' atualizado com sucesso!");
-            } catch (IllegalArgumentException e) {
-                showError("Erro", "Erro ao editar plano: " + e.getMessage());
+        // Criar Stage modal
+        Stage stage = new Stage();
+        try {
+            if (sairB != null && sairB.getScene() != null) {
+                stage.initOwner(sairB.getScene().getWindow());
             }
+        } catch (Exception ex) {
+            logger.log(Level.FINE, "Não foi possível inicializar owner do Stage de listar planos", ex);
         }
+        stage.initModality(Modality.WINDOW_MODAL);
+
+        // Montar cena com header + container
+        javafx.scene.layout.VBox root = new javafx.scene.layout.VBox(10);
+        root.setPadding(new Insets(10));
+        root.getChildren().addAll(header, container);
+
+        Scene scene = new Scene(root, 760, 520);
+        scene.getStylesheets().addAll();
+        stage.setScene(scene);
+        stage.setTitle("Meus Planos de Treino");
+
+        // Garantir que o botão Voltar fecha o Stage
+        btnVoltar.setOnAction(e -> stage.close());
+
+        // Mostrar de maneira modal e esperar até fechar
+        stage.showAndWait();
     }
+
+    // 'Editar Plano' action removed — method deleted because UI no longer exposes it.
 
     @FXML
     private void handleDeletarPlano() {
@@ -557,6 +601,73 @@ public class MenuPlanoTreinosController {
             tableView.getColumns().addAll(colId, colNome, colCarga, colRepeticoes);
 
             // Aplicar estilo
+            aplicarEstiloTableView(tableView);
+
+            dialog.getDialogPane().setContent(tableView);
+        }
+
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.showAndWait();
+    }
+
+    /**
+     * Mostra os detalhes do plano fornecido (versão que recebe o PlanoTreino diretamente).
+     */
+    private void showDetalhesPlano(PlanoTreino planoSelecionado) {
+        if (planoSelecionado == null) return;
+
+        Dialog<ButtonType> dialog = criarDialogPadrao("Detalhes do Plano", 
+            String.format("Plano: %s (ID: %d) | %d exercício(s)", 
+                planoSelecionado.getNome(), 
+                planoSelecionado.getIdPlano(), 
+                planoSelecionado.getItensTreino().size()));
+
+        if (planoSelecionado.getItensTreino().isEmpty()) {
+            TextArea textArea = criarTextArea(650, 420);
+            textArea.setText("Nenhum exercício adicionado ainda ao plano \"" + planoSelecionado.getNome() + "\".");
+            dialog.getDialogPane().setContent(textArea);
+        } else {
+            List<ExercicioPlanoData> dadosTabela = new ArrayList<>();
+            for (ItemPlanoTreino item : planoSelecionado.getItensTreino()) {
+                Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio());
+                String nomeExercicio = "Desconhecido";
+                if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == idUsuarioLogado) {
+                    nomeExercicio = exercicioOpt.get().getNome();
+                }
+                dadosTabela.add(new ExercicioPlanoData(
+                    item.getIdExercicio(),
+                    nomeExercicio,
+                    item.getCargaKg(),
+                    item.getRepeticoes()
+                ));
+            }
+
+            TableView<ExercicioPlanoData> tableView = new TableView<>();
+            tableView.setItems(FXCollections.observableArrayList(dadosTabela));
+            tableView.setPrefWidth(650);
+            tableView.setPrefHeight(420);
+
+            TableColumn<ExercicioPlanoData, Integer> colId = new TableColumn<>("ID");
+            colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdExercicio()).asObject());
+            colId.setPrefWidth(80);
+            colId.setStyle("-fx-alignment: CENTER;");
+
+            TableColumn<ExercicioPlanoData, String> colNome = new TableColumn<>("Exercício");
+            colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
+            colNome.setPrefWidth(320);
+
+            TableColumn<ExercicioPlanoData, Integer> colCarga = new TableColumn<>("Carga (kg)");
+            colCarga.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaKg()).asObject());
+            colCarga.setPrefWidth(120);
+            colCarga.setStyle("-fx-alignment: CENTER;");
+
+            TableColumn<ExercicioPlanoData, Integer> colRepeticoes = new TableColumn<>("Repetições");
+            colRepeticoes.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRepeticoes()).asObject());
+            colRepeticoes.setPrefWidth(130);
+            colRepeticoes.setStyle("-fx-alignment: CENTER;");
+
+            tableView.getColumns().addAll(colId, colNome, colCarga, colRepeticoes);
+
             aplicarEstiloTableView(tableView);
 
             dialog.getDialogPane().setContent(tableView);

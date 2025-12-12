@@ -83,7 +83,7 @@ public class MenuUsuarioLogadoController {
      */
     private void abrirGerenciarPlanoDeTreino() {
         logger.info("Botão 'Gerenciar Plano de Treino' clicado!");
-        carregarNovaTela("/ui/MenuPlanoTreinos.fxml", "Gym System - Planos de Treino");
+        carregarNovaTela("/ui/PlanosView.fxml", "Gym System - Planos de Treino");
     }
 
     /**
