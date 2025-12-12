@@ -7,16 +7,17 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2c2c2c;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.ExerciciosViewController">
+<BorderPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2c2c2c;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.PlanosViewController">
    <top>
       <HBox alignment="CENTER_LEFT" spacing="10" BorderPane.alignment="CENTER">
          <Label fx:id="totalLabel" textFill="#e5a000" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
          <Region HBox.hgrow="ALWAYS" />
-         <Button fx:id="BAddExercicio" mnemonicParsing="false" onAction="#handleAdicionarExercicio" prefHeight="36.0" prefWidth="140.0" style="-fx-background-color: #1e1e1e;" text="Adicionar" textFill="#e5a000">
+         <Button fx:id="BAddPlano" mnemonicParsing="false" onAction="#handleAdicionarPlano" prefHeight="36.0" prefWidth="140.0" style="-fx-background-color: #1e1e1e;" text="Adicionar" textFill="#e5a000">
             <font>
                <Font size="13.0" />
             </font>
@@ -28,12 +29,12 @@
    </top>
    
    <center>
-      <TableView fx:id="tableExercicios" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+      <TableView fx:id="tablePlanos" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="60.0" />
-            <TableColumn fx:id="colNome" text="Nome" prefWidth="200.0" />
-            <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="320.0" />
-            <TableColumn fx:id="colAcoes" text="Ações" prefWidth="260.0" />
+            <TableColumn fx:id="colId" text="ID" prefWidth="80.0" />
+            <TableColumn fx:id="colNome" text="Nome do Plano" prefWidth="400.0" />
+            <TableColumn fx:id="colExercicios" text="Exercícios" prefWidth="220.0" />
+            <TableColumn fx:id="colAcoes" text="Ações" prefWidth="160.0" />
          </columns>
          <BorderPane.margin>
             <Insets left="20" right="20" />

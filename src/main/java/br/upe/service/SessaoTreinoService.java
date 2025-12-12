@@ -11,12 +11,15 @@ import br.upe.model.ItemPlanoTreino;
 import br.upe.model.ItemSessaoTreino;
 import br.upe.model.PlanoTreino;
 import br.upe.model.SessaoTreino;
+import br.upe.model.Usuario;
 import br.upe.repository.IExercicioRepository;
 import br.upe.repository.IPlanoTreinoRepository;
 import br.upe.repository.ISessaoTreinoRepository;
+import br.upe.repository.IUsuarioRepository;
 import br.upe.repository.impl.ExercicioRepositoryImpl;
 import br.upe.repository.impl.PlanoTreinoRepositoryImpl;
 import br.upe.repository.impl.SessaoTreinoRepositoryImpl;
+import br.upe.repository.impl.UsuarioRepositoryImpl;
 
 public class SessaoTreinoService {
 
@@ -25,26 +28,46 @@ public class SessaoTreinoService {
     private final ISessaoTreinoRepository sessaoRepo;
     private final IPlanoTreinoRepository planoRepo;
     private final IExercicioRepository exercicioRepo;
+    private final IUsuarioRepository usuarioRepo;
 
     public SessaoTreinoService() {
         this.sessaoRepo = new SessaoTreinoRepositoryImpl();
         this.planoRepo = new PlanoTreinoRepositoryImpl();
         this.exercicioRepo = new ExercicioRepositoryImpl();
+        this.usuarioRepo = new UsuarioRepositoryImpl();
     }
 
     // Inicia a sessao de um usuario
     public SessaoTreino iniciarSessao(int idUsuario, int idPlano) {
+        Optional<Usuario> usuarioOpt = usuarioRepo.buscarPorId(idUsuario);
+        if (usuarioOpt.isEmpty()) {
+            throw new IllegalArgumentException("Usuário com ID " + idUsuario + " não encontrado.");
+        }
+
         Optional<PlanoTreino> planoOpt = planoRepo.buscarPorId(idPlano);
         if (planoOpt.isEmpty() || planoOpt.get().getIdUsuario() != idUsuario) {
             throw new IllegalArgumentException("Plano de treino com ID " + idPlano + " não encontrado ou não pertence a você.");
         }
 
-        return new SessaoTreino(idUsuario, idPlano);
+        SessaoTreino sessao = new SessaoTreino();
+        sessao.setUsuario(usuarioOpt.get());
+        sessao.setPlanoTreino(planoOpt.get());
+        sessao.setDataSessao(java.time.LocalDate.now());
+        return sessao;
     }
 
     // Registra a execucao de um exercicio
     public void registrarExecucao(SessaoTreino sessao, int idExercicio, int repeticoesRealizadas, double cargaRealizada) {
-        ItemSessaoTreino itemExecutado = new ItemSessaoTreino(idExercicio, repeticoesRealizadas, cargaRealizada);
+        Optional<Exercicio> exercicioOpt = exercicioRepo.buscarPorId(idExercicio);
+        if (exercicioOpt.isEmpty()) {
+            throw new IllegalArgumentException("Exercício com ID " + idExercicio + " não encontrado.");
+        }
+
+        ItemSessaoTreino itemExecutado = new ItemSessaoTreino();
+        itemExecutado.setSessaoTreino(sessao);
+        itemExecutado.setExercicio(exercicioOpt.get());
+        itemExecutado.setRepeticoesRealizadas(repeticoesRealizadas);
+        itemExecutado.setCargaRealizada(cargaRealizada);
         sessao.adicionarItemExecutado(itemExecutado);
     }
 

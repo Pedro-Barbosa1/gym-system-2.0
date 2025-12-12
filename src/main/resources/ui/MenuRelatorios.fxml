@@ -5,52 +5,109 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.MenuRelatoriosController">
-      <AnchorPane layoutX="775.0" layoutY="-17.0" prefHeight="138.0" prefWidth="150.0">
-            <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="35.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="29.0">
-                  <Image url="@images/sair.png" />
+<BorderPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.MenuRelatoriosController">
+   
+   <!-- Painel Superior com Botão Sair -->
+   <top>
+      <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+         <StackPane>
+            <ImageView fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@images/sair.png" />
             </ImageView>
-            <Button fx:id="sairB" layoutX="30.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
-      </AnchorPane>
-      <AnchorPane prefHeight="700.0" prefWidth="317.0">
-            <Button fx:id="exportarRelatorioB" layoutX="66.0" layoutY="191.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório Por Data" textFill="#e5a000">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="exportarRelatorioDeDiferencaB" layoutX="66.0" layoutY="261.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório De Diferença" textFill="#e5a000">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/salvar.png" />
+            <Button fx:id="sairB" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: transparent;" />
+         </StackPane>
+         <padding>
+            <Insets top="10" right="20" />
+         </padding>
+      </HBox>
+   </top>
+   
+   <!-- Menu Lateral Esquerdo -->
+   <left>
+      <VBox prefWidth="320.0" style="-fx-background-color: #2C2C2C;" BorderPane.alignment="CENTER">
+         <HBox alignment="CENTER_LEFT" spacing="10">
+            <ImageView fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@images/salvar.png" />
             </ImageView>
-            <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="3.0" />
-            <Separator layoutY="107.0" prefHeight="7.0" prefWidth="320.0" />
-            <Text fill="#9c27b0" layoutX="98.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Relatórios">
+            <Text fill="#9c27b0" strokeType="OUTSIDE" strokeWidth="0.0" text="Relatórios">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Text>
-            <ImageView fitHeight="45.0" fitWidth="32.0" layoutX="14.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
+            <padding>
+               <Insets top="20" left="14" right="14" bottom="10" />
+            </padding>
+         </HBox>
+         <Separator />
+         
+         <VBox spacing="10" VBox.vgrow="ALWAYS">
+            <padding>
+               <Insets top="60" left="8" right="8" />
+            </padding>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+               <ImageView fitHeight="45.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                   <Image url="@images/calendario.png" />
-            </ImageView>
-            <ImageView fitHeight="56.0" fitWidth="32.0" layoutX="14.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/calendario-diferenca.png" />
-            </ImageView>
-      </AnchorPane>
-   <opaqueInsets>
-      <Insets bottom="80.0" top="80.0" />
-   </opaqueInsets>
-</AnchorPane>
+               </ImageView>
+               <Button fx:id="exportarRelatorioB" mnemonicParsing="false" prefHeight="40.0" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório" textFill="#e5a000">
+                  <font>
+                     <Font size="15.0" />
+                  </font>
+               </Button>
+            </HBox>
+         </VBox>
+         
+         <Separator orientation="VERTICAL" />
+      </VBox>
+   </left>
+   
+   <!-- Área Central com Calendário -->
+   <center>
+      <VBox alignment="CENTER" spacing="20" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets top="40" bottom="40" left="40" right="40" />
+         </padding>
+         
+         <!-- Texto Explicativo -->
+         <Text fill="#e5a000" text="Selecione os dias entre o intervalo desejado" textAlignment="CENTER">
+            <font>
+               <Font name="System Bold" size="16.0"/>
+            </font>
+         </Text>
+         
+         <!-- Controles de Navegação do Calendário -->
+         <HBox alignment="CENTER" spacing="20">
+            <Button fx:id="btnMesAnterior" text="&lt;" prefHeight="30.0" prefWidth="40.0" style="-fx-background-color: #1E1E1E;" textFill="#e5a000">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Region HBox.hgrow="ALWAYS" />
+            <Text fx:id="txtMesAno" fill="#e5a000" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnMesProximo" text="&gt;" prefHeight="30.0" prefWidth="40.0" style="-fx-background-color: #1E1E1E;" textFill="#e5a000">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+         </HBox>
+         
+         <!-- Grid do Calendário -->
+         <GridPane fx:id="calendarioGrid" hgap="5" vgap="5" alignment="CENTER" VBox.vgrow="ALWAYS" maxWidth="600.0" maxHeight="450.0" />
+      </VBox>
+   </center>
+   
+</BorderPane>

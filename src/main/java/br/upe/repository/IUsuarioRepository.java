@@ -11,5 +11,4 @@ public interface IUsuarioRepository {
     List<Usuario> listarTodos();
     void editar(Usuario usuario);
     void deletar(int id);
-    int gerarProximoId();
 }

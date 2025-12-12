@@ -5,11 +5,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.NavigationUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
@@ -41,14 +39,7 @@ public class MenuPrincipalController {
     @FXML
     private void handleLogin() {
         logger.info("Botão ENTRAR clicado!");
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Login.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) loginB.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("SysFit - Login");
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao abrir a tela de login", e);
+        if (!NavigationUtil.navigateFrom(loginB, "/ui/Login.fxml", "SysFit - Login")) {
             showError("Erro", "Não foi possível abrir a tela de login.");
         }
     }
@@ -56,14 +47,7 @@ public class MenuPrincipalController {
     @FXML
     private void handleRegister() {
         logger.info("Botão CADASTRAR clicado!");
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Signup.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) registerB.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("SysFit - Cadastro");
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Erro ao abrir a tela de cadastro", e);
+        if (!NavigationUtil.navigateFrom(registerB, "/ui/Signup.fxml", "SysFit - Cadastro")) {
             showError("Erro", "Não foi possível abrir a tela de cadastro.");
         }
     }

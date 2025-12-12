@@ -15,4 +15,6 @@ public interface IIndicadorBiomedicoService {
 
     List<IndicadorBiomedico> listarTodosDoUsuario(int idUsuario);
 
+    void deletarIndicador(int idIndicador);
+
 }

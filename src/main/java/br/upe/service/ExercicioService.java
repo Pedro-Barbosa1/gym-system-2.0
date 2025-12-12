@@ -6,15 +6,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import br.upe.model.Exercicio;
+import br.upe.model.Usuario;
 import br.upe.repository.IExercicioRepository;
 import br.upe.repository.impl.ExercicioRepositoryImpl;
 
 public class ExercicioService implements IExercicioService {
     private static final Logger logger = Logger.getLogger(ExercicioService.class.getName());
     private final IExercicioRepository exercicioRepository;
+    private final IUsuarioService usuarioService;
 
     public ExercicioService() {
         this.exercicioRepository = new ExercicioRepositoryImpl();
+        this.usuarioService = new UsuarioService();
     }
 
     // Verifica condições e cadastra exercicios no repositorio
@@ -31,7 +34,11 @@ public class ExercicioService implements IExercicioService {
             throw new IllegalArgumentException("Você já possui um exercício com o nome '" + nome + "'.");
         }
 
-        Exercicio novoExercicio = new Exercicio(idUsuario, nome.trim(), descricao, caminhoGif);
+        Usuario usuario = usuarioService.buscarUsuarioPorId(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com o ID: " + idUsuario));
+
+        Exercicio novoExercicio = new Exercicio(usuario, nome.trim(), descricao, caminhoGif);
+
         return exercicioRepository.salvar(novoExercicio);
     }
 
@@ -133,10 +140,4 @@ public class ExercicioService implements IExercicioService {
         }
     }
 
-
-    public void limparDados() {
-        if (exercicioRepository instanceof ExercicioRepositoryImpl exercicioRepositoryImpl) {
-            exercicioRepositoryImpl.limpar();
-        }
-    }
 }

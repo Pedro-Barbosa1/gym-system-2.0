@@ -2,32 +2,27 @@ package br.upe.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import br.upe.service.IndicadorBiomedicoService;
-import br.upe.service.RelatorioDiferencaIndicadores;
 import br.upe.ui.util.StyledAlert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- * Controller para o menu de relatórios.
- */
 public class MenuRelatoriosController {
 
     private static final Logger logger = Logger.getLogger(MenuRelatoriosController.class.getName());
@@ -38,154 +33,110 @@ public class MenuRelatoriosController {
 
     @FXML private Button sairB;
     @FXML private Button exportarRelatorioB;
-    @FXML private Button exportarRelatorioDeDiferencaB;
+
+    @FXML private GridPane calendarioGrid;
+    @FXML private Button btnMesAnterior;
+    @FXML private Button btnMesProximo;
+    @FXML private Text txtMesAno;
+
+    private List<LocalDate> datasSelecionadas = new ArrayList<>();
+    private YearMonth mesAtual = YearMonth.now();
 
     @FXML
     public void initialize() {
         this.indicadorService = new IndicadorBiomedicoService();
         logger.info("Menu Relatórios inicializado.");
         configurarAcoes();
+
+        // Navegação do calendário
+        btnMesAnterior.setOnAction(e -> {
+            mesAtual = mesAtual.minusMonths(1);
+            montarCalendario(mesAtual);
+        });
+        btnMesProximo.setOnAction(e -> {
+            mesAtual = mesAtual.plusMonths(1);
+            montarCalendario(mesAtual);
+        });
+
+        montarCalendario(mesAtual);
     }
 
     private void configurarAcoes() {
-        exportarRelatorioB.setOnAction(e -> handleExportarRelatorioPorData());
-        exportarRelatorioDeDiferencaB.setOnAction(e -> handleExportarRelatorioDeDiferenca());
+        exportarRelatorioB.setOnAction(e -> handleExportarRelatorioPorDataCalendario());
         sairB.setOnAction(e -> handleSair());
     }
 
-    @FXML
-    private void handleExportarRelatorioPorData() {
-        logger.info("Abrindo diálogo para exportar relatório por data...");
-
-        Dialog<ButtonType> dialog = criarDialogPadrao("Exportar Relatório Por Data", "Informe o período para o relatório:");
-
-        // Criação do conteúdo
-        GridPane grid = criarGridPadrao();
-
-        TextField dataInicioField = new TextField();
-        TextField dataFimField = new TextField();
-        dataInicioField.setPromptText("AAAA-MM-DD");
-        dataFimField.setPromptText("AAAA-MM-DD");
-
-        aplicarEstiloCampo(dataInicioField);
-        aplicarEstiloCampo(dataFimField);
-
-        Label l1 = criarLabel("Data Início:");
-        Label l2 = criarLabel("Data Fim:");
-        Label l3 = criarLabel("Formato: AAAA-MM-DD");
-        Label l4 = criarLabel("Exemplo: 2025-10-15");
-
-        grid.add(l1, 0, 0);
-        grid.add(dataInicioField, 1, 0);
-        grid.add(l2, 0, 1);
-        grid.add(dataFimField, 1, 1);
-        grid.add(l3, 0, 2, 2, 1);
-        grid.add(l4, 0, 3, 2, 1);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        dialog.showAndWait().ifPresent(resposta -> {
-            if (resposta == ButtonType.OK) {
-                processarExportacaoPorData(dataInicioField.getText(), dataFimField.getText());
-            }
-        });
-    }
-
-    private void processarExportacaoPorData(String inicio, String fim) {
-        if (inicio.isEmpty() || fim.isEmpty()) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "As datas de início e fim não podem estar vazias.");
+    private void handleExportarRelatorioPorDataCalendario() {
+        if (datasSelecionadas.size() < 2) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Aviso", "Selecione pelo menos duas datas no calendário.");
             return;
         }
+        LocalDate inicio = Collections.min(datasSelecionadas);
+        LocalDate fim = Collections.max(datasSelecionadas);
 
         try {
-            LocalDate dataInicio = LocalDate.parse(inicio, FORMATTER_ISO);
-            LocalDate dataFim = LocalDate.parse(fim, FORMATTER_ISO);
-
-            if (dataInicio.isAfter(dataFim)) {
-                mostrarAlerta(Alert.AlertType.ERROR, "Erro de Data", "A data inicial deve ser anterior ou igual à data final!");
-                return;
-            }
-
             String caminho = "src/main/resources/relatorios/relatorio_por_data_" + idUsuarioLogado + ".csv";
-            indicadorService.exportarRelatorioPorDataParaCsv(idUsuarioLogado, dataInicio, dataFim, caminho);
-
+            indicadorService.exportarRelatorioPorDataParaCsv(idUsuarioLogado, inicio, fim, caminho);
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso",
-                    "Relatório exportado com sucesso!\n\nPeríodo: " + inicio + " a " + fim + "\nArquivo: " + caminho);
-
-        } catch (DateTimeParseException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Data Inválida", "Formato incorreto! Use AAAA-MM-DD (ex: 2025-10-15)");
+                    "Relatório exportado com sucesso!\nPeríodo: " + inicio + " a " + fim + "\nArquivo: " + caminho);
         } catch (Exception e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Erro ao exportar relatório: " + e.getMessage());
             logger.log(Level.SEVERE, "Erro ao exportar relatório por data", e);
         }
     }
 
-    @FXML
-    private void handleExportarRelatorioDeDiferenca() {
-        logger.info("Abrindo diálogo para exportar relatório de diferença...");
+    private void montarCalendario(YearMonth mes) {
+        calendarioGrid.getChildren().clear();
+        LocalDate primeiroDia = mes.atDay(1);
+        int diasNoMes = mes.lengthOfMonth();
 
-        Dialog<ButtonType> dialog = criarDialogPadrao("Relatório de Diferença", "Informe as datas para comparação:");
-        GridPane grid = criarGridPadrao();
+        for (int dia = 1; dia <= diasNoMes; dia++) {
+            LocalDate data = mes.atDay(dia);
+            Button diaButton = new Button(String.valueOf(dia));
+            diaButton.setPrefSize(40, 40);
+            diaButton.setUserData(data);
+            diaButton.setStyle("-fx-background-color: #1E1E1E; -fx-text-fill: #e5a000;");
 
-        TextField dataInicioField = new TextField();
-        TextField dataFimField = new TextField();
-        dataInicioField.setPromptText("AAAA-MM-DD");
-        dataFimField.setPromptText("AAAA-MM-DD");
-        aplicarEstiloCampo(dataInicioField);
-        aplicarEstiloCampo(dataFimField);
+            diaButton.setOnAction(e -> handleClickData(data));
 
-        Label l1 = criarLabel("Data Início:");
-        Label l2 = criarLabel("Data Fim:");
-        Label l3 = criarLabel("Formato: AAAA-MM-DD");
-        Label l4 = criarLabel("Exemplo: 2025-10-15");
-
-        grid.add(l1, 0, 0);
-        grid.add(dataInicioField, 1, 0);
-        grid.add(l2, 0, 1);
-        grid.add(dataFimField, 1, 1);
-        grid.add(l3, 0, 2, 2, 1);
-        grid.add(l4, 0, 3, 2, 1);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        dialog.showAndWait().ifPresent(resposta -> {
-            if (resposta == ButtonType.OK) {
-                processarRelatorioDiferenca(dataInicioField.getText(), dataFimField.getText());
-            }
-        });
-    }
-
-    private void processarRelatorioDiferenca(String inicio, String fim) {
-        if (inicio.isEmpty() || fim.isEmpty()) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "As datas de início e fim não podem estar vazias.");
-            return;
+            int coluna = (dia + primeiroDia.getDayOfWeek().getValue() - 2) % 7;
+            int linha = (dia + primeiroDia.getDayOfWeek().getValue() - 2) / 7;
+            calendarioGrid.add(diaButton, coluna, linha);
         }
 
-        try {
-            LocalDate dataInicio = LocalDate.parse(inicio, FORMATTER_ISO);
-            LocalDate dataFim = LocalDate.parse(fim, FORMATTER_ISO);
+        // Atualiza o texto do mês e ano
+        txtMesAno.setText(mes.getMonth().name() + " " + mes.getYear());
 
-            if (dataInicio.isAfter(dataFim)) {
-                mostrarAlerta(Alert.AlertType.ERROR, "Erro de Data", "A data inicial deve ser anterior ou igual à data final!");
-                return;
+        atualizarVisualizacaoCalendario();
+    }
+
+    private void handleClickData(LocalDate data) {
+        if (datasSelecionadas.contains(data)) {
+            datasSelecionadas.remove(data);
+        } else {
+            datasSelecionadas.add(data);
+            if (datasSelecionadas.size() > 2) {
+                LocalDate maisAntiga = Collections.min(datasSelecionadas);
+                LocalDate maisNova = Collections.max(datasSelecionadas);
+                datasSelecionadas.clear();
+                datasSelecionadas.add(maisAntiga);
+                datasSelecionadas.add(maisNova);
             }
+        }
+        atualizarVisualizacaoCalendario();
+    }
 
-            RelatorioDiferencaIndicadores relatorio =
-                    indicadorService.gerarRelatorioDiferenca(idUsuarioLogado, dataInicio, dataFim);
+    private void atualizarVisualizacaoCalendario() {
+        for (Node node : calendarioGrid.getChildren()) {
+            Button diaButton = (Button) node;
+            LocalDate dia = (LocalDate) diaButton.getUserData();
 
-            String caminho = "src/main/resources/relatorios/relatorio_diferenca_" + idUsuarioLogado + ".csv";
-            relatorio.exportarParaCsv(caminho);
-
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso",
-                    "Relatório de diferença exportado!\n\nDe: " + inicio + "\nAté: " + fim + "\n\nArquivo: " + caminho);
-
-        } catch (DateTimeParseException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Data Inválida", "Formato incorreto! Use AAAA-MM-DD (ex: 2025-10-15)");
-        } catch (Exception e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Erro ao exportar relatório: " + e.getMessage());
-            logger.log(Level.SEVERE, "Erro ao exportar relatório de diferença", e);
+            if (datasSelecionadas.contains(dia) ||
+                (!datasSelecionadas.isEmpty() && dia.isAfter(datasSelecionadas.get(0)) && dia.isBefore(datasSelecionadas.get(1)))) {
+                diaButton.setStyle("-fx-background-color: #e5a000; -fx-text-fill: #000000;");
+            } else {
+                diaButton.setStyle("-fx-background-color: #1E1E1E; -fx-text-fill: #e5a000;");
+            }
         }
     }
 
@@ -202,46 +153,6 @@ public class MenuRelatoriosController {
         }
     }
 
-    // === MÉTODOS AUXILIARES DE ESTILO ===
-
-    /** Cria um diálogo com estilo escuro e cabeçalho dourado. */
-    private Dialog<ButtonType> criarDialogPadrao(String titulo, String cabecalho) {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle(titulo);
-        dialog.setHeaderText(cabecalho);
-        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        dialog.setOnShown(e -> {
-            Node header = dialog.getDialogPane().lookup(".header-panel");
-            if (header != null) header.setStyle("-fx-background-color: #1e1e1e;");
-            Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
-            if (headerLabel != null) headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
-        });
-        return dialog;
-    }
-
-    /** Cria um GridPane com o mesmo estilo dos pop-ups escuros. */
-    private GridPane criarGridPadrao() {
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-        grid.setStyle("-fx-background-color: #2c2c2c; -fx-border-color: #1e1e1e; -fx-border-width: 1; -fx-border-radius: 8;");
-        return grid;
-    }
-
-    /** Cria um label com texto dourado e negrito. */
-    private Label criarLabel(String texto) {
-        Label label = new Label(texto);
-        label.setStyle("-fx-font-weight: bold; -fx-text-fill: #ffb300;");
-        return label;
-    }
-
-    /** Aplica o estilo padrão aos campos de texto. */
-    private void aplicarEstiloCampo(TextField campo) {
-        campo.setStyle("-fx-text-fill: #ffb300;-fx-background-color: dark gray; -fx-border-color: #1e1e1e; -fx-border-width: 1; -fx-border-radius: 4;");
-    }
-
-    /** Mostra alertas com o mesmo tema visual. */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
         if (tipo == Alert.AlertType.ERROR) {
             StyledAlert.showErrorAndWait(titulo, mensagem);

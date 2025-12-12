@@ -1,22 +1,45 @@
 package br.upe.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "exercicios")
 public class Exercicio {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idExercicio;
-    private int idUsuario;
+
+    @ManyToOne()
+    @JoinColumn(name = "idUsuario")
+    private Usuario usuario;
+
+    @OneToOne()
+    @JoinColumn(name="item_plano_id")
+    private ItemPlanoTreino itemPlanoTreino;
+
     private String nome;
+
     private String descricao;
+
     private String caminhoGif;
 
-    public Exercicio(int idExercicio, int idUsuario, String nome, String descricao, String caminhoGif) {
-        this.idExercicio = idExercicio;
-        this.idUsuario = idUsuario;
+    // construtor vazio exigido pelo JPA
+    public Exercicio() {
+
+    }
+
+    public Exercicio(Usuario usuario, String nome, String descricao, String caminhoGif) {
+        this.usuario = usuario;
         this.nome = nome;
         this.descricao = descricao;
         this.caminhoGif = caminhoGif;
     }
 
-    public Exercicio(int idUsuario, String nome, String descricao, String caminhoGif) {
-        this.idUsuario = idUsuario;
+    public Exercicio(Usuario usuario, int idExercicio, String nome, String descricao, String caminhoGif) {
+        this.usuario = usuario;
+        this.usuario.setId(idExercicio);
+        this.idExercicio = idExercicio;
         this.nome = nome;
         this.descricao = descricao;
         this.caminhoGif = caminhoGif;
@@ -30,14 +53,6 @@ public class Exercicio {
         this.idExercicio = idExercicio;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
     public String getNome() {
         return nome;
     }
@@ -48,6 +63,18 @@ public class Exercicio {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public int getIdUsuario() {
+        return (this.usuario != null) ? this.usuario.getId() : 0;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public void setDescricao(String descricao) {
@@ -66,4 +93,5 @@ public class Exercicio {
     public String toString() {
         return String.format("ID: %d | Nome: %s | Descrição: %s | GIF: %s", idExercicio, nome, descricao, caminhoGif);
     }
+
 }

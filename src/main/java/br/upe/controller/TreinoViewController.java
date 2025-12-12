@@ -19,6 +19,7 @@ import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.service.SessaoTreinoService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.UserSession;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -179,16 +180,8 @@ public class TreinoViewController {
 
     @FXML
     private void handleVoltar(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuUsuarioLogado.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) BAdicionarSessao.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Gym System - Menu do Usuário");
-            stage.show();
-        } catch (IOException e) {
+        if (!br.upe.util.NavigationUtil.navigateFrom(BVoltar, "/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário")) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível voltar para a tela anterior.");
-            logger.log(Level.SEVERE, "Erro ao voltar para MenuUsuarioLogado", e);
         }
     }
 
@@ -367,7 +360,7 @@ public class TreinoViewController {
     void iniciarNovaSessao(ActionEvent event) {
         logger.info("Iniciando nova sessão de treino...");
         
-        List<PlanoTreino> meusPlanos = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+        List<PlanoTreino> meusPlanos = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
 
         if (meusPlanos.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sem Planos", 
@@ -388,7 +381,7 @@ public class TreinoViewController {
         }
 
         try {
-            SessaoTreino sessaoAtual = sessaoTreinoService.iniciarSessao(idUsuarioLogado, planoEscolhido.getIdPlano());
+            SessaoTreino sessaoAtual = sessaoTreinoService.iniciarSessao(UserSession.getInstance().getIdUsuarioLogado(), planoEscolhido.getIdPlano());
             logger.info("Sessão iniciada para o plano: " + planoEscolhido.getNome() + " em " + sessaoAtual.getDataSessao());
 
             boolean concluido = registrarExerciciosComDialog(sessaoAtual, planoEscolhido);
@@ -400,10 +393,6 @@ public class TreinoViewController {
 
             sessaoTreinoService.salvarSessao(sessaoAtual);
             logger.info("===== FIM DA SESSÃO =====");
-
-            List<SessaoTreinoService.SugestaoAtualizacaoPlano> sugestoes = 
-                sessaoTreinoService.verificarAlteracoesEGerarSugestoes(sessaoAtual);
-            tratarSugestoesComDialog(sugestoes, planoEscolhido);
 
             loadSessoes();
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sessão Concluída", 
@@ -424,7 +413,7 @@ public class TreinoViewController {
     void verHistoricoSessoes(ActionEvent event) {
         logger.info("Botão 'Ver Histórico de Sessões' clicado!");
 
-        List<SessaoTreino> historico = sessaoTreinoService.listarSessoesPorUsuario(idUsuarioLogado);
+        List<SessaoTreino> historico = sessaoTreinoService.listarSessoesPorUsuario(UserSession.getInstance().getIdUsuarioLogado());
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Meu Histórico de Treinos");
@@ -438,6 +427,24 @@ public class TreinoViewController {
             javafx.scene.Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
             if (headerLabel != null)
                 headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
+            
+            // Estilizar botões
+            javafx.application.Platform.runLater(() -> {
+                dialog.getDialogPane().lookupAll(".button").forEach(node -> {
+                    if (node instanceof javafx.scene.control.ButtonBase) {
+                        node.setStyle(
+                            "-fx-background-color: #5A189A;" +
+                            "-fx-text-fill: #FFFFFF;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-background-radius: 5px;" +
+                            "-fx-border-radius: 5px;" +
+                            "-fx-padding: 8px 16px 8px 16px;" +
+                            "-fx-min-width: 80px;" +
+                            "-fx-cursor: hand;"
+                        );
+                    }
+                });
+            });
         });
 
         // Criar lista de dados para a tabela
@@ -698,19 +705,10 @@ public class TreinoViewController {
     }
 
     private void carregarNovaTela(String fxmlFile, String titulo) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent root = loader.load();
-            Stage stage = (Stage) BAdicionarSessao.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle(titulo);
-            stage.show();
-
-            logger.info(() -> "Tela carregada com sucesso: " + fxmlFile);
-
-        } catch (IOException e) {
+        if (!br.upe.util.NavigationUtil.navigateFrom(BAdicionarSessao, fxmlFile, titulo)) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela solicitada.");
-            logger.log(Level.SEVERE, "Erro ao carregar tela: " + fxmlFile, e);
+        } else {
+            logger.info(() -> "Tela carregada com sucesso: " + fxmlFile);
         }
     }
 

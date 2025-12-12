@@ -1,46 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2c2c2c;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.IndicadoresViewController">
-      <AnchorPane layoutY="-2.0" prefHeight="700.0" prefWidth="317.0">
-            <Button fx:id="BCadastrarIN" alignment="CENTER" contentDisplay="CENTER" layoutX="66.0" layoutY="194.0" mnemonicParsing="false" onAction="#cadastrarNovoIndicador" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Cadastrar novo indicador" textFill="#e5a000">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="BListarIN" alignment="CENTER" contentDisplay="CENTER" layoutX="66.0" layoutY="267.0" mnemonicParsing="false" onAction="#listarMeusIndicadores" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Ver meus indicadores" textFill="#e5a000">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/coracao.png" />
-            </ImageView>
-            <Separator layoutY="109.0" prefHeight="7.0" prefWidth="320.0" />
-            <Separator layoutX="320.0" layoutY="-2.0" orientation="VERTICAL" prefHeight="706.0" prefWidth="0.0" />
-            <Text fill="#9c27b0" layoutX="106.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Indicadores">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-            </Text>
-            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/ver.png" />
-            </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="28.0" layoutX="17.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/ferramenta-lapis.png" />
-            </ImageView>
-      </AnchorPane>
-      <AnchorPane layoutX="786.0" layoutY="-21.0" prefHeight="140.0" prefWidth="130.0">
-            <ImageView fx:id="IFechar" fitHeight="80.0" fitWidth="100.0" layoutX="25.0" layoutY="30.0" onMouseClicked="#voltar" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="30.0">
-                  <Image url="@images/sair.png" />
-            </ImageView>
-            <Button fx:id="sairB" layoutX="15.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
-      </AnchorPane>
-</AnchorPane>
+<BorderPane prefHeight="700.0" prefWidth="900.0"
+            style="-fx-background-color: #2c2c2c;"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="br.upe.controller.IndicadoresViewController">
+
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="10" BorderPane.alignment="CENTER">
+         <Label fx:id="totalLabel"
+                text="Total de 0 indicador(es) cadastrados"
+                style="-fx-text-fill: #ffb300; -fx-font-size: 16px;"/>
+         <Region HBox.hgrow="ALWAYS" />
+         <Button fx:id="BAddIndicador"
+                 prefWidth="190.0" prefHeight="30.0"
+                 text="Cadastrar novo indicador" textFill="#e5a000"
+                 style="-fx-background-color: #1E1E1E;"
+                 onAction="#handleAdicionarIndicador"/>
+         <padding>
+            <Insets top="15" bottom="15" left="20" right="20" />
+         </padding>
+      </HBox>
+   </top>
+
+   <center>
+      <TableView fx:id="tableIndicadores" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="colData" text="Data" prefWidth="100.0"/>
+            <TableColumn fx:id="colPeso" text="Peso (kg)" prefWidth="120.0"/>
+            <TableColumn fx:id="colAltura" text="Altura (cm)" prefWidth="120.0"/>
+            <TableColumn fx:id="colImc" text="IMC" prefWidth="80.0"/>
+            <TableColumn fx:id="colGordura" text="Gordura (%)" prefWidth="140.0"/>
+            <TableColumn fx:id="colMassaMagra" text="Massa Magra (%)" prefWidth="160.0"/>
+            <TableColumn fx:id="colAcoes" text="Ações" prefWidth="140.0"/>
+         </columns>
+         <BorderPane.margin>
+            <Insets left="20" right="20" />
+         </BorderPane.margin>
+      </TableView>
+   </center>
+
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+         <Button fx:id="BVoltar"
+                 prefWidth="160.0" prefHeight="40.0"
+                 text="Voltar" textFill="#e5a000"
+                 style="-fx-background-color: #1E1E1E;"
+                 onAction="#handleVoltar"/>
+         <padding>
+            <Insets top="12" bottom="12" left="20" right="20" />
+         </padding>
+      </HBox>
+   </bottom>
+
+</BorderPane>
