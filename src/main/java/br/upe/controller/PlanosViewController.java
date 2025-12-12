@@ -282,42 +282,33 @@ public class PlanosViewController {
         return textArea;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void aplicarEstiloTableView(TableView<?> tableView) {
-        // Basic styling (adapted from other controllers)
-        tableView.setStyle(
-            "-fx-background-color: #2c2c2c; " +
-            "-fx-control-inner-background: #2c2c2c; " +
-            "-fx-background-insets: 0; " +
-            "-fx-padding: 0; " +
-            "-fx-table-cell-border-color: #333;"
-        );
+        // Reaproveita estilo simples usado no ExerciciosViewController
+        tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
+        tableView.setRowFactory(tv -> new javafx.scene.control.TableRow() {
+            {
+                // forçar prefHeight por linha (combinado com fixedCellSize)
+                setPrefHeight(56);
+                setMinHeight(56);
+            }
 
-        // Keep styling simpler here to avoid generic/row factory complexity
-        // Row-level styling is handled by CSS-like inline styles applied below.
-
-        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                tableView.applyCss();
-                tableView.layout();
-
-                javafx.scene.Node headerRow = tableView.lookup(".column-header-background");
-                if (headerRow != null) headerRow.setStyle("-fx-background-color: #1e1e1e;");
-
-                tableView.lookupAll(".column-header").forEach(node -> {
-                    node.setStyle(
-                        "-fx-background-color: #1e1e1e; " +
+            @Override
+            protected void updateItem(Object item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setStyle("");
+                } else {
+                    // fundo escuro + borda inferior para demarcar separação de linhas
+                    setStyle(
+                        "-fx-background-color: #2c2c2c; " +
                         "-fx-text-fill: #ffb300; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-border-color: #333;"
+                        "-fx-border-color: transparent transparent #e6e6e6 transparent; " +
+                        "-fx-border-width: 0 0 1 0; " +
+                        "-fx-border-style: solid; " +
+                        "-fx-border-insets: 0;"
                     );
-                });
-
-                tableView.lookupAll(".column-header .label").forEach(node -> {
-                    ((javafx.scene.control.Labeled) node).setStyle(
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-font-weight: bold;"
-                    );
-                });
+                }
             }
         });
     }

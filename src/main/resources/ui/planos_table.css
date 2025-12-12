@@ -1,0 +1,67 @@
+/* Planos table styling to mimic the Exercises reference:
+   - light header with dark text
+   - dark table body
+   - thin white horizontal separators and thin vertical dividers
+*/
+
+.table-view {
+    -fx-background-color: transparent; /* parent pane provides dark background */
+    -fx-control-inner-background: #2c2c2c; /* dark rows */
+    -fx-padding: 0;
+}
+
+/* Header: bright/light gradient like the reference */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #f7f7f7 0%, #e7e7e7 100%);
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 6 8 6 8;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #111111; /* darker header text to better match reference */
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Cell appearance: dark background with light text */
+.table-view .cell {
+    -fx-background-color: #2c2c2c;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 10 12 10 12;
+}
+
+/* Horizontal separators: thin white lines between rows */
+.table-view .table-row-cell {
+    -fx-background-color: #2c2c2c;
+    -fx-border-color: transparent transparent #ffffff transparent; /* solid white separator below */
+    -fx-border-width: 0 0 1 0; /* 1px bottom border */
+}
+
+/* Vertical separators between columns (thin white lines on right side of each cell) */
+.table-view .cell {
+    -fx-border-color: transparent #ffffff transparent transparent; /* solid white vertical divider */
+    -fx-border-width: 0 1 0 0; /* 1px right border */
+}
+
+/* Keep focus and selection subtle (no bright blue) */
+.table-view .table-row-cell:focused, .table-view .table-row-cell:selected {
+    -fx-background-color: #2c2c2c;
+}
+
+/* Buttons used inside action cells: small, dark, yellow text */
+.table-view .button {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #e5a000;
+    -fx-padding: 6 8 6 8;
+    -fx-background-radius: 4;
+}
+
+/* Make header bottom border slightly more visible */
+.table-view .column-header-background {
+    -fx-border-color: transparent transparent #cfcfcf transparent;
+    -fx-border-width: 0 0 1 0;
+}
