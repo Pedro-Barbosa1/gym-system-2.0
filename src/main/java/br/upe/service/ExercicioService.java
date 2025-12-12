@@ -20,6 +20,11 @@ public class ExercicioService implements IExercicioService {
         this.usuarioService = new UsuarioService();
     }
 
+    public ExercicioService(IExercicioRepository exercicioRepository) {
+        this.exercicioRepository = exercicioRepository;
+        this.usuarioService = new UsuarioService();
+    }
+
     // Verifica condições e cadastra exercicios no repositorio
     @Override
     public Exercicio cadastrarExercicio(int idUsuario, String nome, String descricao, String caminhoGif) {

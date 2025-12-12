@@ -8,6 +8,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Teste de integracao que usa o repositorio real.
+ * Requer MySQL rodando - desabilitado para CI/CD.
+ */
+@Disabled("Requer MySQL - usar IndicadorBiomedicoServiceIntegrationTest para H2")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class IndicadorBiomedicoIntegrationTest {
 

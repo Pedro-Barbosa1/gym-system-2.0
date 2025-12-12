@@ -17,6 +17,11 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
+/**
+ * Teste de integracao de UI com TestFX.
+ * Requer ambiente grafico - desabilitado para CI/CD.
+ */
+@Disabled("Requer ambiente grafico (JavaFX) - nao executa em CI")
 public class TreinoFlowIntegrationTest extends ApplicationTest {
 
     private SessaoTreinoService sessaoServiceMock;

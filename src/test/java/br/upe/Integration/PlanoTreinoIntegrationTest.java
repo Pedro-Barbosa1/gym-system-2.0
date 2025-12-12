@@ -3,9 +3,9 @@ package br.upe.Integration;
 import br.upe.model.Exercicio;
 import br.upe.model.ItemPlanoTreino;
 import br.upe.model.PlanoTreino;
+import br.upe.model.Usuario;
+import br.upe.model.TipoUsuario;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -13,45 +13,51 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DisplayName("PlanoTreino Original Integration Test")
 public class PlanoTreinoIntegrationTest {
 
-    private EntityManagerFactory emf;
     private EntityManager em;
+    private static Usuario usuarioTeste;
 
     @BeforeAll
     void setup() {
-        emf = Persistence.createEntityManagerFactory("AcademiaPU");
-        em = emf.createEntityManager();
+        IntegrationTestHelper.initEntityManagerFactory();
+        em = IntegrationTestHelper.createEntityManager();
+        
+        // Criar usuario para os testes
+        em.getTransaction().begin();
+        usuarioTeste = new Usuario("Teste Original", "testeoriginal@email.com", "senha", TipoUsuario.COMUM);
+        em.persist(usuarioTeste);
+        em.getTransaction().commit();
     }
 
     @AfterAll
     void teardown() {
-        em.close();
-        emf.close();
+        if (em != null && em.isOpen()) {
+            em.close();
+        }
+        IntegrationTestHelper.closeEntityManagerFactory();
     }
 
     @BeforeEach
     void limparDados() {
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM ItemSessaoTreino").executeUpdate();
-        em.createQuery("DELETE FROM SessaoTreino").executeUpdate();
-        em.createQuery("DELETE FROM ItemPlanoTreino").executeUpdate();
-        em.createQuery("DELETE FROM PlanoTreino").executeUpdate();
-        em.createQuery("DELETE FROM Exercicio WHERE nome = 'Supino Reto'").executeUpdate();
-        em.getTransaction().commit();
+        // Com H2 em memoria, nao precisamos limpar dados entre testes
     }
 
     @Test
+    @DisplayName("Deve persistir plano de treino com item")
     void devePersistirPlanoTreinoComItem() {
 
         //exercício
         Exercicio exercicio = new Exercicio();
         exercicio.setNome("Supino Reto");
         exercicio.setDescricao("Exercício de peitoral");
+        exercicio.setUsuario(usuarioTeste);
 
         //plano de treino
         PlanoTreino plano = new PlanoTreino();
         plano.setNome("Treino A");
+        plano.setUsuario(usuarioTeste);
 
         //item do plano
         ItemPlanoTreino item = new ItemPlanoTreino();

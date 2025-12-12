@@ -13,6 +13,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Teste de integracao que usa o repositorio real.
+ * Requer MySQL rodando - desabilitado para CI/CD.
+ */
+@Disabled("Requer MySQL - usar ExercicioServiceIntegrationTest para H2")
 public class ExercicioIntegrationTest {
 
     private static IExercicioRepository repository;

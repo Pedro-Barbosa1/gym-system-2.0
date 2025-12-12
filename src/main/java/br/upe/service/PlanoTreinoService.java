@@ -33,134 +33,84 @@ public class PlanoTreinoService implements IPlanoTreinoService {
         this.usuarioRepository = new UsuarioRepositoryImpl();
     }
 
-    // ------------------ CRIAR PLANO ------------------
     @Override
     public PlanoTreino criarPlano(int idUsuario, String nome) {
         Optional<Usuario> usuarioOpt = usuarioRepository.buscarPorId(idUsuario);
-
         if (usuarioOpt.isEmpty()) {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new RuntimeException("Usuario nao encontrado");
         }
-
         Usuario usuario = usuarioOpt.get();
-
         PlanoTreino plano = new PlanoTreino(usuario, nome);
         planoTreinoRepository.salvar(plano);
         return plano;
     }
 
-    // ------------------ ADICIONAR EXERCICIO ------------------
     @Override
     public void adicionarExercicioAoPlano(int idUsuario, String nomePlano, int idExercicio) {
-
-        Optional<PlanoTreino> planoOpt =
-                planoTreinoRepository.buscarPorNome(nomePlano.trim(), idUsuario);
-
+        Optional<PlanoTreino> planoOpt = planoTreinoRepository.buscarPorNome(nomePlano.trim(), idUsuario);
         if (planoOpt.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Plano '" + nomePlano + "' não encontrado ou não pertence a você.");
+            throw new IllegalArgumentException("Plano nao encontrado ou nao pertence a voce.");
         }
-
         PlanoTreino plano = planoOpt.get();
-
         Optional<Exercicio> exercicioOpt = exercicioRepository.buscarPorId(idExercicio);
-
         if (exercicioOpt.isEmpty() || exercicioOpt.get().getIdUsuario() != idUsuario) {
-            throw new IllegalArgumentException(
-                    "Exercício com ID " + idExercicio + " não encontrado ou não pertence a você.");
+            throw new IllegalArgumentException("Exercicio nao encontrado ou nao pertence a voce.");
         }
-
-        boolean exercicioJaNoPlano = plano.getItensTreino()
-                .stream()
+        boolean exercicioJaNoPlano = plano.getItensTreino().stream()
                 .anyMatch(item -> item.getIdExercicio() == idExercicio);
-
         if (exercicioJaNoPlano) {
-            throw new IllegalArgumentException(
-                    "Exercício já adicionado a este plano. Considere editá-lo.");
+            throw new IllegalArgumentException("Exercicio ja adicionado a este plano.");
         }
-
-        // Valores padrão de 0 - serão definidos durante a sessão de treino
         ItemPlanoTreino newItem = new ItemPlanoTreino(plano.getIdPlano(), idExercicio, 0, 0);
         plano.adicionarItem(newItem);
-
         planoTreinoRepository.editar(plano);
     }
 
-    // ------------------ REMOVER EXERCÍCIO ------------------
     @Override
     public void removerExercicioDoPlano(int idUsuario, String nomePlano, int idExercicio) {
-        Optional<PlanoTreino> planoOpt =
-                planoTreinoRepository.buscarPorNome(nomePlano.trim(), idUsuario);
-
+        Optional<PlanoTreino> planoOpt = planoTreinoRepository.buscarPorNome(nomePlano.trim(), idUsuario);
         if (planoOpt.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Plano '" + nomePlano + "' não encontrado ou não pertence a você.");
+            throw new IllegalArgumentException("Plano nao encontrado ou nao pertence a voce.");
         }
-
         PlanoTreino plano = planoOpt.get();
-
-        boolean removido = plano.getItensTreino()
-                .removeIf(item -> item.getIdExercicio() == idExercicio);
-
+        boolean removido = plano.getItensTreino().removeIf(item -> item.getIdExercicio() == idExercicio);
         if (!removido) {
-            throw new IllegalArgumentException(
-                    "Exercício com ID " + idExercicio + " não encontrado neste plano.");
+            throw new IllegalArgumentException("Exercicio nao encontrado neste plano.");
         }
-
         planoTreinoRepository.editar(plano);
     }
 
-    // ------------------ LISTAR PLANOS ------------------
     @Override
     public List<PlanoTreino> listarMeusPlanos(int idUsuario) {
         return planoTreinoRepository.buscarTodosDoUsuario(idUsuario);
     }
 
-    // ------------------ EDITAR PLANO ------------------
-    @Override
     public void editarPlano(int idUsuario, String nomeAtualPlano, String novoNome) {
-        Optional<PlanoTreino> planoOpt =
-                planoTreinoRepository.buscarPorNome(nomeAtualPlano.trim(), idUsuario);
-
+        Optional<PlanoTreino> planoOpt = planoTreinoRepository.buscarPorNome(nomeAtualPlano.trim(), idUsuario);
         if (planoOpt.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Plano '" + nomeAtualPlano + "' não encontrado ou não pertence a você.");
+            throw new IllegalArgumentException("Plano nao encontrado ou nao pertence a voce.");
         }
-
         PlanoTreino plano = planoOpt.get();
-
-        if (novoNome != null && !novoNome.trim().isEmpty() &&
-                !novoNome.trim().equalsIgnoreCase(plano.getNome())) {
-
-            Optional<PlanoTreino> nomeExistente =
-                    planoTreinoRepository.buscarPorNome(novoNome.trim(), idUsuario);
-
+        if (novoNome != null && !novoNome.trim().isEmpty() && !novoNome.trim().equalsIgnoreCase(plano.getNome())) {
+            Optional<PlanoTreino> nomeExistente = planoTreinoRepository.buscarPorNome(novoNome.trim(), idUsuario);
             if (nomeExistente.isPresent()) {
-                throw new IllegalArgumentException(
-                        "Você já possui outro plano com o nome '" + novoNome + "'.");
+                throw new IllegalArgumentException("Voce ja possui outro plano com este nome.");
             }
-
             plano.setNome(novoNome.trim());
         }
-
         planoTreinoRepository.editar(plano);
     }
 
-    // ------------------ DELETAR ------------------
     @Override
     public boolean deletarPlano(int idUsuario, String nomePlano) {
-        Optional<PlanoTreino> planoOpt =
-                planoTreinoRepository.buscarPorNome(nomePlano.trim(), idUsuario);
-
+        Optional<PlanoTreino> planoOpt = planoTreinoRepository.buscarPorNome(nomePlano.trim(), idUsuario);
         if (planoOpt.isEmpty()) {
             return false;
         }
-
         planoTreinoRepository.deletar(planoOpt.get().getIdPlano());
         return true;
     }
 
-    // ------------------ BUSCAR POR ID ------------------
     @Override
     public Optional<PlanoTreino> buscarPlanoPorId(int idPlano) {
         return planoTreinoRepository.buscarPorId(idPlano);

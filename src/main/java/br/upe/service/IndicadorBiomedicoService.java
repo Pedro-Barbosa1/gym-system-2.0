@@ -24,6 +24,10 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         this.indicadorRepository = new IndicadorBiomedicoRepositoryImpl();
     }
 
+    public IndicadorBiomedicoService(IIndicadorBiomedicoRepository indicadorRepository) {
+        this.indicadorRepository = indicadorRepository;
+    }
+
     // Verifica condições e cadastra os indicadores
     @Override
     public IndicadorBiomedico cadastrarIndicador(int idUsuario, LocalDate data, double pesoKg, double alturaCm,

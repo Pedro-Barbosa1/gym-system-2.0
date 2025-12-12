@@ -10,7 +10,6 @@ public interface IPlanoTreinoService {
     void adicionarExercicioAoPlano(int idUsuario, String nomePlano, int idExercicio);
     void removerExercicioDoPlano(int idUsuario, String nomePlano, int idExercicio);
     List<PlanoTreino> listarMeusPlanos(int idUsuario);
-    void editarPlano(int idUsuario, String nomeAtualPlano, String novoNome);
     boolean deletarPlano(int idUsuario, String nomePlano);
     Optional<PlanoTreino> buscarPlanoPorId(int idPlanoEscolhido);
 }

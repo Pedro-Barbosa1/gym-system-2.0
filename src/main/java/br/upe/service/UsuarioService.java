@@ -19,6 +19,10 @@ public class UsuarioService implements IUsuarioService {
         this.usuarioRepository = new UsuarioRepositoryImpl();
     }
 
+    public UsuarioService(IUsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
+
     @Override
     public Usuario autenticarUsuario(String email, String senha) {
         if (email == null || email.trim().isEmpty() || senha == null || senha.trim().isEmpty()) {
