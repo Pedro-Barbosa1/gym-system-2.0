@@ -82,14 +82,16 @@ public class PlanosViewController {
     private void setupTable() {
         colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdPlano()).asObject());
         colId.setPrefWidth(80);
-        colId.setStyle("-fx-alignment: CENTER;");
+        // alinhar ao canto superior-esquerdo (referência: coluna 'Nome do Plano')
+        colId.setStyle("-fx-alignment: TOP_LEFT;");
 
         colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
         colNome.setPrefWidth(400);
 
         colExercicios.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getItensTreino().size()).asObject());
         colExercicios.setPrefWidth(220);
-        colExercicios.setStyle("-fx-alignment: CENTER;");
+        // alinhar ao canto superior-esquerdo para combinar com a coluna de nome
+        colExercicios.setStyle("-fx-alignment: TOP_LEFT;");
 
         adicionarColunaAcoes();
         // make columns fit the table width to avoid horizontal scrollbar
