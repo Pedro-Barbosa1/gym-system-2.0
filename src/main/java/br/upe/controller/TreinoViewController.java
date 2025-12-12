@@ -180,16 +180,8 @@ public class TreinoViewController {
 
     @FXML
     private void handleVoltar(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuUsuarioLogado.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) BAdicionarSessao.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Gym System - Menu do Usuário");
-            stage.show();
-        } catch (IOException e) {
+        if (!br.upe.util.NavigationUtil.navigateFrom(BVoltar, "/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário")) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível voltar para a tela anterior.");
-            logger.log(Level.SEVERE, "Erro ao voltar para MenuUsuarioLogado", e);
         }
     }
 
@@ -717,19 +709,10 @@ public class TreinoViewController {
     }
 
     private void carregarNovaTela(String fxmlFile, String titulo) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent root = loader.load();
-            Stage stage = (Stage) BAdicionarSessao.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle(titulo);
-            stage.show();
-
-            logger.info(() -> "Tela carregada com sucesso: " + fxmlFile);
-
-        } catch (IOException e) {
+        if (!br.upe.util.NavigationUtil.navigateFrom(BAdicionarSessao, fxmlFile, titulo)) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela solicitada.");
-            logger.log(Level.SEVERE, "Erro ao carregar tela: " + fxmlFile, e);
+        } else {
+            logger.info(() -> "Tela carregada com sucesso: " + fxmlFile);
         }
     }
 

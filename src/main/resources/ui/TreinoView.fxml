@@ -1,41 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.TreinoViewController">
-
-      <AnchorPane style="-fx-background-color: #2c2c2c;" VBox.vgrow="ALWAYS">
-
-            <!-- Cabeçalho: total e botão adicionar -->
-            <Label fx:id="totalLabel" layoutX="20.0" layoutY="18.0" textFill="#e5a000" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
-
-            <Button fx:id="BAdicionarSessao" mnemonicParsing="false" onAction="#handleAdicionarSessao" prefHeight="36.0" prefWidth="180.0" style="-fx-background-color: #1e1e1e;" text="Nova Sessão de Treino" textFill="#e5a000" AnchorPane.topAnchor="12.0" AnchorPane.rightAnchor="20.0">
-                  <font>
-                        <Font size="13.0" />
-                  </font>
-            </Button>
-
-            <!-- Tabela ocupa a maior parte da área -->
-            <TableView fx:id="tableSessoes" prefHeight="620.0" prefWidth="860.0" AnchorPane.topAnchor="60.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.bottomAnchor="80.0">
-                  <columns>
-                        <TableColumn fx:id="colData" text="Data" prefWidth="120.0" />
-                        <TableColumn fx:id="colPlano" text="Plano ID" prefWidth="100.0" />
-                        <TableColumn fx:id="colExercicios" text="Exercícios Realizados" prefWidth="380.0" />
-                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="260.0" />
-                  </columns>
-            </TableView>
-            
-            <Button fx:id="BVoltar" mnemonicParsing="false" onAction="#handleVoltar" prefHeight="36.0" prefWidth="140.0" style="-fx-background-color: #1e1e1e;" text="Voltar" textFill="#e5a000" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="20.0">
-                  <font>
-                        <Font size="13.0" />
-                  </font>
-            </Button>
-      </AnchorPane>
-
-</VBox>
+<BorderPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2c2c2c;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.TreinoViewController">
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="10" BorderPane.alignment="CENTER">
+         <Label fx:id="totalLabel" textFill="#e5a000" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+         <Region HBox.hgrow="ALWAYS" />
+         <Button fx:id="BAdicionarSessao" mnemonicParsing="false" onAction="#handleAdicionarSessao" prefHeight="36.0" prefWidth="180.0" style="-fx-background-color: #1e1e1e;" text="Nova Sessão de Treino" textFill="#e5a000">
+            <font>
+               <Font size="13.0" />
+            </font>
+         </Button>
+         <padding>
+            <Insets top="12" bottom="12" left="20" right="20" />
+         </padding>
+      </HBox>
+   </top>
+   
+   <center>
+      <TableView fx:id="tableSessoes" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="colData" text="Data" prefWidth="120.0" />
+            <TableColumn fx:id="colPlano" text="Plano ID" prefWidth="100.0" />
+            <TableColumn fx:id="colExercicios" text="Exercícios Realizados" prefWidth="380.0" />
+            <TableColumn fx:id="colAcoes" text="Ações" prefWidth="260.0" />
+         </columns>
+         <BorderPane.margin>
+            <Insets left="20" right="20" />
+         </BorderPane.margin>
+      </TableView>
+   </center>
+   
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+         <Button fx:id="BVoltar" mnemonicParsing="false" onAction="#handleVoltar" prefHeight="36.0" prefWidth="140.0" style="-fx-background-color: #1e1e1e;" text="Voltar" textFill="#e5a000">
+            <font>
+               <Font size="13.0" />
+            </font>
+         </Button>
+         <padding>
+            <Insets top="12" bottom="12" left="20" right="20" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

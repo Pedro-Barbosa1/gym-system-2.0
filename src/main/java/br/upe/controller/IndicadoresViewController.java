@@ -308,10 +308,7 @@ public class IndicadoresViewController {
                     new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
 
-            Stage stage = (Stage) tableIndicadores.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle(titulo);
-            stage.show();
+            br.upe.util.NavigationUtil.navigateTo(tableIndicadores, root, titulo);
 
             logger.info(() -> "Tela carregada com sucesso: " + fxmlFile);
 

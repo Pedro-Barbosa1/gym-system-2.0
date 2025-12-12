@@ -5,97 +5,112 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.MenuPlanoTreinosController">
-      <AnchorPane layoutX="772.0" layoutY="-17.0" prefHeight="138.0" prefWidth="150.0">
-            <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="35.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="29.0">
-                  <Image url="@images/sair.png" />
+<BorderPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.MenuPlanoTreinosController">
+   <left>
+      <VBox prefWidth="320.0" style="-fx-background-color: #2C2C2C;" BorderPane.alignment="CENTER">
+         <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 20;">
+            <ImageView fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@images/halter_pequeno.png" />
             </ImageView>
-            <Button fx:id="sairB" layoutX="37.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
-      </AnchorPane>
-      <AnchorPane prefHeight="700.0" prefWidth="317.0">
-            <Button fx:id="criarPlanoB" layoutX="63.0" layoutY="249.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Criar Novo Plano de Treino" textFill="#e5a000">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="ListarPlanoB" layoutX="63.0" layoutY="189.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Listar Meus Planos de Treino" textFill="#e5a000">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="deletarPlanoB" layoutX="63.0" layoutY="372.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Deletar Plano de Treino" textFill="#e5a000">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="adicionarExercicioAoPlanoB" layoutX="63.0" layoutY="497.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Adicionar Exercício ao Plano" textFill="#e5a000">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="removerExercíciodoPlanoB" layoutX="63.0" layoutY="559.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Remover Exercício do Plano" textFill="#e5a000">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="verDetalhesDePlanoB" layoutX="63.0" layoutY="434.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Ver Detalhes do Plano" textFill="#e5a000">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="0.0" />
-            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/ver.png" />
-            </ImageView>
-            <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="17.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/halter_pequeno.png" />
-            </ImageView>
-            <Separator layoutY="113.0" prefHeight="3.0" prefWidth="320.0" />
-            <ImageView fitHeight="50.0" fitWidth="28.0" layoutX="17.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/ferramenta-lapis.png" />
-            </ImageView>
-            <!-- 'Editar Plano de Treino' button removed as requested -->
-            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="376.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/excluir.png" />
-            </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="438.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/ver.png" />
-            </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="501.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/criar.png" />
-            </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="16.0" layoutY="563.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@images/excluir.png" />
-            </ImageView>
-            <Text fill="#9c27b0" layoutX="97.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plano de Treinos">
+            <Text fill="#9c27b0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plano de Treinos">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Text>
-      </AnchorPane>
-   <opaqueInsets>
-      <Insets bottom="80.0" top="80.0" />
-   </opaqueInsets>
-</AnchorPane>
+         </HBox>
+         <Separator />
+         
+         <VBox spacing="10" VBox.vgrow="ALWAYS">
+            <padding>
+               <Insets top="60" left="8" right="8" />
+            </padding>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+               <ImageView fitHeight="50.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@images/ver.png" />
+               </ImageView>
+               <Button fx:id="ListarPlanoB" mnemonicParsing="false" prefHeight="40.0" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: #1E1E1E;" text="Listar Meus Planos de Treino" textFill="#e5a000">
+                  <font>
+                     <Font size="15.0" />
+                  </font>
+               </Button>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+               <ImageView fitHeight="50.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@images/ferramenta-lapis.png" />
+               </ImageView>
+               <Button fx:id="criarPlanoB" mnemonicParsing="false" prefHeight="40.0" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: #1E1E1E;" text="Criar Novo Plano de Treino" textFill="#e5a000">
+                  <font>
+                     <Font size="15.0" />
+                  </font>
+               </Button>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+               <ImageView fitHeight="50.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@images/excluir.png" />
+               </ImageView>
+               <Button fx:id="deletarPlanoB" mnemonicParsing="false" prefHeight="40.0" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: #1E1E1E;" text="Deletar Plano de Treino" textFill="#e5a000">
+                  <font>
+                     <Font size="15.0" />
+                  </font>
+               </Button>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+               <ImageView fitHeight="50.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@images/ver.png" />
+               </ImageView>
+               <Button fx:id="verDetalhesDePlanoB" mnemonicParsing="false" prefHeight="40.0" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: #1E1E1E;" text="Ver Detalhes do Plano" textFill="#e5a000">
+                  <font>
+                     <Font size="15.0" />
+                  </font>
+               </Button>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+               <ImageView fitHeight="50.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@images/criar.png" />
+               </ImageView>
+               <Button fx:id="adicionarExercicioAoPlanoB" mnemonicParsing="false" prefHeight="40.0" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: #1E1E1E;" text="Adicionar Exercício ao Plano" textFill="#e5a000">
+                  <font>
+                     <Font size="15.0" />
+                  </font>
+               </Button>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+               <ImageView fitHeight="50.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@images/excluir.png" />
+               </ImageView>
+               <Button fx:id="removerExercíciodoPlanoB" mnemonicParsing="false" prefHeight="40.0" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: #1E1E1E;" text="Remover Exercício do Plano" textFill="#e5a000">
+                  <font>
+                     <Font size="15.0" />
+                  </font>
+               </Button>
+            </HBox>
+         </VBox>
+         
+         <Separator orientation="VERTICAL" />
+      </VBox>
+   </left>
+   
+   <top>
+      <HBox alignment="CENTER_RIGHT" style="-fx-padding: 20;" BorderPane.alignment="CENTER">
+         <StackPane>
+            <ImageView fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@images/sair.png" />
+            </ImageView>
+            <Button fx:id="sairB" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
+         </StackPane>
+      </HBox>
+   </top>
+</BorderPane>

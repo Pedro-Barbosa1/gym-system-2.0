@@ -640,13 +640,7 @@ public class MenuPlanoTreinosController {
      */
     @FXML
     private void handleSair() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuUsuarioLogado.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) sairB.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Não foi possível voltar ao menu.", e);
+        if (!br.upe.util.NavigationUtil.navigateFrom(sairB, "/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário")) {
             showError("Erro", "Não foi possível voltar ao menu.");
         }
     }

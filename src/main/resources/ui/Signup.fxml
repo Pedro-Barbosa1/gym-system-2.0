@@ -1,55 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.RegisterController">
+<BorderPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2c2c2c;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.RegisterController">
    <center>
-      <AnchorPane prefHeight="637.0" prefWidth="574.0" style="-fx-background-color: #2c2c2c;" BorderPane.alignment="CENTER">
-            <AnchorPane layoutX="225.0" prefHeight="700.0" prefWidth="450.0" style="-fx-background-color: #2C2C2C;">
-                  <Pane layoutX="35.0" layoutY="192.0" prefHeight="438.0" prefWidth="379.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
-                        <Label layoutX="36.0" layoutY="94.0" prefHeight="28.0" prefWidth="90.0" text="Nome completo" />
-                        <Label layoutX="36.0" layoutY="156.0" prefHeight="28.0" prefWidth="90.0" text="E-mail" />
-                        <TextField fx:id="emailTextField" layoutX="36.0" layoutY="184.0" prefHeight="26.0" prefWidth="307.0" promptText="E-mail" />
-                        <Label layoutX="36.0" layoutY="217.0" prefHeight="28.0" prefWidth="90.0" text="Senha" />
-                        <Label layoutX="36.0" layoutY="278.0" prefHeight="28.0" prefWidth="106.0" text="Confirme a senha" />
-                        <PasswordField fx:id="setSenhaField" layoutX="36.0" layoutY="244.0" prefHeight="26.0" prefWidth="307.0" promptText="Senha" />
-                        <PasswordField fx:id="senhaTextField" layoutX="36.0" layoutY="306.0" prefHeight="26.0" prefWidth="307.0" promptText="Confirme a senha" />
-                        <Button fx:id="cadastroBotao" layoutX="122.0" layoutY="350.0" mnemonicParsing="false" onAction="#onCadastrar" prefHeight="26.0" prefWidth="134.0" style="-fx-background-color: #e5a000;" text="Cadastrar" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="voltarBotao" layoutX="163.0" layoutY="385.0" mnemonicParsing="false" onAction="#onVoltar" prefHeight="26.0" prefWidth="53.0" style="-fx-background-color: #5A189A; -fx-border-radius: 5;" text="Voltar" textFill="#f7f7f7">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Button>
-                        <TextField fx:id="nomeCompletoTextField" layoutX="36.0" layoutY="122.0" prefHeight="26.0" prefWidth="307.0" promptText="Nome" />
-                        <Text fill="#5a189a" layoutX="96.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cadastro" textAlignment="CENTER" wrappingWidth="186.93673706054688">
-                           <font>
-                              <Font name="System Bold" size="24.0" />
-                           </font>
-                        </Text>
-                  </Pane>
-                  <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="185.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@images/logo_app.png" />
-                  </ImageView>
-                  <Text fill="#e5a000" layoutX="138.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System">
-                     <font>
-                        <Font name="System Bold" size="30.0" />
-                     </font>
-                  </Text>
-            </AnchorPane>
-      </AnchorPane>
+      <StackPane BorderPane.alignment="CENTER">
+         <VBox alignment="CENTER" spacing="20" maxWidth="450">
+            <ImageView fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@images/logo_app.png" />
+            </ImageView>
+            
+            <Text fill="#e5a000" strokeType="OUTSIDE" strokeWidth="0.0" text="Gym System">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Text>
+            
+            <VBox spacing="15" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15; -fx-padding: 40;" maxWidth="394" minWidth="350">
+               <Text fill="#5a189a" strokeType="OUTSIDE" strokeWidth="0.0" text="Cadastro" textAlignment="CENTER" VBox.vgrow="NEVER">
+                  <font>
+                     <Font name="System Bold" size="24.0" />
+                  </font>
+               </Text>
+               
+               <VBox spacing="5">
+                  <Label text="Nome completo" />
+                  <TextField fx:id="nomeCompletoTextField" promptText="Nome" prefWidth="307.0" />
+               </VBox>
+               
+               <VBox spacing="5">
+                  <Label text="E-mail" />
+                  <TextField fx:id="emailTextField" promptText="E-mail" prefWidth="307.0" />
+               </VBox>
+               
+               <VBox spacing="5">
+                  <Label text="Senha" />
+                  <PasswordField fx:id="setSenhaField" promptText="Senha" prefWidth="307.0" />
+               </VBox>
+               
+               <VBox spacing="5">
+                  <Label text="Confirme a senha" />
+                  <PasswordField fx:id="senhaTextField" promptText="Confirme a senha" prefWidth="307.0" />
+               </VBox>
+               
+               <Button fx:id="cadastroBotao" mnemonicParsing="false" onAction="#onCadastrar" maxWidth="Infinity" style="-fx-background-color: #e5a000;" text="Cadastrar" textFill="WHITE">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+                  <VBox.margin>
+                     <Insets top="10" />
+                  </VBox.margin>
+               </Button>
+               
+               <Button fx:id="voltarBotao" mnemonicParsing="false" onAction="#onVoltar" prefWidth="80.0" style="-fx-background-color: #5A189A; -fx-border-radius: 5;" text="Voltar" textFill="#f7f7f7">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+               </Button>
+            </VBox>
+         </VBox>
+      </StackPane>
    </center>
 </BorderPane>

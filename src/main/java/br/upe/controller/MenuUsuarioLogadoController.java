@@ -148,10 +148,7 @@ public class MenuUsuarioLogadoController {
                 ex.printStackTrace();  // mostra qual controller está quebrando
             }
 
-            Stage stage = (Stage) sairB.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle(titulo);
-            stage.show();
+            br.upe.util.NavigationUtil.navigateTo(sairB, root, titulo);
 
         } catch (IOException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela solicitada.");

@@ -8,6 +8,7 @@ import br.upe.model.TipoUsuario;
 import br.upe.model.Usuario;
 import br.upe.service.UsuarioService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.NavigationUtil;
 import br.upe.util.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -69,13 +70,10 @@ public class LoginController {
                     titulo = "Gym System - Painel do Usuário";
                 }
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(caminhoFXML));
-                Parent root = loader.load();
-
-                Stage stage = (Stage) entrarBotao.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.setTitle(titulo);
-                stage.show();
+                // Usa NavigationUtil para manter dimensões da janela
+                if (!NavigationUtil.navigateFrom(entrarBotao, caminhoFXML, titulo)) {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível carregar a tela.");
+                }
 
             } else {
                 mostrarAlerta(Alert.AlertType.ERROR, "Falha no login", "Email ou senha incorretos.");
@@ -93,39 +91,19 @@ public class LoginController {
      */
     @FXML
     void onCadastrase(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Signup.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) cadastreseBotao.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Gym System - Cadastro");
-            stage.show();
-
-            logger.info("Tela de cadastro carregada com sucesso.");
-
-        } catch (IOException e) {
+        if (!NavigationUtil.navigateFrom(cadastreseBotao, "/ui/Signup.fxml", "Gym System - Cadastro")) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela de cadastro.");
-            logger.log(Level.SEVERE, "Erro ao carregar tela de cadastro.", e);
+        } else {
+            logger.info("Tela de cadastro carregada com sucesso.");
         }
     }
 
     @FXML
     void onVoltar(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuPrincipal.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) voltarBotao.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Gym System - Tela Inicial");
-            stage.show();
-
-            logger.info("Retornando para a tela de menu principal.");
-
-        } catch (IOException e) {
+        if (!NavigationUtil.navigateFrom(voltarBotao, "/ui/MenuPrincipal.fxml", "Gym System - Tela Inicial")) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível voltar à tela inicial.");
-            logger.log(Level.SEVERE, "Erro ao carregar a tela inicial no onVoltar.", e);
+        } else {
+            logger.info("Retornando para a tela de menu principal.");
         }
     }
 

@@ -210,14 +210,7 @@ public class PlanosViewController {
 
     @FXML
     private void handleVoltar() {
-        // retornar para MenuUsuarioLogado.fxml
-        try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/ui/MenuUsuarioLogado.fxml"));
-            javafx.scene.Parent root = loader.load();
-            Stage stage = (Stage) BVoltar.getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Erro ao voltar para o menu do usuário", e);
+        if (!br.upe.util.NavigationUtil.navigateFrom(BVoltar, "/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário")) {
             showError("Erro", "Não foi possível voltar ao menu.");
         }
     }

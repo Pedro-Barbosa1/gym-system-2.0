@@ -356,19 +356,10 @@ public class AdministradorViewController {
      * @param titulo Título da janela
      */
     private void carregarNovaTela(String fxmlFile, String titulo) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) BSairDoApp.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle(titulo);
-            stage.show();
-
-            logger.log(Level.INFO, "Tela carregada com sucesso: {0}", fxmlFile);
-        } catch (IOException e) {
+        if (!br.upe.util.NavigationUtil.navigateFrom(BSairDoApp, fxmlFile, titulo)) {
             showError("Erro", "Não foi possível abrir a tela solicitada.");
-            logger.log(Level.SEVERE, () -> "Erro ao carregar tela: " + fxmlFile);
+        } else {
+            logger.log(Level.INFO, "Tela carregada com sucesso: {0}", fxmlFile);
         }
     }
 
