@@ -79,7 +79,38 @@ public class ExercicioService implements IExercicioService {
 
         if (exercicioParaDeletarOpt.isPresent()) {
             Exercicio exercicioParaDeletar = exercicioParaDeletarOpt.get();
-            exercicioRepository.deletar(exercicioParaDeletar.getIdExercicio());
+            int idExercicio = exercicioParaDeletar.getIdExercicio();
+            
+            // Verificar se o exercício está sendo usado em algum plano ou sessão
+            String motivoBloqueio = exercicioRepository.verificarUsodoExercicio(idExercicio);
+            if (motivoBloqueio != null) {
+                throw new IllegalArgumentException(motivoBloqueio);
+            }
+            
+            exercicioRepository.deletar(idExercicio);
+            return true;
+        } else {
+            logger.log(Level.WARNING, "Exercício com nome ''{0}'' não encontrado entre os seus exercícios.", nomeExercicio);
+            return false;
+        }
+    }
+
+    // Deleta exercício forçadamente, removendo todas as referências
+    public boolean deletarExercicioForcado(int idUsuario, String nomeExercicio) {
+        if (nomeExercicio == null || nomeExercicio.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome do exercício para deletar não pode ser vazio.");
+        }
+
+        Optional<Exercicio> exercicioParaDeletarOpt = buscarExercicioDoUsuarioPorNome(idUsuario, nomeExercicio);
+
+        if (exercicioParaDeletarOpt.isPresent()) {
+            Exercicio exercicioParaDeletar = exercicioParaDeletarOpt.get();
+            int idExercicio = exercicioParaDeletar.getIdExercicio();
+            
+            // Deletar forçadamente, removendo todas as referências
+            exercicioRepository.deletarComReferencias(idExercicio);
+            logger.log(Level.INFO, "Exercício ''{0}'' (ID: {1}) foi excluído forçadamente com todas as suas referências.", 
+                new Object[]{nomeExercicio, idExercicio});
             return true;
         } else {
             logger.log(Level.WARNING, "Exercício com nome ''{0}'' não encontrado entre os seus exercícios.", nomeExercicio);

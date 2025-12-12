@@ -1,6 +1,7 @@
 package br.upe.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -178,7 +179,15 @@ public class ExerciciosViewController {
 
             TextField nomeField = criarCampoTexto("Ex: Supino Reto");
             TextField descricaoField = criarCampoTexto("Ex: Exercício para peito");
-            TextField gifField = criarCampoTexto("Ex: supino.gif");
+            TextField gifField = criarCampoTexto("Ex: supino_reto_barra.gif");
+            
+            // Auto-sugerir GIF quando o nome mudar
+            nomeField.textProperty().addListener((obs, oldVal, newVal) -> {
+                String sugestao = sugerirCaminhoGif(newVal);
+                if (sugestao != null) {
+                    gifField.setText(sugestao);
+                }
+            });
 
             grid.add(criarLabel("Nome do Exercício:"), 0, 0);
             grid.add(nomeField, 1, 0);
@@ -207,6 +216,9 @@ public class ExerciciosViewController {
                     // reabrir pop-up em branco (continua loop)
                     continue;
                 }
+                
+                // Normalizar caminho do GIF
+                caminhoGif = normalizarCaminhoGif(caminhoGif);
 
                 exercicioService.cadastrarExercicio(idUsuarioLogado, nome, descricao, caminhoGif);
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Exercício cadastrado com sucesso!");
@@ -235,6 +247,14 @@ public class ExerciciosViewController {
         TextField nomeField = criarCampoTexto(exercicio.getNome());
         TextField descricaoField = criarCampoTexto(exercicio.getDescricao());
         TextField gifField = criarCampoTexto(exercicio.getCaminhoGif());
+        
+        // Auto-sugerir GIF quando o nome mudar
+        nomeField.textProperty().addListener((obs, oldVal, newVal) -> {
+            String sugestao = sugerirCaminhoGif(newVal);
+            if (sugestao != null) {
+                gifField.setText(sugestao);
+            }
+        });
 
         grid.add(criarLabel("Novo Nome:"), 0, 0);
         grid.add(nomeField, 1, 0);
@@ -250,12 +270,14 @@ public class ExerciciosViewController {
         dialog.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 try {
+                    String novoCaminhoGif = gifField.getText().isEmpty() ? null : normalizarCaminhoGif(gifField.getText());
+                    
                     exercicioService.atualizarExercicio(
                             idUsuarioLogado,
                             exercicio.getNome(),
                             nomeField.getText().isEmpty() ? null : nomeField.getText(),
                             descricaoField.getText().isEmpty() ? null : descricaoField.getText(),
-                            gifField.getText().isEmpty() ? null : gifField.getText()
+                            novoCaminhoGif
                     );
                     mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Exercício atualizado com sucesso!");
                     loadExercicios();
@@ -278,6 +300,9 @@ public class ExerciciosViewController {
                     exercicioService.deletarExercicioPorNome(idUsuarioLogado, exercicio.getNome());
                     mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Exercício excluído com sucesso!");
                     loadExercicios();
+                } catch (IllegalArgumentException e) {
+                    // Exercício está sendo usado - oferecer opções
+                    mostrarDialogExclusaoBloqueada(exercicio, e.getMessage());
                 } catch (Exception e) {
                     mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Erro ao excluir exercício: " + e.getMessage());
                     logger.log(Level.WARNING, "Erro ao excluir exercício", e);
@@ -286,7 +311,114 @@ public class ExerciciosViewController {
         });
     }
 
+    private void mostrarDialogExclusaoBloqueada(Exercicio exercicio, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Exclusão Bloqueada");
+        alert.setHeaderText("Não foi possível excluir o exercício");
+        alert.setContentText(mensagem);
+        
+        // Adicionar botões personalizados
+        ButtonType btnVerSessoes = new ButtonType("Ver Sessões de Treino");
+        ButtonType btnExcluirForcado = new ButtonType("Excluir de Qualquer Forma");
+        ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        
+        alert.getButtonTypes().setAll(btnVerSessoes, btnExcluirForcado, btnCancelar);
+        
+        Optional<ButtonType> resultado = alert.showAndWait();
+        
+        if (resultado.isPresent()) {
+            if (resultado.get() == btnVerSessoes) {
+                // Navegar para a tela de sessões de treino
+                navegarParaSessoes();
+            } else if (resultado.get() == btnExcluirForcado) {
+                confirmarExclusaoForcada(exercicio);
+            }
+        }
+    }
+
+    private void navegarParaSessoes() {
+        if (!br.upe.util.NavigationUtil.navigateFrom(
+                tableExercicios, 
+                "/ui/TreinoView.fxml", 
+                "Gym System - Sessões de Treino")) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela de sessões de treino.");
+        }
+    }
+
+    private void confirmarExclusaoForcada(Exercicio exercicio) {
+        Alert confirmForcado = new Alert(Alert.AlertType.WARNING);
+        confirmForcado.setTitle("Confirmar Exclusão Forçada");
+        confirmForcado.setHeaderText("ATENÇÃO: Exclusão Forçada");
+        confirmForcado.setContentText(
+            "Isso vai excluir o exercício E todas as suas referências:\n" +
+            "• Será removido dos planos de treino\n" +
+            "• Será removido do histórico de sessões\n\n" +
+            "Esta ação NÃO PODE SER DESFEITA!\n\n" +
+            "Tem certeza absoluta?"
+        );
+        
+        ButtonType btnConfirmar = new ButtonType("Sim, Excluir Tudo", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnCancelar = new ButtonType("Não, Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirmForcado.getButtonTypes().setAll(btnConfirmar, btnCancelar);
+        
+        confirmForcado.showAndWait().ifPresent(resp -> {
+            if (resp == btnConfirmar) {
+                try {
+                    exercicioService.deletarExercicioForcado(idUsuarioLogado, exercicio.getNome());
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", 
+                        "Exercício e todas as suas referências foram excluídos!");
+                    loadExercicios();
+                } catch (Exception e) {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Erro", 
+                        "Erro ao excluir exercício forçadamente: " + e.getMessage());
+                    logger.log(Level.SEVERE, "Erro na exclusão forçada", e);
+                }
+            }
+        });
+    }
+
     // ========================= Helpers (copiados e adaptados) =========================
+    
+    /**
+     * Sugere um caminho de GIF baseado no nome do exercício.
+     * Mapeia nomes conhecidos para os GIFs disponíveis na pasta resources/gif/
+     */
+    private String sugerirCaminhoGif(String nomeExercicio) {
+        if (nomeExercicio == null || nomeExercicio.trim().isEmpty()) {
+            return null;
+        }
+        
+        String nomeLower = nomeExercicio.toLowerCase().trim();
+        
+        // Mapeamento dos 3 GIFs disponíveis
+        if (nomeLower.contains("agachamento") || nomeLower.contains("squat")) {
+            return "agachamento_livre.gif";
+        } else if (nomeLower.contains("remada") || nomeLower.contains("row")) {
+            return "remada_curvada.gif";
+        } else if (nomeLower.contains("supino") || nomeLower.contains("bench") || nomeLower.contains("press")) {
+            return "supino_reto_barra.gif";
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Normaliza o caminho do GIF removendo barras e prefixos desnecessários.
+     * Garante que o caminho seja apenas o nome do arquivo.
+     */
+    private String normalizarCaminhoGif(String caminhoGif) {
+        if (caminhoGif == null || caminhoGif.trim().isEmpty()) {
+            return "";
+        }
+        
+        String normalizado = caminhoGif.replace("\\", "/");
+        normalizado = normalizado.replaceFirst("^/gif/", "");
+        normalizado = normalizado.replaceFirst("^gif/", "");
+        normalizado = normalizado.replaceFirst("^/", "");
+        
+        return normalizado.trim();
+    }
+    
     private Dialog<javafx.scene.control.ButtonType> criarDialogPadrao(String titulo, String cabecalho) {
         Dialog<javafx.scene.control.ButtonType> dialog = new Dialog<>();
         dialog.setTitle(titulo);

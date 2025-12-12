@@ -17,4 +17,6 @@ public interface IIndicadorBiomedicoService {
 
     void deletarIndicador(int idIndicador);
 
+    void editarIndicador(int idIndicador, LocalDate data, double pesoKg, double alturaCm, double percentualGordura, double percentualMassaMagra);
+
 }

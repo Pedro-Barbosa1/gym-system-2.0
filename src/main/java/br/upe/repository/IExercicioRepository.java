@@ -13,4 +13,7 @@ public interface IExercicioRepository {
     Optional<Exercicio> buscarPorNome(String nome);
     int proximoId();
     Optional<Exercicio> buscarPorId(int idExercicio);
+    boolean exercicioEstaSendoUsadoEmPlano(int idExercicio);
+    String verificarUsodoExercicio(int idExercicio);
+    void deletarComReferencias(int idExercicio);
 }

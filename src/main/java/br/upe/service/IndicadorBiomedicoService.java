@@ -138,7 +138,41 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
         }
     }
 
+    @Override
     public void deletarIndicador(int idIndicador) {
         indicadorRepository.deletar(idIndicador);
+    }
+
+    @Override
+    public void editarIndicador(int idIndicador, LocalDate data, double pesoKg, double alturaCm,
+                                double percentualGordura, double percentualMassaMagra) {
+        if (pesoKg <= 0 || alturaCm <= 0) {
+            throw new IllegalArgumentException("Peso e altura devem ser maiores que zero.");
+        }
+        if (percentualGordura < 0 || percentualMassaMagra < 0) {
+            throw new IllegalArgumentException("Percentuais de gordura e massa magra não podem ser negativos.");
+        }
+        if (data == null) {
+            throw new IllegalArgumentException("Data não pode ser nula.");
+        }
+
+        double imc = CalculadoraIMC.calcular(pesoKg, alturaCm);
+
+        // Buscar indicador existente para preservar ID do usuário
+        IndicadorBiomedico indicadorExistente = indicadorRepository.buscarPorId(idIndicador)
+                .orElseThrow(() -> new IllegalArgumentException("Indicador não encontrado."));
+
+        IndicadorBiomedico indicadorAtualizado = new IndicadorBiomedico.Builder()
+                .id(idIndicador)
+                .idUsuario(indicadorExistente.getIdUsuario())
+                .data(data)
+                .pesoKg(pesoKg)
+                .alturaCm(alturaCm)
+                .percentualGordura(percentualGordura)
+                .percentualMassaMagra(percentualMassaMagra)
+                .imc(imc)
+                .build();
+
+        indicadorRepository.editar(indicadorAtualizado);
     }
 }
