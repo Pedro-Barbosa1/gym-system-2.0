@@ -9,3 +9,5 @@ id;nome;email;senha;tipo
 8;Neymar Junior;neymarjr@email.com;santos123;COMUM
 9;usuario;usuarioemail@gmail.com;12345;COMUM
 10;usuario2;usuario2@email.com;12345;COMUM
+11;Henrique;h@gmail.com;123;COMUM
+12;henriquinho;h@email.com;123;COMUM
