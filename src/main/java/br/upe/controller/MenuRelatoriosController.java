@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import br.upe.service.IndicadorBiomedicoService;
 import br.upe.service.RelatorioDiferencaIndicadores;
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -34,7 +35,6 @@ public class MenuRelatoriosController {
     private static final DateTimeFormatter FORMATTER_ISO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private IndicadorBiomedicoService indicadorService;
-    private int idUsuarioLogado = 1; // TODO: Integrar com login
 
     @FXML private Button sairB;
     @FXML private Button exportarRelatorioB;
@@ -107,6 +107,7 @@ public class MenuRelatoriosController {
                 return;
             }
 
+            int idUsuarioLogado = UserSession.getInstance().getIdUsuarioLogado();
             String caminho = "src/main/resources/relatorios/relatorio_por_data_" + idUsuarioLogado + ".csv";
             indicadorService.exportarRelatorioPorDataParaCsv(idUsuarioLogado, dataInicio, dataFim, caminho);
 
@@ -171,7 +172,7 @@ public class MenuRelatoriosController {
                 mostrarAlerta(Alert.AlertType.ERROR, "Erro de Data", "A data inicial deve ser anterior ou igual à data final!");
                 return;
             }
-
+            int idUsuarioLogado = UserSession.getInstance().getIdUsuarioLogado();
             RelatorioDiferencaIndicadores relatorio =
                     indicadorService.gerarRelatorioDiferenca(idUsuarioLogado, dataInicio, dataFim);
 

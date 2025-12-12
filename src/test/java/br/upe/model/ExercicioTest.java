@@ -7,7 +7,8 @@ class ExercicioTest {
 
     @Test
     void deveCriarExercicioComTodosAtributos() {
-        Exercicio exercicio = new Exercicio(1, 10, "Agachamento", "Exercício para pernas", "agachamento.gif");
+        Usuario usuario = new Usuario(10, "Teste", "teste@email.com", "senha123", TipoUsuario.COMUM);
+        Exercicio exercicio = new Exercicio(usuario, 1, "Agachamento", "Exercício para pernas", "agachamento.gif");
 
         assertEquals(1, exercicio.getIdExercicio());
         assertEquals(10, exercicio.getIdUsuario());
@@ -18,7 +19,8 @@ class ExercicioTest {
 
     @Test
     void deveCriarExercicioSemIdExercicio() {
-        Exercicio exercicio = new Exercicio(20, "Flexão", "Exercício para peito", "flexao.gif");
+        Usuario usuario = new Usuario(20, "Teste", "teste@email.com", "senha123", TipoUsuario.COMUM);
+        Exercicio exercicio = new Exercicio(usuario, "Flexão", "Exercício para peito", "flexao.gif");
 
         assertEquals(20, exercicio.getIdUsuario());
         assertEquals("Flexão", exercicio.getNome());
@@ -31,10 +33,12 @@ class ExercicioTest {
 
     @Test
     void deveAlterarAtributosComSetters() {
-        Exercicio exercicio = new Exercicio(1, 10, "Agachamento", "Exercício para pernas", "agachamento.gif");
+        Usuario usuario = new Usuario(10, "Teste", "teste@email.com", "senha123", TipoUsuario.COMUM);
+        Exercicio exercicio = new Exercicio(usuario, 1, "Agachamento", "Exercício para pernas", "agachamento.gif");
 
         exercicio.setIdExercicio(2);
-        exercicio.setIdUsuario(30);
+        Usuario novoUsuario = new Usuario(30, "Teste2", "teste2@email.com", "senha123", TipoUsuario.COMUM);
+        exercicio.setUsuario(novoUsuario);
         exercicio.setNome("Abdominal");
         exercicio.setDescricao("Exercício para abdômen");
         exercicio.setCaminhoGif("abdominal.gif");
@@ -48,7 +52,8 @@ class ExercicioTest {
 
     @Test
     void deveRetornarToStringFormatado() {
-        Exercicio exercicio = new Exercicio(1, 10, "Agachamento", "Exercício para pernas", "agachamento.gif");
+        Usuario usuario = new Usuario(10, "Teste", "teste@email.com", "senha123", TipoUsuario.COMUM);
+        Exercicio exercicio = new Exercicio(usuario, 1, "Agachamento", "Exercício para pernas", "agachamento.gif");
 
         String esperado = "ID: 1 | Nome: Agachamento | Descrição: Exercício para pernas | GIF: agachamento.gif";
 

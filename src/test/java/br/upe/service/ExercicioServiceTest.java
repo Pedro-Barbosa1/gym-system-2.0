@@ -12,7 +12,6 @@ class ExercicioServiceTest {
     @BeforeEach
     void setUp() {
         exercicioService = new ExercicioService();
-        exercicioService.limparDados();
     }
 
     @Test

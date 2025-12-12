@@ -13,6 +13,7 @@ import br.upe.model.IndicadorBiomedico;
 import br.upe.service.IIndicadorBiomedicoService;
 import br.upe.service.IndicadorBiomedicoService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.util.UserSession;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -111,8 +112,15 @@ public class IndicadoresViewController {
         double header = 30;
         tableIndicadores.setPrefHeight(fixed * rowsToShow + header);
 
+<<<<<<< HEAD
         aplicarEstiloTableView(tableIndicadores);
     }
+=======
+                    // Cadastrar indicador
+                    IndicadorBiomedico novo = indicadorService.cadastrarIndicador(
+                        UserSession.getInstance().getIdUsuarioLogado(), data, peso, altura, gordura, massaMagra
+                    );
+>>>>>>> fix/logicaDeUsuarioLogado
 
     private void adicionarColunaAcoes() {
         colAcoes.setCellFactory(col -> new TableCell<IndicadorBiomedico, Void>() {
@@ -163,6 +171,7 @@ public class IndicadoresViewController {
     // -------- ações principais --------
 
     @FXML
+<<<<<<< HEAD
     private void handleAdicionarIndicador(ActionEvent event) {
         logger.info("Abrindo dialog para cadastrar novo indicador...");
 
@@ -204,6 +213,16 @@ public class IndicadoresViewController {
 
         Optional<ButtonType> opt = dialog.showAndWait();
         if (opt.isEmpty() || opt.get() == ButtonType.CANCEL) {
+=======
+    void listarMeusIndicadores(ActionEvent event) {
+    logger.info("Listando indicadores do usuário...");
+        
+        List<IndicadorBiomedico> meusIndicadores = indicadorService.listarTodosDoUsuario(UserSession.getInstance().getIdUsuarioLogado());
+        
+        if (meusIndicadores.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Sem Indicadores", 
+                "Você ainda não possui indicadores registrados.");
+>>>>>>> fix/logicaDeUsuarioLogado
             return;
         }
 

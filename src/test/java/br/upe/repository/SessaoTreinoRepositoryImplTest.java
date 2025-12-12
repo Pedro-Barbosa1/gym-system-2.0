@@ -36,7 +36,7 @@ class SessaoTreinoRepositoryImplTest {
                 1,
                 1,
                 LocalDate.now(),
-                List.of(new ItemSessaoTreino(10, 12, 50.0))
+                List.of(new ItemSessaoTreino(0, 10, 12, 50.0))
         );
 
         SessaoTreino salva = repository.salvar(nova);

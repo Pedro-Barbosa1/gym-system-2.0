@@ -1,41 +1,55 @@
 package br.upe.model;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "planos_de_treino")
 public class PlanoTreino {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPlano;
-    private int idUsuario;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+
+    @Column(nullable = false)
     private String nome;
-    private List<ItemPlanoTreino> itensTreino;
 
-    public PlanoTreino(int idPlano, int idUsuario, String nome, List<ItemPlanoTreino> itensTreino) {
-        this.idPlano = idPlano;
-        this.idUsuario = idUsuario;
-        this.nome = nome;
-        this.itensTreino = itensTreino;
-    }
+    @OneToMany(mappedBy = "planoTreino", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ItemPlanoTreino> itensTreino = new ArrayList<>();
 
-    public PlanoTreino(int idUsuario, String nome) {
-        this.idUsuario = idUsuario;
+    @OneToMany(mappedBy = "planoTreino", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SessaoTreino> sessaoTreinos = new ArrayList<>();
+
+    public PlanoTreino() {}
+
+    public PlanoTreino(Usuario usuario, String nome) {
+        this.usuario = usuario;
         this.nome = nome;
-        this.itensTreino = new ArrayList<>();
     }
 
     public int getIdPlano() {
         return idPlano;
     }
 
-    public void setIdPlano(int idPlano) {
-        this.idPlano = idPlano;
+    public void setIdPlano(int id) {
+        this.idPlano = id;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
     }
 
     public int getIdUsuario() {
-        return idUsuario;
+        return usuario.getId();
     }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getNome() {
@@ -53,25 +67,8 @@ public class PlanoTreino {
     public void setItensTreino(List<ItemPlanoTreino> itensTreino) {
         this.itensTreino = itensTreino;
     }
-
     public void adicionarItem(ItemPlanoTreino item) {
         this.itensTreino.add(item);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ID Plano: ").append(idPlano)
-                .append(", ID Usuário: ").append(idUsuario)
-                .append(", Nome: '").append(nome).append("'\n");
-        if (itensTreino.isEmpty()) {
-            sb.append("  [Este plano não possui exercícios ainda.]");
-        } else {
-            sb.append("  Exercícios no Plano:\n");
-            for (int i = 0; i < itensTreino.size(); i++) {
-                sb.append("    ").append(i + 1).append(". ").append(itensTreino.get(i).toString()).append("\n");
-            }
-        }
-        return sb.toString();
-    }
 }
