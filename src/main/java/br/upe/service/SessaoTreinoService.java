@@ -97,7 +97,13 @@ public class SessaoTreinoService {
     }
 
     public List<SessaoTreino> listarSessoesPorUsuario(int idUsuario) {
-    return sessaoRepo.listarPorUsuario(idUsuario);
+        return sessaoRepo.listarPorUsuario(idUsuario);
+    }
+
+    // Remove uma sessão de treino pelo ID
+    public void removerSessao(int idSessao) {
+        sessaoRepo.deletar(idSessao);
+        logger.log(Level.INFO, "Sessão de treino ID {0} removida com sucesso!", idSessao);
     }
 
     // Verifica condições e atualiza o plano de acordo com a sessao
