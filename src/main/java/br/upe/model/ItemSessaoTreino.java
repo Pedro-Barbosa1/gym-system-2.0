@@ -21,6 +21,10 @@ public class ItemSessaoTreino {
     @JoinColumn(name="id_sessao_treino")
     private SessaoTreino sessaoTreino;
 
+    public ItemSessaoTreino() {
+
+    }
+
     public ItemSessaoTreino(int idSessaoTreino, int idExercicio, int repeticoesRealizadas, double cargaRealizada) {
         this.sessaoTreino = new SessaoTreino();
         this.sessaoTreino.setIdSessao(idSessaoTreino);
@@ -30,11 +34,30 @@ public class ItemSessaoTreino {
         this.cargaRealizada = cargaRealizada;
     }
 
+    public Exercicio getExercicio() {
+        return exercicio;
+    }
+
+    public void setExercicio(Exercicio exercicio) {
+        this.exercicio = exercicio;
+    }
+
+    public SessaoTreino getSessaoTreino() {
+        return sessaoTreino;
+    }
+
+    public void setSessaoTreino(SessaoTreino sessaoTreino) {
+        this.sessaoTreino = sessaoTreino;
+    }
+
     public int getIdExercicio() {
-        return this.exercicio.getIdExercicio();
+        return this.exercicio != null ? this.exercicio.getIdExercicio() : 0;
     }
 
     public void setIdExercicio(int idExercicio) {
+        if (this.exercicio == null) {
+            this.exercicio = new Exercicio();
+        }
         this.exercicio.setIdExercicio(idExercicio);
     }
 

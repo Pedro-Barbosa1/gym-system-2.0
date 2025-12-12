@@ -439,6 +439,24 @@ public class TreinoViewController {
             javafx.scene.Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
             if (headerLabel != null)
                 headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
+            
+            // Estilizar botões
+            javafx.application.Platform.runLater(() -> {
+                dialog.getDialogPane().lookupAll(".button").forEach(node -> {
+                    if (node instanceof javafx.scene.control.ButtonBase) {
+                        node.setStyle(
+                            "-fx-background-color: #5A189A;" +
+                            "-fx-text-fill: #FFFFFF;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-background-radius: 5px;" +
+                            "-fx-border-radius: 5px;" +
+                            "-fx-padding: 8px 16px 8px 16px;" +
+                            "-fx-min-width: 80px;" +
+                            "-fx-cursor: hand;"
+                        );
+                    }
+                });
+            });
         });
 
         // Criar lista de dados para a tabela

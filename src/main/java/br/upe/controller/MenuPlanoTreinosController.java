@@ -196,7 +196,7 @@ public class MenuPlanoTreinosController {
                     confirmacao.showAndWait().ifPresent(resp -> {
                         if (resp == ButtonType.OK) {
                             try {
-                                boolean deletado = planoTreinoService.deletarPlano(idUsuarioLogado, plano.getNome());
+                                boolean deletado = planoTreinoService.deletarPlano(UserSession.getInstance().getIdUsuarioLogado(), plano.getNome());
                                 if (deletado) {
                                     getTableView().getItems().remove(plano);
                                     showInfo("Sucesso", "Plano '" + plano.getNome() + "' deletado com sucesso!");
@@ -233,14 +233,13 @@ public class MenuPlanoTreinosController {
         btnAdicionar.setOnAction(e -> {
             handleCriarPlano();
             // Atualizar lista após possível criação
-            List<PlanoTreino> atualizados = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
+            List<PlanoTreino> atualizados = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
             tableView.setItems(FXCollections.observableArrayList(atualizados));
         });
 
         javafx.scene.control.Button btnVoltar = new javafx.scene.control.Button("Voltar");
         // O handler será associado ao Stage criado adiante (fechará a janela)
 
-<<<<<<< HEAD
         javafx.scene.layout.VBox container = new javafx.scene.layout.VBox(8);
         container.setPadding(new Insets(10));
         container.getChildren().addAll(btnAdicionar, tableView, btnVoltar);
@@ -250,52 +249,6 @@ public class MenuPlanoTreinosController {
         try {
             if (sairB != null && sairB.getScene() != null) {
                 stage.initOwner(sairB.getScene().getWindow());
-=======
-        List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(UserSession.getInstance().getIdUsuarioLogado());
-
-        if (planos.isEmpty()) {
-            showInfo("Editar Plano", "Você não possui planos de treino cadastrados.");
-            return;
-        }
-
-        // Selecionar plano existente
-        PlanoTreino planoSelecionado = exibirDialogSelecaoPlano(planos, "Editar Plano");
-        if (planoSelecionado == null) {
-            return;
-        }
-
-        // Criar Dialog estilizado
-        Dialog<ButtonType> dialog = criarDialogPadrao("Editar Plano de Treino", 
-            "Edite o plano '" + planoSelecionado.getNome() + "'");
-
-        // GridPane padronizado
-        GridPane grid = criarGridPadrao();
-
-        TextField nomeField = criarCampoTexto(planoSelecionado.getNome());
-        nomeField.setText(planoSelecionado.getNome());
-
-        grid.add(criarLabel("Novo Nome:"), 0, 0);
-        grid.add(nomeField, 1, 0);
-        grid.add(criarLabel("(Deixe em branco para não alterar)"), 0, 1, 2, 1);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        Optional<ButtonType> resultado = dialog.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            String novoNome = nomeField.getText().trim();
-
-            try {
-                planoTreinoService.editarPlano(
-                    UserSession.getInstance().getIdUsuarioLogado(),
-                    planoSelecionado.getNome(),
-                    novoNome.isEmpty() ? null : novoNome
-                );
-                showInfo("Sucesso", "Plano '" + planoSelecionado.getNome() + "' atualizado com sucesso!");
-            } catch (IllegalArgumentException e) {
-                showError("Erro", "Erro ao editar plano: " + e.getMessage());
->>>>>>> fix/logicaDeUsuarioLogado
             }
         } catch (Exception ex) {
             logger.log(Level.FINE, "Não foi possível inicializar owner do Stage de listar planos", ex);
@@ -588,71 +541,11 @@ public class MenuPlanoTreinosController {
             return;
         }
 
-        // Criar dialog customizado
-        Dialog<ButtonType> dialog = criarDialogPadrao("Detalhes do Plano", 
-            String.format("Plano: %s (ID: %d) | %d exercício(s)", 
-                planoSelecionado.getNome(), 
-                planoSelecionado.getIdPlano(), 
-                planoSelecionado.getItensTreino().size()));
-
-        if (planoSelecionado.getItensTreino().isEmpty()) {
-            TextArea textArea = criarTextArea(650, 420);
-            textArea.setText("Nenhum exercício adicionado ainda ao plano \"" + planoSelecionado.getNome() + "\".");
-            dialog.getDialogPane().setContent(textArea);
-        } else {
-            // Criar lista de dados para a tabela
-            List<ExercicioPlanoData> dadosTabela = new ArrayList<>();
-            for (ItemPlanoTreino item : planoSelecionado.getItensTreino()) {
-                Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio());
-                String nomeExercicio = "Desconhecido";
-                if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == UserSession.getInstance().getIdUsuarioLogado()) {
-                    nomeExercicio = exercicioOpt.get().getNome();
-                }
-                dadosTabela.add(new ExercicioPlanoData(
-                    item.getIdExercicio(),
-                    nomeExercicio,
-                    item.getCargaKg(),
-                    item.getRepeticoes()
-                ));
-            }
-
-            // Criar TableView
-            TableView<ExercicioPlanoData> tableView = new TableView<>();
-            tableView.setItems(FXCollections.observableArrayList(dadosTabela));
-            tableView.setPrefWidth(650);
-            tableView.setPrefHeight(420);
-
-            // Colunas
-            TableColumn<ExercicioPlanoData, Integer> colId = new TableColumn<>("ID");
-            colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdExercicio()).asObject());
-            colId.setPrefWidth(80);
-            colId.setStyle("-fx-alignment: CENTER;");
-
-            TableColumn<ExercicioPlanoData, String> colNome = new TableColumn<>("Exercício");
-            colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
-            colNome.setPrefWidth(320);
-
-            TableColumn<ExercicioPlanoData, Integer> colCarga = new TableColumn<>("Carga (kg)");
-            colCarga.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaKg()).asObject());
-            colCarga.setPrefWidth(120);
-            colCarga.setStyle("-fx-alignment: CENTER;");
-
-            TableColumn<ExercicioPlanoData, Integer> colRepeticoes = new TableColumn<>("Repetições");
-            colRepeticoes.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRepeticoes()).asObject());
-            colRepeticoes.setPrefWidth(130);
-            colRepeticoes.setStyle("-fx-alignment: CENTER;");
-
-            tableView.getColumns().addAll(colId, colNome, colCarga, colRepeticoes);
-
-            // Aplicar estilo
-            aplicarEstiloTableView(tableView);
-
-            dialog.getDialogPane().setContent(tableView);
-        }
-
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.showAndWait();
+        // Usar o método showDetalhesPlano que sempre exibe a tabela
+        showDetalhesPlano(planoSelecionado);
     }
+
+
 
     /**
      * Mostra os detalhes do plano fornecido (versão que recebe o PlanoTreino diretamente).
@@ -675,7 +568,7 @@ public class MenuPlanoTreinosController {
             for (ItemPlanoTreino item : planoSelecionado.getItensTreino()) {
                 Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio());
                 String nomeExercicio = "Desconhecido";
-                if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == idUsuarioLogado) {
+                if (exercicioOpt.isPresent() && exercicioOpt.get().getIdUsuario() == UserSession.getInstance().getIdUsuarioLogado()) {
                     nomeExercicio = exercicioOpt.get().getNome();
                 }
                 dadosTabela.add(new ExercicioPlanoData(

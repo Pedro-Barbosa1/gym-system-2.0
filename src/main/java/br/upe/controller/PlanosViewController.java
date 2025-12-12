@@ -332,27 +332,6 @@ public class PlanosViewController {
                 planoSelecionado.getIdPlano(), 
                 planoSelecionado.getItensTreino().size()));
 
-        // Se não houver exercícios, manter a mensagem simples
-        if (planoSelecionado.getItensTreino().isEmpty()) {
-            TextArea textArea = criarTextArea(650, 200);
-            textArea.setText("Nenhum exercício adicionado ainda ao plano \"" + planoSelecionado.getNome() + "\".");
-            // Adicionar botão fechar abaixo
-            Button btnFecharEmpty = new Button("Fechar");
-            btnFecharEmpty.setPrefHeight(36);
-            btnFecharEmpty.setPrefWidth(140);
-            btnFecharEmpty.setStyle("-fx-background-color: #1e1e1e;");
-            btnFecharEmpty.setTextFill(Color.web("#e5a000"));
-            btnFecharEmpty.setOnAction(e -> {
-                Stage st = (Stage) dialog.getDialogPane().getScene().getWindow();
-                st.close();
-            });
-            javafx.scene.layout.VBox v = new javafx.scene.layout.VBox(10, textArea, btnFecharEmpty);
-            v.setPadding(new Insets(10));
-            dialog.getDialogPane().setContent(v);
-            dialog.showAndWait();
-            return;
-        }
-
         // Função auxiliar para rebuild da tabela a partir do plano mais recente do serviço
         java.util.function.Consumer<TableView<ExercicioPlanoData>> refresh = (tableView) -> {
             List<PlanoTreino> planosAtualizados = planoTreinoService.listarMeusPlanos(idUsuarioLogado);
@@ -377,6 +356,9 @@ public class PlanosViewController {
         tableView.setPrefHeight(360);
         // Remover barra de rolagem horizontal
         tableView.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        
+        // Mensagem quando não há exercícios
+        tableView.setPlaceholder(new Label("Nenhum exercício adicionado ainda ao plano \"" + planoSelecionado.getNome() + "\"."));
 
         TableColumn<ExercicioPlanoData, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdExercicio()).asObject());

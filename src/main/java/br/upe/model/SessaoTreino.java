@@ -58,19 +58,41 @@ public class SessaoTreino {
         this.idSessao = idSessao;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public PlanoTreino getPlanoTreino() {
+        return planoTreino;
+    }
+
+    public void setPlanoTreino(PlanoTreino planoTreino) {
+        this.planoTreino = planoTreino;
+    }
+
     public int getIdUsuario() {
-        return this.usuario.getId();
+        return this.usuario != null ? this.usuario.getId() : 0;
     }
 
     public void setIdUsuario(int idUsuario) {
+        if (this.usuario == null) {
+            this.usuario = new Usuario();
+        }
         this.usuario.setId(idUsuario);
     }
 
     public int getIdPlanoTreino() {
-        return planoTreino.getIdPlano();
+        return planoTreino != null ? planoTreino.getIdPlano() : 0;
     }
 
     public void setIdPlanoTreino(int idPlanoTreino) {
+        if (this.planoTreino == null) {
+            this.planoTreino = new PlanoTreino();
+        }
         this.planoTreino.setIdPlano(idPlanoTreino);
     }
 
