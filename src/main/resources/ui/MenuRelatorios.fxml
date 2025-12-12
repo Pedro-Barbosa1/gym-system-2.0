@@ -20,9 +20,10 @@
         <Button fx:id="sairB" layoutX="30.0" layoutY="29.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="80.0" prefWidth="100.0" style="-fx-background-color: transparent;" />
     </AnchorPane>
 
-    <!-- Menu lateral -->
+    <!-- MENU LATERAL (ESQUERDA) -->
     <AnchorPane prefHeight="700.0" prefWidth="317.0">
-        <Button fx:id="exportarRelatorioB" layoutX="66.0" layoutY="191.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório Por Data" textFill="#e5a000">
+        <Button fx:id="exportarRelatorioB" layoutX="66.0" layoutY="191.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório
+        " textFill="#e5a000">
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
@@ -30,14 +31,7 @@
                 <Font size="15.0" />
             </font>
         </Button>
-        <Button fx:id="exportarRelatorioDeDiferencaB" layoutX="66.0" layoutY="261.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="240.0" style="-fx-background-color: #1E1E1E;" text="Exportar Relatório De Diferença" textFill="#e5a000">
-            <opaqueInsets>
-                <Insets />
-            </opaqueInsets>
-            <font>
-                <Font size="15.0" />
-            </font>
-        </Button>
+
         <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@images/salvar.png" />
         </ImageView>
@@ -51,18 +45,25 @@
         <ImageView fitHeight="45.0" fitWidth="32.0" layoutX="14.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@images/calendario.png" />
         </ImageView>
-        <ImageView fitHeight="56.0" fitWidth="32.0" layoutX="14.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@images/calendario-diferenca.png" />
-        </ImageView>
+    </AnchorPane>
 
-        <!-- BOTÕES DE NAVEGAÇÃO DO CALENDÁRIO -->
-        <Button fx:id="btnMesAnterior" layoutX="50.0" layoutY="310.0" text="&lt;" />
-        <Button fx:id="btnMesProximo" layoutX="220.0" layoutY="310.0" text="&gt;" />
-        <Text fx:id="txtMesAno" layoutX="120.0" layoutY="330.0" fill="#e5a000" />
+    <!-- CALENDÁRIO (DIREITA) CENTRALIZADO -->
+    <AnchorPane layoutX="350.0" layoutY="80.0" prefWidth="500.0" prefHeight="600.0">
 
-        <!-- GRID DO CALENDÁRIO -->
-        <GridPane fx:id="calendarioGrid" layoutX="50.0" layoutY="350.0" hgap="5" vgap="5" prefWidth="250.0" prefHeight="250.0" />
+        <!-- TEXTO EXPLICATIVO CENTRALIZADO -->
+        <Text layoutX="50.0" layoutY="20.0" fill="#e5a000" text="Selecione os dias entre o intervalo desejado" wrappingWidth="400" textAlignment="CENTER">
+            <font>
+                <Font name="System Bold" size="16.0"/>
+            </font>
+        </Text>
 
+        <!-- BOTÕES DE NAVEGAÇÃO -->
+        <Button fx:id="btnMesAnterior" layoutX="50.0" layoutY="60.0" text="&lt;" />
+        <Button fx:id="btnMesProximo" layoutX="400.0" layoutY="60.0" text="&gt;" />
+        <Text fx:id="txtMesAno" layoutX="200.0" layoutY="85.0" fill="#e5a000" />
+
+        <!-- GRID DO CALENDÁRIO CENTRALIZADO VERTICALMENTE -->
+        <GridPane fx:id="calendarioGrid" layoutX="50.0" layoutY="120.0" hgap="5" vgap="5" prefWidth="400.0" prefHeight="400.0" />
     </AnchorPane>
 
     <opaqueInsets>

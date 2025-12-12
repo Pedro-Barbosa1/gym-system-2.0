@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import br.upe.service.IndicadorBiomedicoService;
-import br.upe.service.RelatorioDiferencaIndicadores;
 import br.upe.ui.util.StyledAlert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +33,6 @@ public class MenuRelatoriosController {
 
     @FXML private Button sairB;
     @FXML private Button exportarRelatorioB;
-    @FXML private Button exportarRelatorioDeDiferencaB;
 
     @FXML private GridPane calendarioGrid;
     @FXML private Button btnMesAnterior;
@@ -65,7 +63,6 @@ public class MenuRelatoriosController {
 
     private void configurarAcoes() {
         exportarRelatorioB.setOnAction(e -> handleExportarRelatorioPorDataCalendario());
-        exportarRelatorioDeDiferencaB.setOnAction(e -> handleExportarRelatorioDeDiferencaCalendario());
         sairB.setOnAction(e -> handleSair());
     }
 
@@ -85,26 +82,6 @@ public class MenuRelatoriosController {
         } catch (Exception e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Erro ao exportar relatório: " + e.getMessage());
             logger.log(Level.SEVERE, "Erro ao exportar relatório por data", e);
-        }
-    }
-
-    private void handleExportarRelatorioDeDiferencaCalendario() {
-        if (datasSelecionadas.size() < 2) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Aviso", "Selecione pelo menos duas datas no calendário.");
-            return;
-        }
-        LocalDate inicio = Collections.min(datasSelecionadas);
-        LocalDate fim = Collections.max(datasSelecionadas);
-
-        try {
-            RelatorioDiferencaIndicadores relatorio = indicadorService.gerarRelatorioDiferenca(idUsuarioLogado, inicio, fim);
-            String caminho = "src/main/resources/relatorios/relatorio_diferenca_" + idUsuarioLogado + ".csv";
-            relatorio.exportarParaCsv(caminho);
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso",
-                    "Relatório de diferença exportado!\nDe: " + inicio + "\nAté: " + fim + "\nArquivo: " + caminho);
-        } catch (Exception e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Erro ao exportar relatório: " + e.getMessage());
-            logger.log(Level.SEVERE, "Erro ao exportar relatório de diferença", e);
         }
     }
 
