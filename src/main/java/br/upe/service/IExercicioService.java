@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface IExercicioService {
     Exercicio cadastrarExercicio(int idUsuario, String nome, String descricao, String caminhoGif);
+    boolean deletarExercicioForcado(int idUsuario, String nomeExercicio);
     List<Exercicio> listarExerciciosDoUsuario(int idUsuario);
     Optional<Exercicio> buscarExercicioDoUsuarioPorNome(int idUsuario, String nomeExercicio);
     Optional<Exercicio> buscarExercicioPorIdGlobal(int idExercicio);

@@ -262,20 +262,80 @@ public class IndicadoresViewController {
                         "Indicador em " + ind.getData().format(DATE_FORMATTER));
 
         GridPane grid = criarGridPadrao();
-        grid.add(criarLabel("Peso (kg):"), 0, 0);
-        grid.add(new Label(String.format("%.1f", ind.getPesoKg())), 1, 0);
-        grid.add(criarLabel("Altura (cm):"), 0, 1);
-        grid.add(new Label(String.format("%.1f", ind.getAlturaCm())), 1, 1);
-        grid.add(criarLabel("IMC:"), 0, 2);
-        grid.add(new Label(String.format("%.1f", ind.getImc())), 1, 2);
+
+        // Criar campos editáveis
+        TextField dataField = new TextField(ind.getData().format(DATE_FORMATTER));
+        TextField pesoField = new TextField(String.format("%.1f", ind.getPesoKg()));
+        TextField alturaField = new TextField(String.format("%.1f", ind.getAlturaCm()));
+        TextField gorduraField = new TextField(String.format("%.1f", ind.getPercentualGordura()));
+        TextField massaMagraField = new TextField(String.format("%.1f", ind.getPercentualMassaMagra()));
+
+        // Campo IMC somente leitura (calculado automaticamente)
+        Label imcLabel = new Label(String.format("%.1f", ind.getImc()));
+        imcLabel.setStyle("-fx-text-fill: #ffb300;");
+
+        String textFieldStyle =
+                "-fx-text-fill: #ffb300; -fx-background-color: darkgray; " +
+                "-fx-border-color: #1e1e1e; -fx-border-width: 1; -fx-border-radius: 4;";
+        dataField.setStyle(textFieldStyle);
+        pesoField.setStyle(textFieldStyle);
+        alturaField.setStyle(textFieldStyle);
+        gorduraField.setStyle(textFieldStyle);
+        massaMagraField.setStyle(textFieldStyle);
+
+        grid.add(criarLabel("Data (AAAA-MM-DD):"), 0, 0);
+        grid.add(dataField, 1, 0);
+        grid.add(criarLabel("Peso (kg):"), 0, 1);
+        grid.add(pesoField, 1, 1);
+        grid.add(criarLabel("Altura (cm):"), 0, 2);
+        grid.add(alturaField, 1, 2);
         grid.add(criarLabel("Gordura (%):"), 0, 3);
-        grid.add(new Label(String.format("%.1f", ind.getPercentualGordura())), 1, 3);
+        grid.add(gorduraField, 1, 3);
         grid.add(criarLabel("Massa Magra (%):"), 0, 4);
-        grid.add(new Label(String.format("%.1f", ind.getPercentualMassaMagra())), 1, 4);
+        grid.add(massaMagraField, 1, 4);
+        grid.add(criarLabel("IMC:"), 0, 5);
+        grid.add(imcLabel, 1, 5);
 
         dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.showAndWait();
+        dialog.getDialogPane().getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                LocalDate novaData = LocalDate.parse(dataField.getText().trim(), DATE_FORMATTER);
+                double novoPeso = Double.parseDouble(pesoField.getText().trim());
+                double novaAltura = Double.parseDouble(alturaField.getText().trim());
+                double novaGordura = Double.parseDouble(gorduraField.getText().trim());
+                double novaMassaMagra = Double.parseDouble(massaMagraField.getText().trim());
+
+                indicadorService.editarIndicador(
+                        ind.getIdIndicador(),
+                        novaData,
+                        novoPeso,
+                        novaAltura,
+                        novaGordura,
+                        novaMassaMagra
+                );
+
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso",
+                        "Indicador atualizado com sucesso!");
+                logger.info("Indicador editado: ID=" + ind.getIdIndicador());
+                loadIndicadores();
+
+            } catch (NumberFormatException e) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro de Formato",
+                        "Por favor, digite valores numéricos válidos.");
+                logger.log(Level.WARNING, "Erro de formato ao editar indicador", e);
+            } catch (DateTimeParseException e) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro de Data",
+                        "Formato de data inválido. Use AAAA-MM-DD (ex: 2025-12-12)");
+                logger.log(Level.WARNING, "Erro ao parsear data", e);
+            } catch (IllegalArgumentException e) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro",
+                        "Erro ao editar indicador: " + e.getMessage());
+                logger.log(Level.WARNING, "Erro de validação ao editar indicador", e);
+            }
+        }
     }
 
     private void confirmarRemocao(IndicadorBiomedico ind) {

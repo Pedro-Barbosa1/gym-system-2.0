@@ -20,6 +20,12 @@ public class IndicadorBiomedico {
     private double percentualMassaMagra;
     private double imc;
 
+    /**
+     * Construtor padrao requerido pelo JPA/Hibernate.
+     */
+    protected IndicadorBiomedico() {
+    }
+
     public IndicadorBiomedico(Builder builder) {
         this.id = builder.id;
         this.idUsuario = builder.idUsuario;

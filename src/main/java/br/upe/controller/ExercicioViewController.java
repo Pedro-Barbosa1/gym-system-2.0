@@ -58,7 +58,15 @@ public class ExercicioViewController {
 
         TextField nomeField = criarCampoTexto("Ex: Supino Reto");
         TextField descricaoField = criarCampoTexto("Ex: Exercício para peito");
-        TextField gifField = criarCampoTexto("Ex: supino.gif");
+        TextField gifField = criarCampoTexto("Ex: supino_reto_barra.gif");
+        
+        // Auto-sugerir GIF quando o nome mudar
+        nomeField.textProperty().addListener((obs, oldVal, newVal) -> {
+            String sugestao = sugerirCaminhoGif(newVal);
+            if (sugestao != null) {
+                gifField.setText(sugestao);
+            }
+        });
 
         grid.add(criarLabel("Nome do Exercício:"), 0, 0);
         grid.add(nomeField, 1, 0);
@@ -81,6 +89,9 @@ public class ExercicioViewController {
                         mostrarAlerta(Alert.AlertType.WARNING, "Campos obrigatórios", "Nome e descrição são obrigatórios.");
                         return;
                     }
+                    
+                    // Normalizar caminho do GIF
+                    caminhoGif = normalizarCaminhoGif(caminhoGif);
 
                     Exercicio novo = exercicioService.cadastrarExercicio(idUsuarioLogado, nome, descricao, caminhoGif);
                     mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Exercício '" + novo.getNome() + "' cadastrado com sucesso!");
@@ -159,6 +170,14 @@ public class ExercicioViewController {
         TextField nomeField = criarCampoTexto(exercicioSelecionado.getNome());
         TextField descricaoField = criarCampoTexto(exercicioSelecionado.getDescricao());
         TextField gifField = criarCampoTexto(exercicioSelecionado.getCaminhoGif());
+        
+        // Auto-sugerir GIF quando o nome mudar
+        nomeField.textProperty().addListener((obs, oldVal, newVal) -> {
+            String sugestao = sugerirCaminhoGif(newVal);
+            if (sugestao != null) {
+                gifField.setText(sugestao);
+            }
+        });
 
         grid.add(criarLabel("Novo Nome:"), 0, 0);
         grid.add(nomeField, 1, 0);
@@ -173,12 +192,14 @@ public class ExercicioViewController {
 
         dialog.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
+                String novoCaminhoGif = gifField.getText().isEmpty() ? null : normalizarCaminhoGif(gifField.getText());
+                
                 exercicioService.atualizarExercicio(
                         idUsuarioLogado,
                         exercicioSelecionado.getNome(),
                         nomeField.getText().isEmpty() ? null : nomeField.getText(),
                         descricaoField.getText().isEmpty() ? null : descricaoField.getText(),
-                        gifField.getText().isEmpty() ? null : gifField.getText()
+                        novoCaminhoGif
                 );
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Exercício atualizado com sucesso!");
             }
@@ -310,6 +331,46 @@ public class ExercicioViewController {
     // ============================================================
     //                     MÉTODOS AUXILIARES
     // ============================================================
+    
+    /**
+     * Sugere um caminho de GIF baseado no nome do exercício.
+     * Mapeia nomes conhecidos para os GIFs disponíveis na pasta resources/gif/
+     */
+    private String sugerirCaminhoGif(String nomeExercicio) {
+        if (nomeExercicio == null || nomeExercicio.trim().isEmpty()) {
+            return null;
+        }
+        
+        String nomeLower = nomeExercicio.toLowerCase().trim();
+        
+        // Mapeamento dos 3 GIFs disponíveis
+        if (nomeLower.contains("agachamento") || nomeLower.contains("squat")) {
+            return "agachamento_livre.gif";
+        } else if (nomeLower.contains("remada") || nomeLower.contains("row")) {
+            return "remada_curvada.gif";
+        } else if (nomeLower.contains("supino") || nomeLower.contains("bench") || nomeLower.contains("press")) {
+            return "supino_reto_barra.gif";
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Normaliza o caminho do GIF removendo barras e prefixos desnecessários.
+     * Garante que o caminho seja apenas o nome do arquivo.
+     */
+    private String normalizarCaminhoGif(String caminhoGif) {
+        if (caminhoGif == null || caminhoGif.trim().isEmpty()) {
+            return "";
+        }
+        
+        String normalizado = caminhoGif.replace("\\", "/");
+        normalizado = normalizado.replaceFirst("^/gif/", "");
+        normalizado = normalizado.replaceFirst("^gif/", "");
+        normalizado = normalizado.replaceFirst("^/", "");
+        
+        return normalizado.trim();
+    }
 
     private Exercicio exibirDialogSelecaoExercicio(List<Exercicio> exercicios, String titulo) {
         List<String> opcoes = new ArrayList<>();
