@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,12 +13,14 @@ import br.upe.model.IndicadorBiomedico;
 import br.upe.service.IIndicadorBiomedicoService;
 import br.upe.service.IndicadorBiomedicoService;
 import br.upe.ui.util.StyledAlert;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,280 +29,286 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
 
 public class IndicadoresViewController {
 
-    private static final Logger logger = Logger.getLogger(IndicadoresViewController.class.getName());
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static final Logger logger =
+            Logger.getLogger(IndicadoresViewController.class.getName());
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ISO_LOCAL_DATE;
 
     private final IIndicadorBiomedicoService indicadorService;
-    
-    private int idUsuarioLogado = 1; 
+    private int idUsuarioLogado = 1;
 
-    @FXML
-    private Button BCadastrarIN;
+    // elementos principais da tela
+    @FXML private TableView<IndicadorBiomedico> tableIndicadores;
+    @FXML private TableColumn<IndicadorBiomedico, String> colData;
+    @FXML private TableColumn<IndicadorBiomedico, String> colPeso;
+    @FXML private TableColumn<IndicadorBiomedico, String> colAltura;
+    @FXML private TableColumn<IndicadorBiomedico, String> colImc;
+    @FXML private TableColumn<IndicadorBiomedico, String> colGordura;
+    @FXML private TableColumn<IndicadorBiomedico, String> colMassaMagra;
+    @FXML private TableColumn<IndicadorBiomedico, Void> colAcoes;
 
-    @FXML
-    private Button BListarIN;
-
-    @FXML
-    private Button sairB;
-
-    @FXML
-    private ImageView IFavoritos;
-
-    @FXML
-    private ImageView IFechar;
+    @FXML private Button BAddIndicador;
+    @FXML private Button BVoltar;
+    @FXML private Label totalLabel;
 
     public IndicadoresViewController() {
         this.indicadorService = new IndicadorBiomedicoService();
     }
 
+    // -------- ciclo de vida --------
 
     @FXML
-    void cadastrarNovoIndicador(ActionEvent event) {
-    logger.info("Abrindo dialog para cadastrar novo indicador...");
-    
-    Dialog<ButtonType> dialog = new Dialog<>();
-    dialog.setTitle("Cadastrar Novo Indicador");
-    dialog.setHeaderText("Preencha os dados do indicador biomédico");
-    dialog.getDialogPane().lookup(".header-panel").setStyle("-fx-background-color: #1e1e1e;");
-    dialog.getDialogPane().lookup(".header-panel .label").setStyle("-fx-text-fill: #ffb300ff; -fx-font-size: 16px; -fx-font-weight: bold;");
+    private void initialize() {
+        logger.info("IndicadoresViewController inicializado");
 
-    // Criar grid para os campos
-    GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(10);
-    grid.setPadding(new Insets(20, 150, 10, 10));
-    
-    // Aplicar estilo ao GridPane
-    grid.setStyle("-fx-background-color: #2c2c2c; -fx-border-color: #1e1e1e; -fx-border-width: 1; -fx-border-radius: 8;");
+        colData.setCellValueFactory(d ->
+                new SimpleStringProperty(d.getValue().getData().format(DATE_FORMATTER)));
+        colPeso.setCellValueFactory(d ->
+                new SimpleStringProperty(String.format("%.1f", d.getValue().getPesoKg())));
+        colAltura.setCellValueFactory(d ->
+                new SimpleStringProperty(String.format("%.1f", d.getValue().getAlturaCm())));
+        colImc.setCellValueFactory(d ->
+                new SimpleStringProperty(String.format("%.1f", d.getValue().getImc())));
+        colGordura.setCellValueFactory(d ->
+                new SimpleStringProperty(String.format("%.1f", d.getValue().getPercentualGordura())));
+        colMassaMagra.setCellValueFactory(d ->
+                new SimpleStringProperty(String.format("%.1f", d.getValue().getPercentualMassaMagra())));
 
-    // Campos do formulário
-    TextField dataField = new TextField(LocalDate.now().format(DATE_FORMATTER));
-    TextField pesoField = new TextField();
-    TextField alturaField = new TextField();
-    TextField gorduraField = new TextField();
-    TextField massaMagraField = new TextField();
+        adicionarColunaAcoes();
 
-    // Aplicar estilo aos campos de texto
-    String textFieldStyle = "-fx-text-fill: #ffb300;-fx-background-color: dark gray; -fx-border-color: #1e1e1e; -fx-border-width: 1; -fx-border-radius: 4;";
-    dataField.setStyle(textFieldStyle);
-    pesoField.setStyle(textFieldStyle);
-    alturaField.setStyle(textFieldStyle);
-    gorduraField.setStyle(textFieldStyle);
-    massaMagraField.setStyle(textFieldStyle);
+        tableIndicadores.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableIndicadores.setFixedCellSize(56);
 
-    // Adicionar labels e campos com estilo
-    Label[] labels = {
-        new Label("Data (AAAA-MM-DD):"),
-        new Label("Peso (kg):"),
-        new Label("Altura (cm):"),
-        new Label("% Gordura:"),
-        new Label("% Massa Magra:")
-    };
-    
-    // Aplicar estilo aos labels
-    String labelStyle = "-fx-font-weight: bold; -fx-text-fill: #ffb300ff;";
-    for (Label label : labels) {
-        label.setStyle(labelStyle);
+        loadIndicadores();
+        setupResizeListeners();
     }
-    
-    grid.add(labels[0], 0, 0);
-    grid.add(dataField, 1, 0);
-    grid.add(labels[1], 0, 1);
-    grid.add(pesoField, 1, 1);
-    grid.add(labels[2], 0, 2);
-    grid.add(alturaField, 1, 2);
-    grid.add(labels[3], 0, 3);
-    grid.add(gorduraField, 1, 3);
-    grid.add(labels[4], 0, 4);
-    grid.add(massaMagraField, 1, 4);
 
-    dialog.getDialogPane().setContent(grid);
-    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-    
-    // Aplicar estilo geral ao DialogPane
-    dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
+    // -------- tabela --------
 
-    dialog.showAndWait().ifPresent(response -> {
-        if (response == ButtonType.OK) {
-            try {
-                    // Parse data
-                    LocalDate data = LocalDate.now();
-                    String dataStr = dataField.getText().trim();
-                    if (!dataStr.isEmpty()) {
-                        data = LocalDate.parse(dataStr, DATE_FORMATTER);
-                    }
+    private void loadIndicadores() {
+        List<IndicadorBiomedico> lista =
+                indicadorService.listarTodosDoUsuario(idUsuarioLogado);
+        tableIndicadores.setItems(FXCollections.observableArrayList(lista));
+        if (totalLabel != null) {
+            totalLabel.setText(
+                    String.format("Total de %d indicador(es) cadastrados", lista.size()));
+        }
 
-                    // Parse valores
-                    double peso = Double.parseDouble(pesoField.getText().trim());
-                    double altura = Double.parseDouble(alturaField.getText().trim());
-                    double gordura = Double.parseDouble(gorduraField.getText().trim());
-                    double massaMagra = Double.parseDouble(massaMagraField.getText().trim());
+        double fixed = tableIndicadores.getFixedCellSize();
+        if (fixed <= 0) fixed = 56;
+        int rowsToShow = Math.max(6, lista.size());
+        double header = 30;
+        tableIndicadores.setPrefHeight(fixed * rowsToShow + header);
 
-                    // Cadastrar indicador
-                    IndicadorBiomedico novo = indicadorService.cadastrarIndicador(
-                        idUsuarioLogado, data, peso, altura, gordura, massaMagra
-                    );
+        aplicarEstiloTableView(tableIndicadores);
+    }
 
-                    mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", 
-                        String.format("Indicador cadastrado com sucesso!\nIMC: %.1f", novo.getImc()));
-                    logger.info("Indicador cadastrado: " + novo);
+    private void adicionarColunaAcoes() {
+        colAcoes.setCellFactory(col -> new TableCell<IndicadorBiomedico, Void>() {
+            private final Button btnDetalhes = new Button("Detalhes");
+            private final Button btnRemover = new Button("Remover");
+            private final HBox container = new HBox(8, btnDetalhes, btnRemover);
 
-                } catch (NumberFormatException e) {
-                    mostrarAlerta(Alert.AlertType.ERROR, "Erro de Formato", 
-                        "Por favor, digite valores numéricos válidos.");
-                    logger.log(Level.WARNING, "Erro de formato ao cadastrar indicador", e);
-                } catch (DateTimeParseException e) {
-                    mostrarAlerta(Alert.AlertType.ERROR, "Erro de Data", 
-                        "Formato de data inválido. Use AAAA-MM-DD (ex: 2025-10-17)");
-                    logger.log(Level.WARNING, "Erro ao parsear data", e);
-                } catch (IllegalArgumentException e) {
-                    mostrarAlerta(Alert.AlertType.ERROR, "Erro", 
-                        "Erro ao cadastrar indicador: " + e.getMessage());
-                    logger.log(Level.WARNING, "Erro de validação ao cadastrar indicador", e);
+            {
+                btnDetalhes.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+                btnRemover.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+
+                btnDetalhes.setPrefWidth(90);
+                btnRemover.setPrefWidth(70);
+
+                container.setAlignment(Pos.CENTER);
+                container.setPadding(new Insets(6, 4, 6, 4));
+                container.setPrefHeight(48);
+                container.setMinHeight(48);
+                btnDetalhes.setPrefHeight(28);
+                btnRemover.setPrefHeight(28);
+
+                btnDetalhes.setOnAction(e -> {
+                    IndicadorBiomedico ind =
+                            getTableView().getItems().get(getIndex());
+                    abrirDialogDetalhes(ind);
+                });
+
+                btnRemover.setOnAction(e -> {
+                    IndicadorBiomedico ind =
+                            getTableView().getItems().get(getIndex());
+                    confirmarRemocao(ind);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(container);
+                    setAlignment(Pos.CENTER);
                 }
             }
         });
     }
 
+    // -------- ações principais --------
+
     @FXML
-    void listarMeusIndicadores(ActionEvent event) {
-    logger.info("Listando indicadores do usuário...");
-        
-        List<IndicadorBiomedico> meusIndicadores = indicadorService.listarTodosDoUsuario(idUsuarioLogado);
-        
-        if (meusIndicadores.isEmpty()) {
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Sem Indicadores", 
-                "Você ainda não possui indicadores registrados.");
+    private void handleAdicionarIndicador(ActionEvent event) {
+        logger.info("Abrindo dialog para cadastrar novo indicador...");
+
+        Dialog<ButtonType> dialog =
+                criarDialogPadrao("Cadastrar Novo Indicador",
+                        "Preencha os dados do indicador biomédico");
+        GridPane grid = criarGridPadrao();
+
+        TextField dataField =
+                new TextField(LocalDate.now().format(DATE_FORMATTER));
+        TextField pesoField = new TextField();
+        TextField alturaField = new TextField();
+        TextField gorduraField = new TextField();
+        TextField massaMagraField = new TextField();
+
+        String textFieldStyle =
+                "-fx-text-fill: #ffb300; -fx-background-color: darkgray; " +
+                "-fx-border-color: #1e1e1e; -fx-border-width: 1; -fx-border-radius: 4;";
+        dataField.setStyle(textFieldStyle);
+        pesoField.setStyle(textFieldStyle);
+        alturaField.setStyle(textFieldStyle);
+        gorduraField.setStyle(textFieldStyle);
+        massaMagraField.setStyle(textFieldStyle);
+
+        grid.add(criarLabel("Data (AAAA-MM-DD):"), 0, 0);
+        grid.add(dataField, 1, 0);
+        grid.add(criarLabel("Peso (kg):"), 0, 1);
+        grid.add(pesoField, 1, 1);
+        grid.add(criarLabel("Altura (cm):"), 0, 2);
+        grid.add(alturaField, 1, 2);
+        grid.add(criarLabel("% Gordura:"), 0, 3);
+        grid.add(gorduraField, 1, 3);
+        grid.add(criarLabel("% Massa Magra:"), 0, 4);
+        grid.add(massaMagraField, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes()
+              .setAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> opt = dialog.showAndWait();
+        if (opt.isEmpty() || opt.get() == ButtonType.CANCEL) {
             return;
         }
 
-        // Criar o Dialog customizado
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Meus Indicadores Biomédicos");
-        dialog.setHeaderText(String.format("Total de %d indicador(es) registrado(s)", meusIndicadores.size()));
-
-        // Estilo para dialog e header
-        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
-        dialog.setOnShown(e -> {
-            Node headerPanel = dialog.getDialogPane().lookup(".header-panel");
-            if (headerPanel != null) {
-                headerPanel.setStyle("-fx-background-color: #1e1e1e;");
+        try {
+            LocalDate data = LocalDate.now();
+            String dataStr = dataField.getText().trim();
+            if (!dataStr.isEmpty()) {
+                data = LocalDate.parse(dataStr, DATE_FORMATTER);
             }
-            Node headerLabel = dialog.getDialogPane().lookup(".header-panel .label");
-            if (headerLabel != null) {
-                headerLabel.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
-            }
-        });
 
-        // Criar TableView
-        TableView<IndicadorBiomedico> tableView = new TableView<>();
-        tableView.setItems(FXCollections.observableArrayList(meusIndicadores));
-        tableView.setPrefWidth(700);
-        tableView.setPrefHeight(400);
+            double peso = Double.parseDouble(pesoField.getText().trim());
+            double altura = Double.parseDouble(alturaField.getText().trim());
+            double gordura = Double.parseDouble(gorduraField.getText().trim());
+            double massaMagra =
+                    Double.parseDouble(massaMagraField.getText().trim());
 
-        // Colunas
-        TableColumn<IndicadorBiomedico, String> colData = new TableColumn<>("Data");
-        colData.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getData().format(DATE_FORMATTER)));
-        colData.setPrefWidth(120);
+            IndicadorBiomedico novo =
+                    indicadorService.cadastrarIndicador(
+                            idUsuarioLogado, data, peso, altura,
+                            gordura, massaMagra);
 
-        TableColumn<IndicadorBiomedico, String> colPeso = new TableColumn<>("Peso (kg)");
-        colPeso.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getPesoKg())));
-        colPeso.setPrefWidth(100);
-        colPeso.setStyle("-fx-alignment: CENTER;");
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso",
+                    String.format("Indicador cadastrado com sucesso!\nIMC: %.1f",
+                            novo.getImc()));
+            logger.info("Indicador cadastrado: " + novo);
+            loadIndicadores();
 
-        TableColumn<IndicadorBiomedico, String> colAltura = new TableColumn<>("Altura (cm)");
-        colAltura.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getAlturaCm())));
-        colAltura.setPrefWidth(100);
-        colAltura.setStyle("-fx-alignment: CENTER;");
+        } catch (NumberFormatException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro de Formato",
+                    "Por favor, digite valores numéricos válidos.");
+            logger.log(Level.WARNING,
+                    "Erro de formato ao cadastrar indicador", e);
+        } catch (DateTimeParseException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro de Data",
+                    "Formato de data inválido. Use AAAA-MM-DD (ex: 2025-10-17)");
+            logger.log(Level.WARNING, "Erro ao parsear data", e);
+        } catch (IllegalArgumentException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro",
+                    "Erro ao cadastrar indicador: " + e.getMessage());
+            logger.log(Level.WARNING,
+                    "Erro de validação ao cadastrar indicador", e);
+        }
+    }
 
-        TableColumn<IndicadorBiomedico, String> colIMC = new TableColumn<>("IMC");
-        colIMC.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getImc())));
-        colIMC.setPrefWidth(80);
-        colIMC.setStyle("-fx-alignment: CENTER;");
+    @FXML
+    private void handleVoltar(ActionEvent event) {
+        carregarNovaTela("/ui/MenuUsuarioLogado.fxml",
+                "Gym System - Menu do Usuário");
+    }
 
-        TableColumn<IndicadorBiomedico, String> colGordura = new TableColumn<>("Gordura (%)");
-        colGordura.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getPercentualGordura())));
-        colGordura.setPrefWidth(100);
-        colGordura.setStyle("-fx-alignment: CENTER;");
+    // -------- dialogs de detalhes / remoção --------
 
-        TableColumn<IndicadorBiomedico, String> colMassaMagra = new TableColumn<>("Massa Magra (%)");
-        colMassaMagra.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getPercentualMassaMagra())));
-        colMassaMagra.setPrefWidth(120);
-        colMassaMagra.setStyle("-fx-alignment: CENTER;");
+    private void abrirDialogDetalhes(IndicadorBiomedico ind) {
+        Dialog<ButtonType> dialog =
+                criarDialogPadrao("Detalhes do Indicador",
+                        "Indicador em " + ind.getData().format(DATE_FORMATTER));
 
-        tableView.getColumns().addAll(colData, colPeso, colAltura, colIMC, colGordura, colMassaMagra);
+        GridPane grid = criarGridPadrao();
+        grid.add(criarLabel("Peso (kg):"), 0, 0);
+        grid.add(new Label(String.format("%.1f", ind.getPesoKg())), 1, 0);
+        grid.add(criarLabel("Altura (cm):"), 0, 1);
+        grid.add(new Label(String.format("%.1f", ind.getAlturaCm())), 1, 1);
+        grid.add(criarLabel("IMC:"), 0, 2);
+        grid.add(new Label(String.format("%.1f", ind.getImc())), 1, 2);
+        grid.add(criarLabel("Gordura (%):"), 0, 3);
+        grid.add(new Label(String.format("%.1f", ind.getPercentualGordura())), 1, 3);
+        grid.add(criarLabel("Massa Magra (%):"), 0, 4);
+        grid.add(new Label(String.format("%.1f", ind.getPercentualMassaMagra())), 1, 4);
 
-        // Aplicar estilo
-        aplicarEstiloTableView(tableView);
-
-        // Um VBox para aplicar fundo igual ao GridPane das outras telas
-        VBox vbox = new VBox(tableView);
-        vbox.setPadding(new Insets(20));
-        vbox.setStyle("-fx-background-color: #2c2c2c;");
-
-        dialog.getDialogPane().setContent(vbox);
+        dialog.getDialogPane().setContent(grid);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         dialog.showAndWait();
     }
 
-    /**
-     * Chamado ao clicar no botão sair.
-     * Retorna ao menu principal do usuário logado.
-     */
-    @FXML
-    void handleSair(ActionEvent event) {
-        logger.info("Botão 'Sair' clicado! Retornando ao menu principal...");
-        carregarNovaTela("/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
+    private void confirmarRemocao(IndicadorBiomedico ind) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmar Exclusão");
+        confirm.setHeaderText("Excluir indicador de " +
+                ind.getData().format(DATE_FORMATTER));
+        confirm.setContentText("Tem certeza que deseja excluir este indicador?");
+        confirm.showAndWait().ifPresent(resp -> {
+            if (resp == ButtonType.OK) {
+                try {
+                    indicadorService.deletarIndicador(ind.getIdIndicador());
+                    mostrarAlerta(Alert.AlertType.INFORMATION,
+                            "Sucesso", "Indicador excluído com sucesso!");
+                    loadIndicadores();
+                } catch (Exception e) {
+                    mostrarAlerta(Alert.AlertType.ERROR,
+                            "Erro", "Erro ao excluir indicador: " + e.getMessage());
+                    logger.log(Level.WARNING, "Erro ao excluir indicador", e);
+                }
+            }
+        });
     }
 
-    /**
-     * Chamado ao clicar no ícone IFechar.
-     * Retorna ao menu principal do usuário logado.
-     */
-    @FXML
-    void voltar(MouseEvent event) {
-        logger.info("Ícone 'Fechar' clicado! Retornando ao menu principal...");
-        carregarNovaTela("/ui/MenuUsuarioLogado.fxml", "Gym System - Menu do Usuário");
-    }
+    // -------- navegação / helpers visuais --------
 
-    /**
-     * Placeholder para funcionalidade de favoritos (implementação futura).
-     */
-    @FXML
-    void abrirFavoritos(MouseEvent event) {
-        logger.info("Ícone 'Favoritos' clicado!");
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Em Desenvolvimento", 
-            "A funcionalidade de favoritos será implementada em breve.");
-    }
-
-
-    // --- MÉTODOS AUXILIARES ---
-
-    /**
-     * Método auxiliar para carregar uma nova tela FXML, fechando a atual.
-     *
-     * @param fxmlFile O caminho do arquivo FXML a ser carregado.
-     * @param titulo   O título da nova janela.
-     */
     private void carregarNovaTela(String fxmlFile, String titulo) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
 
-            // Obtém o stage atual através do botão BCadastrarIN
-            Stage stage = (Stage) BCadastrarIN.getScene().getWindow();
+            Stage stage = (Stage) tableIndicadores.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle(titulo);
             stage.show();
@@ -307,18 +316,91 @@ public class IndicadoresViewController {
             logger.info(() -> "Tela carregada com sucesso: " + fxmlFile);
 
         } catch (IOException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela solicitada.");
-            logger.log(Level.SEVERE, "Erro ao carregar tela: " + fxmlFile, e);
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro",
+                    "Não foi possível abrir a tela solicitada.");
+            logger.log(Level.SEVERE,
+                    "Erro ao carregar tela: " + fxmlFile, e);
         }
     }
 
-    /**
-     * Exibe uma caixa de diálogo para feedback do usuário.
-     *
-     * @param tipo     Tipo do alerta (INFORMATION, WARNING, ERROR, etc.)
-     * @param titulo   Título da janela de alerta
-     * @param mensagem Mensagem a ser exibida
-     */
+    private Dialog<ButtonType> criarDialogPadrao(String titulo, String cabecalho) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle(titulo);
+        dialog.setHeaderText(cabecalho);
+        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
+        dialog.setOnShown(e -> {
+            Node header = dialog.getDialogPane().lookup(".header-panel");
+            if (header != null) header.setStyle("-fx-background-color: #1e1e1e;");
+            Node label = dialog.getDialogPane().lookup(".header-panel .label");
+            if (label != null) {
+                label.setStyle("-fx-text-fill: #ffb300; -fx-font-size: 16px; -fx-font-weight: bold;");
+            }
+        });
+        return dialog;
+    }
+
+    private GridPane criarGridPadrao() {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setStyle("-fx-background-color: #2c2c2c;");
+        return grid;
+    }
+
+    private Label criarLabel(String texto) {
+        Label label = new Label(texto);
+        label.setStyle("-fx-font-weight: bold; -fx-text-fill: #ffb300;");
+        return label;
+    }
+
+    private void aplicarEstiloTableView(TableView<IndicadorBiomedico> tableView) {
+        tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
+        tableView.setRowFactory(tv -> new TableRow<IndicadorBiomedico>() {
+            {
+                setPrefHeight(56);
+                setMinHeight(56);
+            }
+
+            @Override
+            protected void updateItem(IndicadorBiomedico item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setStyle("");
+                } else {
+                    setStyle(
+                            "-fx-background-color: #2c2c2c; " +
+                            "-fx-text-fill: #ffb300; " +
+                            "-fx-border-color: transparent transparent #e6e6e6 transparent; " +
+                            "-fx-border-width: 0 0 1 0; " +
+                            "-fx-border-style: solid; " +
+                            "-fx-border-insets: 0;");
+                }
+            }
+        });
+    }
+
+    private void setupResizeListeners() {
+        Runnable recompute = () -> Platform.runLater(() -> {
+            double fixed = tableIndicadores.getFixedCellSize();
+            if (fixed <= 0) fixed = 56;
+            int rowsToShow = Math.max(6,
+                    tableIndicadores.getItems() == null
+                            ? 0 : tableIndicadores.getItems().size());
+            double header = 30;
+            tableIndicadores.setPrefHeight(fixed * rowsToShow + header);
+            tableIndicadores.refresh();
+        });
+
+        tableIndicadores.widthProperty().addListener((obs, oldV, nw) -> recompute.run());
+        tableIndicadores.sceneProperty().addListener((obs, oldV, nw) -> {
+            if (nw != null) recompute.run();
+        });
+        for (TableColumn<IndicadorBiomedico, ?> c : tableIndicadores.getColumns()) {
+            c.widthProperty().addListener((obs, oldV, nw) -> recompute.run());
+        }
+    }
+
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
         if (tipo == Alert.AlertType.ERROR) {
             StyledAlert.showErrorAndWait(titulo, mensagem);
@@ -329,91 +411,5 @@ public class IndicadoresViewController {
         } else if (tipo == Alert.AlertType.CONFIRMATION) {
             StyledAlert.showConfirmationAndWait(titulo, mensagem);
         }
-    }
-
-    private void aplicarEstiloTableView(TableView<?> tableView) {
-        aplicarEstiloTableViewGenerico(tableView);
-    }
-    
-    @SuppressWarnings("unchecked")
-    private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
-        // Aplicar estilo inline diretamente no TableView
-        tableView.setStyle(
-            "-fx-background-color: #2c2c2c; " +
-            "-fx-control-inner-background: #2c2c2c; " +
-            "-fx-background-insets: 0; " +
-            "-fx-padding: 0; " +
-            "-fx-table-cell-border-color: #333;"
-        );
-        
-        // Aplicar estilo usando setRowFactory para garantir fundo escuro
-        tableView.setRowFactory(tv -> {
-            javafx.scene.control.TableRow<T> row = new javafx.scene.control.TableRow<>();
-            row.setStyle(
-                "-fx-background-color: #2c2c2c; " +
-                "-fx-text-fill: #ffb300; " +
-                "-fx-border-color: #333;"
-            );
-            
-            // Atualizar estilo quando o item mudar
-            row.itemProperty().addListener((obs, oldItem, newItem) -> {
-                if (newItem != null) {
-                    row.setStyle(
-                        "-fx-background-color: #2c2c2c; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: #333;"
-                    );
-                }
-            });
-            
-            // Estilo de seleção
-            row.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-                if (isSelected) {
-                    row.setStyle(
-                        "-fx-background-color: #5A189A; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-border-color: #333;"
-                    );
-                } else {
-                    row.setStyle(
-                        "-fx-background-color: #2c2c2c; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: #333;"
-                    );
-                }
-            });
-            
-            return row;
-        });
-        
-        // Estilizar headers após a tabela ser exibida
-        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                tableView.applyCss();
-                tableView.layout();
-                
-                // Estilizar headers
-                javafx.scene.Node headerRow = tableView.lookup(".column-header-background");
-                if (headerRow != null) {
-                    headerRow.setStyle("-fx-background-color: #1e1e1e;");
-                }
-                
-                tableView.lookupAll(".column-header").forEach(node -> {
-                    node.setStyle(
-                        "-fx-background-color: #1e1e1e; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-border-color: #333;"
-                    );
-                });
-                
-                tableView.lookupAll(".column-header .label").forEach(node -> {
-                    ((javafx.scene.control.Labeled) node).setStyle(
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-font-weight: bold;"
-                    );
-                });
-            }
-        });
     }
 }

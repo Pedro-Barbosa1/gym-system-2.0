@@ -137,4 +137,8 @@ public class IndicadorBiomedicoService implements IIndicadorBiomedicoService {
             logger.log(Level.SEVERE, "Erro ao exportar relatório: {0}", e.getMessage());
         }
     }
+
+    public void deletarIndicador(int idIndicador) {
+        indicadorRepository.deletar(idIndicador);
+    }
 }
