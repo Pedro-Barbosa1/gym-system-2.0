@@ -13,6 +13,7 @@ import org.junit.jupiter.api.*;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -64,12 +65,21 @@ public class TreinoFlowIntegrationTest extends ApplicationTest {
         Parent root = loader.load();
         controller = loader.getController();
 
-        TestUtils.setField(controller, "sessaoTreinoService", sessaoServiceMock);
-        TestUtils.setField(controller, "planoTreinoService", planoServiceMock);
-        TestUtils.setField(controller, "exercicioService", exercicioServiceMock);
+        setField(controller, "sessaoTreinoService", sessaoServiceMock);
+        setField(controller, "planoTreinoService", planoServiceMock);
+        setField(controller, "exercicioService", exercicioServiceMock);
 
         stage.setScene(new Scene(root));
         stage.show();
+    }
+
+    /**
+     * Helper para injetar campos via reflection.
+     */
+    private static void setField(Object target, String fieldName, Object value) throws Exception {
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(target, value);
     }
 
     private static PlanoTreino getPlanoTreino() {
