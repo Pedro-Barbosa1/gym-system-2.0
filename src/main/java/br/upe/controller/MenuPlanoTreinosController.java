@@ -3,6 +3,7 @@ package br.upe.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +16,7 @@ import br.upe.service.IExercicioService;
 import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.ui.util.StyledAlert;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -38,9 +40,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.stage.Window;
 
 public class MenuPlanoTreinosController {
-
     // Logger para registrar informações e erros do controller
     private static final Logger logger = Logger.getLogger(MenuPlanoTreinosController.class.getName());
 
@@ -144,9 +147,11 @@ public class MenuPlanoTreinosController {
             return;
         }
 
-        // Criar o Dialog customizado
-        Dialog<ButtonType> dialog = criarDialogPadrao("Meus Planos de Treino", 
-            String.format("Total de %d plano(s) de treino registrado(s)", planos.size()));
+        // Header para a janela de listagem
+        javafx.scene.control.Label header = new javafx.scene.control.Label(
+            String.format("Meus Planos de Treino — Total: %d", planos.size())
+        );
+        header.setStyle("-fx-text-fill: #ffb300; -fx-font-weight: bold; -fx-font-size: 16px;");
 
         // Criar TableView
         TableView<PlanoTreino> tableView = new TableView<>();
@@ -238,17 +243,38 @@ public class MenuPlanoTreinosController {
         });
 
         javafx.scene.control.Button btnVoltar = new javafx.scene.control.Button("Voltar");
-        btnVoltar.setOnAction(e -> dialog.close());
+        // O handler será associado ao Stage criado adiante (fechará a janela)
 
         javafx.scene.layout.VBox container = new javafx.scene.layout.VBox(8);
         container.setPadding(new Insets(10));
         container.getChildren().addAll(btnAdicionar, tableView, btnVoltar);
 
-        dialog.getDialogPane().setContent(container);
-        // Mantemos o botão CLOSE apenas como redundância padrão
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        // Criar Stage modal
+        Stage stage = new Stage();
+        try {
+            if (sairB != null && sairB.getScene() != null) {
+                stage.initOwner(sairB.getScene().getWindow());
+            }
+        } catch (Exception ex) {
+            logger.log(Level.FINE, "Não foi possível inicializar owner do Stage de listar planos", ex);
+        }
+        stage.initModality(Modality.WINDOW_MODAL);
 
-        dialog.showAndWait();
+        // Montar cena com header + container
+        javafx.scene.layout.VBox root = new javafx.scene.layout.VBox(10);
+        root.setPadding(new Insets(10));
+        root.getChildren().addAll(header, container);
+
+        Scene scene = new Scene(root, 760, 520);
+        scene.getStylesheets().addAll();
+        stage.setScene(scene);
+        stage.setTitle("Meus Planos de Treino");
+
+        // Garantir que o botão Voltar fecha o Stage
+        btnVoltar.setOnAction(e -> stage.close());
+
+        // Mostrar de maneira modal e esperar até fechar
+        stage.showAndWait();
     }
 
     // 'Editar Plano' action removed — method deleted because UI no longer exposes it.
