@@ -112,6 +112,10 @@ public class IndicadorBiomedico {
         this.imc = imc;
     }
 
+    public int getIdIndicador() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.US,
