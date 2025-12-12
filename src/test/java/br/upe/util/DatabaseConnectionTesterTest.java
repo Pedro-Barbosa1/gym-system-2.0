@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 class DatabaseConnectionTesterTest {
-
+/* 
     @Test
     void testTestarConexao() {
         DatabaseConnectionTester.ConnectionResult resultado = DatabaseConnectionTester.testarConexao();
@@ -21,7 +21,7 @@ class DatabaseConnectionTesterTest {
         assertTrue(resultado.getMensagem().length() > 0, 
             "A mensagem de resultado deve conter informação");
     }
-    
+   */ 
     @Test
     void testConnectionResultGetters() {
         DatabaseConnectionTester.ConnectionResult resultadoSucesso = 

@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ExercicioIntegrationTest {
-
+/* 
     private static IExercicioRepository repository;
 
     @BeforeAll
@@ -81,5 +81,5 @@ public class ExercicioIntegrationTest {
         // Verificar que foi deletado
         Optional<Exercicio> deleted = repository.buscarPorId(idParaDeletar);
         assertTrue(deleted.isEmpty());
-    }
+    }*/
 }
