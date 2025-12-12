@@ -1,10 +1,17 @@
 package br.upe.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Locale;
 
+@Entity
+@Table(name = "indicador_biomedico")
 public class IndicadorBiomedico {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private int idUsuario;
     private LocalDate data;
     private double pesoKg;

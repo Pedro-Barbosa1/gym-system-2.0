@@ -1,6 +1,7 @@
 package br.upe.controller;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +36,13 @@ public class MenuUsuarioLogadoController {
 
     @FXML
     private Button exportarRelatoriosB;
+
+    private int idUsuarioLogado;
+
+    public void setIdUsuarioLogado(int id) {
+        this.idUsuarioLogado = id;
+        logger.info("ID recebido pelo MenuUsuarioLogado: " + id);
+    }
 
     /**
      * Inicializa o controller e configura os eventos dos botões
@@ -126,16 +134,27 @@ public class MenuUsuarioLogadoController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
 
+            // PEGA O PROXIMO CONTROLLER
+            Object controller = loader.getController();
+
+            // PASSA O ID SE O CONTROLLER TIVER O METODO SET
+            try {
+                controller.getClass()
+                        .getMethod("setIdUsuarioLogado", int.class)
+                        .invoke(controller, idUsuarioLogado);
+            } catch (NoSuchMethodException ignored) {
+                // Controller não precisa do ID
+            } catch (IllegalAccessException | InvocationTargetException ex) {
+                ex.printStackTrace();  // mostra qual controller está quebrando
+            }
+
             Stage stage = (Stage) sairB.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle(titulo);
             stage.show();
 
-            logger.info("Tela carregada com sucesso: " + fxmlFile);
-
         } catch (IOException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela solicitada.");
-            logger.log(Level.SEVERE, "Erro ao carregar tela: " + fxmlFile, e);
         }
     }
 

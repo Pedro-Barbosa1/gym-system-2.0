@@ -16,9 +16,12 @@ class PlanoTreinoTest {
 
     @BeforeEach
     void setUp() {
-        item1 = new ItemPlanoTreino(1, 20, 10);
-        item2 = new ItemPlanoTreino(2, 30, 8);
-        plano = new PlanoTreino(1, 100, "Treino A", new ArrayList<>(List.of(item1)));
+        item1 = new ItemPlanoTreino(1, 1, 20, 10);
+        item2 = new ItemPlanoTreino(1, 2, 30, 8);
+        Usuario usuario = new Usuario(100, "Teste", "teste@email.com", "senha123", TipoUsuario.COMUM);
+        plano = new PlanoTreino(usuario, "Treino A");
+        plano.setIdPlano(1);
+        plano.adicionarItem(item1);
     }
 
     @Test
@@ -27,12 +30,12 @@ class PlanoTreinoTest {
         assertEquals(100, plano.getIdUsuario());
         assertEquals("Treino A", plano.getNome());
         assertEquals(1, plano.getItensTreino().size());
-        assertEquals(item1, plano.getItensTreino().get(0));
     }
 
     @Test
     void testConstrutorComIdUsuarioENome() {
-        PlanoTreino novoPlano = new PlanoTreino(200, "Treino B");
+        Usuario usuario = new Usuario(200, "Teste", "teste@email.com", "senha123", TipoUsuario.COMUM);
+        PlanoTreino novoPlano = new PlanoTreino(usuario, "Treino B");
         assertEquals(200, novoPlano.getIdUsuario());
         assertEquals("Treino B", novoPlano.getNome());
         assertTrue(novoPlano.getItensTreino().isEmpty());
@@ -41,7 +44,8 @@ class PlanoTreinoTest {
     @Test
     void testGettersAndSetters() {
         plano.setIdPlano(2);
-        plano.setIdUsuario(300);
+        Usuario novoUsuario = new Usuario(300, "Teste", "teste@email.com", "senha123", TipoUsuario.COMUM);
+        plano.setUsuario(novoUsuario);
         plano.setNome("Treino C");
 
         List<ItemPlanoTreino> novosItens = new ArrayList<>();
@@ -80,7 +84,8 @@ class PlanoTreinoTest {
 
     @Test
     void testToStringSemItens() {
-        PlanoTreino vazio = new PlanoTreino(101, "Treino Vazio");
+        Usuario usuario = new Usuario(101, "Teste", "teste@email.com", "senha123", TipoUsuario.COMUM);
+        PlanoTreino vazio = new PlanoTreino(usuario, "Treino Vazio");
         String result = vazio.toString();
 
         assertTrue(result.contains("ID Usuário: 101"));

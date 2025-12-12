@@ -19,8 +19,8 @@ class SessaoTreinoTest {
     @BeforeEach
     void setUp() {
         dataFixa = LocalDate.of(2025, 9, 25);
-        item1 = new ItemSessaoTreino(1, 10, 20.0);
-        item2 = new ItemSessaoTreino(2, 8, 30.5);
+        item1 = new ItemSessaoTreino(1, 1, 10, 20.0);
+        item2 = new ItemSessaoTreino(1, 2, 8, 30.5);
         sessao = new SessaoTreino(1, 100, 200, dataFixa, new ArrayList<>(List.of(item1)));
     }
 

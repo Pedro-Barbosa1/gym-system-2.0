@@ -1,22 +1,41 @@
 package br.upe.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "item_sessao_treino")
 public class ItemSessaoTreino {
-    private int idExercicio;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idItemSessao;
+
+    @ManyToOne()
+    @JoinColumn(name="id_exercicio")
+    private Exercicio exercicio;
+
     private int repeticoesRealizadas;
     private double cargaRealizada;
 
-    public ItemSessaoTreino(int idExercicio, int repeticoesRealizadas, double cargaRealizada) {
-        this.idExercicio = idExercicio;
+    @ManyToOne()
+    @JoinColumn(name="id_sessao_treino")
+    private SessaoTreino sessaoTreino;
+
+    public ItemSessaoTreino(int idSessaoTreino, int idExercicio, int repeticoesRealizadas, double cargaRealizada) {
+        this.sessaoTreino = new SessaoTreino();
+        this.sessaoTreino.setIdSessao(idSessaoTreino);
+        this.exercicio = new Exercicio();
+        this.exercicio.setIdExercicio(idExercicio);
         this.repeticoesRealizadas = repeticoesRealizadas;
         this.cargaRealizada = cargaRealizada;
     }
 
     public int getIdExercicio() {
-        return idExercicio;
+        return this.exercicio.getIdExercicio();
     }
 
     public void setIdExercicio(int idExercicio) {
-        this.idExercicio = idExercicio;
+        this.exercicio.setIdExercicio(idExercicio);
     }
 
     public int getRepeticoesRealizadas() {
@@ -37,6 +56,6 @@ public class ItemSessaoTreino {
 
     @Override
     public String toString() {
-        return "ID Exercício: " + idExercicio + ", Repetições: " + repeticoesRealizadas + ", Carga: " + cargaRealizada + "kg";
+        return "ID Exercício: " + exercicio.getIdExercicio() + ", Repetições: " + repeticoesRealizadas + ", Carga: " + cargaRealizada + "kg";
     }
 }

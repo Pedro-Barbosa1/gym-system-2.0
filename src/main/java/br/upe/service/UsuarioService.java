@@ -1,14 +1,14 @@
 package br.upe.service;
 
-import br.upe.model.TipoUsuario;
-import br.upe.model.Usuario;
-import br.upe.repository.IUsuarioRepository;
-import br.upe.repository.impl.UsuarioRepositoryImpl;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import br.upe.model.TipoUsuario;
+import br.upe.model.Usuario;
+import br.upe.repository.IUsuarioRepository;
+import br.upe.repository.impl.UsuarioRepositoryImpl;
 
 public class UsuarioService implements IUsuarioService {
 
@@ -39,9 +39,14 @@ public class UsuarioService implements IUsuarioService {
         if (nome == null || nome.trim().isEmpty() || email == null || email.trim().isEmpty() || senha == null || senha.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome, email e senha não podem ser vazios.");
         }
-        if (!email.contains("@") || !email.contains(".")) {
+        
+        // Permite o email "ADM" para o usuário administrador padrão
+        boolean isAdminPadrao = "ADM".equalsIgnoreCase(email.trim());
+        
+        if (!isAdminPadrao && (!email.contains("@") || !email.contains("."))) {
             throw new IllegalArgumentException("Email inválido.");
         }
+        
         Optional<Usuario> existente = usuarioRepository.buscarPorEmail(email.trim());
         if (existente.isPresent()) {
             throw new IllegalArgumentException("Já existe um usuário com este email.");

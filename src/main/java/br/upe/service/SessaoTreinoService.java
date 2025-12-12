@@ -44,7 +44,7 @@ public class SessaoTreinoService {
 
     // Registra a execucao de um exercicio
     public void registrarExecucao(SessaoTreino sessao, int idExercicio, int repeticoesRealizadas, double cargaRealizada) {
-        ItemSessaoTreino itemExecutado = new ItemSessaoTreino(idExercicio, repeticoesRealizadas, cargaRealizada);
+        ItemSessaoTreino itemExecutado = new ItemSessaoTreino(sessao.getIdSessao(), idExercicio, repeticoesRealizadas, cargaRealizada);
         sessao.adicionarItemExecutado(itemExecutado);
     }
 
