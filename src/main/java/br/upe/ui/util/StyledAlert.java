@@ -302,4 +302,30 @@ public class StyledAlert {
         Optional<ButtonType> result = showConfirmation(title, content).showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
+
+    /**
+     * Exibe um Alert baseado no tipo fornecido.
+     * Método centralizado para evitar duplicação de código nos controllers.
+     * @param tipo Tipo do alert
+     * @param titulo Título do alert
+     * @param mensagem Conteúdo do alert
+     */
+    public static void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
+        switch (tipo) {
+            case ERROR:
+                showErrorAndWait(titulo, mensagem);
+                break;
+            case INFORMATION:
+                showInformationAndWait(titulo, mensagem);
+                break;
+            case WARNING:
+                showWarningAndWait(titulo, mensagem);
+                break;
+            case CONFIRMATION:
+                showConfirmationAndWait(titulo, mensagem);
+                break;
+            default:
+                showInformationAndWait(titulo, mensagem);
+        }
+    }
 }

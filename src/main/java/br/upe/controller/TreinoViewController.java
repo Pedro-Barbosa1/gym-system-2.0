@@ -19,6 +19,7 @@ import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.service.SessaoTreinoService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.ui.util.TableViewStyler;
 import br.upe.util.UserSession;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -766,107 +767,18 @@ public class TreinoViewController {
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
-        if (tipo == Alert.AlertType.ERROR) {
-            StyledAlert.showErrorAndWait(titulo, mensagem);
-        } else if (tipo == Alert.AlertType.INFORMATION) {
-            StyledAlert.showInformationAndWait(titulo, mensagem);
-        } else if (tipo == Alert.AlertType.WARNING) {
-            StyledAlert.showWarningAndWait(titulo, mensagem);
-        } else if (tipo == Alert.AlertType.CONFIRMATION) {
-            StyledAlert.showConfirmationAndWait(titulo, mensagem);
-        }
+        StyledAlert.mostrarAlerta(tipo, titulo, mensagem);
     }
 
     private void aplicarEstiloTableView(TableView<ItemSessaoTreino> tableView) {
-        // Estilo simples e limpo, igual à tela de exercícios
-        tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
-        tableView.setRowFactory(tv -> new javafx.scene.control.TableRow<ItemSessaoTreino>() {
-            {
-                // Forçar prefHeight por linha (combinado com fixedCellSize)
-                setPrefHeight(56);
-                setMinHeight(56);
-            }
-
-            @Override
-            protected void updateItem(ItemSessaoTreino item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setStyle("-fx-background-color: #2c2c2c; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
-                } else {
-                    setStyle(
-                        "-fx-background-color: #2c2c2c; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: white; -fx-border-width: 0 0 1 0;"
-                    );
-                }
-
-                // Estilo ao selecionar
-                if (isSelected()) {
-                    setStyle("-fx-background-color: #5A189A; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
-                }
-            }
-        });
+        TableViewStyler.aplicarEstilo(tableView);
     }
     
     private void aplicarEstiloTableViewSessao(TableView<SessaoTreino> tableView) {
-        // Estilo simples e limpo, igual à tela de exercícios
-        tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
-        tableView.setRowFactory(tv -> new javafx.scene.control.TableRow<SessaoTreino>() {
-            {
-                // Forçar prefHeight por linha (combinado com fixedCellSize)
-                setPrefHeight(56);
-                setMinHeight(56);
-            }
-
-            @Override
-            protected void updateItem(SessaoTreino item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setStyle("-fx-background-color: #2c2c2c; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
-                } else {
-                    setStyle(
-                        "-fx-background-color: #2c2c2c; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: white; -fx-border-width: 0 0 1 0;"
-                    );
-                }
-
-                // Estilo ao selecionar
-                if (isSelected()) {
-                    setStyle("-fx-background-color: #5A189A; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
-                }
-            }
-        });
+        TableViewStyler.aplicarEstilo(tableView);
     }
     
     private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
-        // Estilo simples e limpo, igual à tela de exercícios
-        tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
-        tableView.setRowFactory(tv -> new javafx.scene.control.TableRow<T>() {
-            {
-                // Forçar prefHeight por linha (combinado com fixedCellSize)
-                setPrefHeight(56);
-                setMinHeight(56);
-            }
-
-            @Override
-            protected void updateItem(T item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setStyle("-fx-background-color: #2c2c2c; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
-                } else {
-                    setStyle(
-                        "-fx-background-color: #2c2c2c; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: white; -fx-border-width: 0 0 1 0;"
-                    );
-                }
-
-                // Estilo ao selecionar
-                if (isSelected()) {
-                    setStyle("-fx-background-color: #5A189A; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
-                }
-            }
-        });
+        TableViewStyler.aplicarEstilo(tableView);
     }
 }

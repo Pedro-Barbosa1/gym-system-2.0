@@ -11,6 +11,7 @@ import br.upe.model.Exercicio;
 import br.upe.service.ExercicioService;
 import br.upe.service.IExercicioService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.ui.util.TableViewStyler;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -476,100 +477,10 @@ public class ExercicioViewController {
     }
 
     private void aplicarEstiloTableView(TableView<?> tableView) {
-        aplicarEstiloTableViewGenerico(tableView);
-    }
-    
-    @SuppressWarnings("unchecked")
-    private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
-        // Aplicar estilo inline diretamente no TableView
-        tableView.setStyle(
-            "-fx-background-color: #2c2c2c; " +
-            "-fx-control-inner-background: #2c2c2c; " +
-            "-fx-background-insets: 0; " +
-            "-fx-padding: 0; " +
-            "-fx-table-cell-border-color: #333;"
-        );
-        
-        // Aplicar estilo usando setRowFactory para garantir fundo escuro
-        tableView.setRowFactory(tv -> {
-            javafx.scene.control.TableRow<T> row = new javafx.scene.control.TableRow<>();
-            row.setStyle(
-                "-fx-background-color: #2c2c2c; " +
-                "-fx-text-fill: #ffb300; " +
-                "-fx-border-color: #333;"
-            );
-            
-            // Atualizar estilo quando o item mudar
-            row.itemProperty().addListener((obs, oldItem, newItem) -> {
-                if (newItem != null) {
-                    row.setStyle(
-                        "-fx-background-color: #2c2c2c; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: #333;"
-                    );
-                }
-            });
-            
-            // Estilo de seleção
-            row.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-                if (isSelected) {
-                    row.setStyle(
-                        "-fx-background-color: #5A189A; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-border-color: #333;"
-                    );
-                } else {
-                    row.setStyle(
-                        "-fx-background-color: #2c2c2c; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: #333;"
-                    );
-                }
-            });
-            
-            return row;
-        });
-        
-        // Estilizar headers após a tabela ser exibida
-        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                tableView.applyCss();
-                tableView.layout();
-                
-                // Estilizar headers
-                javafx.scene.Node headerRow = tableView.lookup(".column-header-background");
-                if (headerRow != null) {
-                    headerRow.setStyle("-fx-background-color: #1e1e1e;");
-                }
-                
-                tableView.lookupAll(".column-header").forEach(node -> {
-                    node.setStyle(
-                        "-fx-background-color: #1e1e1e; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-border-color: #333;"
-                    );
-                });
-                
-                tableView.lookupAll(".column-header .label").forEach(node -> {
-                    ((javafx.scene.control.Labeled) node).setStyle(
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-font-weight: bold;"
-                    );
-                });
-            }
-        });
+        TableViewStyler.aplicarEstilo(tableView);
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
-        if (tipo == Alert.AlertType.ERROR) {
-            StyledAlert.showErrorAndWait(titulo, mensagem);
-        } else if (tipo == Alert.AlertType.INFORMATION) {
-            StyledAlert.showInformationAndWait(titulo, mensagem);
-        } else if (tipo == Alert.AlertType.WARNING) {
-            StyledAlert.showWarningAndWait(titulo, mensagem);
-        } else if (tipo == Alert.AlertType.CONFIRMATION) {
-            StyledAlert.showConfirmationAndWait(titulo, mensagem);
-        }
+        StyledAlert.mostrarAlerta(tipo, titulo, mensagem);
     }
 }

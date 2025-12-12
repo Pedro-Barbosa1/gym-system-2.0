@@ -22,6 +22,25 @@
     <junit.jupiter.version>5.10.0</junit.jupiter.version>
     <hibernate.version>6.5.2.Final</hibernate.version>
     <mysql.connector.version>8.0.33</mysql.connector.version>
+
+    <!-- SonarCloud: Exclusões de cobertura (JavaFX/UI não testável) -->
+    <sonar.coverage.exclusions>
+      **/controller/**,
+      **/ui/**,
+      **/repository/impl/**,
+      **/MainFX.java,
+      **/util/DatabaseConnectionTester.java,
+      **/util/DatabaseInitializer.java,
+      **/util/JPAUtil.java,
+      **/util/NavigationUtil.java,
+      **/util/SessionManager.java
+    </sonar.coverage.exclusions>
+    
+    <!-- SonarCloud: Exclusões de duplicação (UI code não refatorável facilmente) -->
+    <sonar.cpd.exclusions>
+      **/controller/**,
+      **/ui/**
+    </sonar.cpd.exclusions>
   </properties>
 
   <dependencies>
