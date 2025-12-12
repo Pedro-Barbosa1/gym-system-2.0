@@ -13,7 +13,6 @@ import br.upe.model.IndicadorBiomedico;
 import br.upe.service.IIndicadorBiomedicoService;
 import br.upe.service.IndicadorBiomedicoService;
 import br.upe.ui.util.StyledAlert;
-import br.upe.util.UserSession;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
