@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,6 +23,10 @@ public class IndicadorBiomedicoServiceIntegrationTest {
     private static int usuarioId;
     private static int indicadorId;
 
+    private static String gerarEmailUnico() {
+        return "indicador_" + UUID.randomUUID().toString().substring(0, 8) + "@email.com";
+    }
+
     @BeforeAll
     static void setup() {
         IntegrationTestHelper.initEntityManagerFactory();
@@ -29,7 +34,7 @@ public class IndicadorBiomedicoServiceIntegrationTest {
 
         // Criar usuario para os testes
         em.getTransaction().begin();
-        Usuario usuario = new Usuario("Teste Indicador", "testeindicador@email.com", "senha", TipoUsuario.COMUM);
+        Usuario usuario = new Usuario("Teste Indicador", gerarEmailUnico(), "senha", TipoUsuario.COMUM);
         em.persist(usuario);
         em.getTransaction().commit();
         usuarioId = usuario.getId();

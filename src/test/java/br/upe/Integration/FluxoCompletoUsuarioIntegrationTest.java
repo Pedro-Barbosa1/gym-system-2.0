@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,12 +39,16 @@ public class FluxoCompletoUsuarioIntegrationTest {
         IntegrationTestHelper.closeEntityManagerFactory();
     }
 
+    private static String gerarEmailUnico() {
+        return "fluxo_" + UUID.randomUUID().toString().substring(0, 8) + "@email.com";
+    }
+
     @Test
     @Order(1)
     @DisplayName("1. Usuario se cadastra no sistema")
     void usuarioSeCadastra() {
         em.getTransaction().begin();
-        Usuario usuario = new Usuario("Carlos Almeida", "carlos@email.com", "minhasenha123", TipoUsuario.COMUM);
+        Usuario usuario = new Usuario("Carlos Almeida", gerarEmailUnico(), "minhasenha123", TipoUsuario.COMUM);
         em.persist(usuario);
         em.getTransaction().commit();
 

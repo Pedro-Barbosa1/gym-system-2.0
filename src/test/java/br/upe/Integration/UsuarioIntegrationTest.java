@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +19,7 @@ public class UsuarioIntegrationTest {
 
     private static EntityManager em;
     private static int usuarioIdCriado;
+    private static String emailCriado;
 
     @BeforeAll
     static void setup() {
@@ -33,11 +35,16 @@ public class UsuarioIntegrationTest {
         IntegrationTestHelper.closeEntityManagerFactory();
     }
 
+    private static String gerarEmailUnico() {
+        return "user_" + UUID.randomUUID().toString().substring(0, 8) + "@email.com";
+    }
+
     @Test
     @Order(1)
     @DisplayName("Deve persistir usuario no banco de dados")
     void devePersistirUsuario() {
-        Usuario usuario = new Usuario("Maria Silva", "maria@email.com", "senha123", TipoUsuario.COMUM);
+        emailCriado = gerarEmailUnico();
+        Usuario usuario = new Usuario("Maria Silva", emailCriado, "senha123", TipoUsuario.COMUM);
 
         em.getTransaction().begin();
         em.persist(usuario);
@@ -55,7 +62,7 @@ public class UsuarioIntegrationTest {
 
         assertNotNull(encontrado);
         assertEquals("Maria Silva", encontrado.getNome());
-        assertEquals("maria@email.com", encontrado.getEmail());
+        assertEquals(emailCriado, encontrado.getEmail());
     }
 
     @Test
@@ -64,7 +71,7 @@ public class UsuarioIntegrationTest {
     void deveBuscarUsuarioPorEmail() {
         Usuario encontrado = em.createQuery(
                 "SELECT u FROM Usuario u WHERE u.email = :email", Usuario.class)
-                .setParameter("email", "maria@email.com")
+                .setParameter("email", emailCriado)
                 .getSingleResult();
 
         assertNotNull(encontrado);
@@ -93,10 +100,10 @@ public class UsuarioIntegrationTest {
     @Order(5)
     @DisplayName("Deve listar todos usuarios")
     void deveListarTodosUsuarios() {
-        // Adiciona mais usuarios
+        // Adiciona mais usuarios com emails unicos
         em.getTransaction().begin();
-        em.persist(new Usuario("Joao Silva", "joao@email.com", "senha456", TipoUsuario.COMUM));
-        em.persist(new Usuario("Pedro Santos", "pedro@email.com", "senha789", TipoUsuario.COMUM));
+        em.persist(new Usuario("Joao Silva", gerarEmailUnico(), "senha456", TipoUsuario.COMUM));
+        em.persist(new Usuario("Pedro Santos", gerarEmailUnico(), "senha789", TipoUsuario.COMUM));
         em.getTransaction().commit();
 
         List<Usuario> usuarios = em.createQuery("SELECT u FROM Usuario u", Usuario.class)
@@ -112,7 +119,7 @@ public class UsuarioIntegrationTest {
     void deveVerificarConstraintEmailUnico() {
         em.getTransaction().begin();
         try {
-            Usuario duplicado = new Usuario("Outro Usuario", "maria@email.com", "outrasenha", TipoUsuario.COMUM);
+            Usuario duplicado = new Usuario("Outro Usuario", emailCriado, "outrasenha", TipoUsuario.COMUM);
             em.persist(duplicado);
             em.getTransaction().commit();
             fail("Deveria lancar excecao por email duplicado");
@@ -129,7 +136,7 @@ public class UsuarioIntegrationTest {
     void deveDeletarUsuario() {
         // Criar usuario para deletar
         em.getTransaction().begin();
-        Usuario paraRemover = new Usuario("Remover", "remover@email.com", "senha", TipoUsuario.COMUM);
+        Usuario paraRemover = new Usuario("Remover", gerarEmailUnico(), "senha", TipoUsuario.COMUM);
         em.persist(paraRemover);
         em.getTransaction().commit();
 

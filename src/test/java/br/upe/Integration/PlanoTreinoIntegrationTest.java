@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +20,10 @@ public class PlanoTreinoIntegrationTest {
     private EntityManager em;
     private static Usuario usuarioTeste;
 
+    private static String gerarEmailUnico() {
+        return "plano_" + UUID.randomUUID().toString().substring(0, 8) + "@email.com";
+    }
+
     @BeforeAll
     void setup() {
         IntegrationTestHelper.initEntityManagerFactory();
@@ -26,7 +31,7 @@ public class PlanoTreinoIntegrationTest {
         
         // Criar usuario para os testes
         em.getTransaction().begin();
-        usuarioTeste = new Usuario("Teste Original", "testeoriginal@email.com", "senha", TipoUsuario.COMUM);
+        usuarioTeste = new Usuario("Teste Original", gerarEmailUnico(), "senha", TipoUsuario.COMUM);
         em.persist(usuarioTeste);
         em.getTransaction().commit();
     }

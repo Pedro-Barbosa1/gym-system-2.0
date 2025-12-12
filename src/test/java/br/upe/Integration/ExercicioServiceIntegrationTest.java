@@ -11,6 +11,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +27,10 @@ public class ExercicioServiceIntegrationTest {
     private static int usuarioId;
     private static int exercicioId;
 
+    private static String gerarEmailUnico() {
+        return "exercicio_" + UUID.randomUUID().toString().substring(0, 8) + "@email.com";
+    }
+
     @BeforeAll
     static void setup() {
         IntegrationTestHelper.initEntityManagerFactory();
@@ -33,7 +38,7 @@ public class ExercicioServiceIntegrationTest {
 
         // Criar usuario para os testes
         em.getTransaction().begin();
-        Usuario usuario = new Usuario("Teste Exercicio Service", "testeexservice@email.com", "senha", TipoUsuario.COMUM);
+        Usuario usuario = new Usuario("Teste Exercicio Service", gerarEmailUnico(), "senha", TipoUsuario.COMUM);
         em.persist(usuario);
         em.getTransaction().commit();
         usuarioId = usuario.getId();

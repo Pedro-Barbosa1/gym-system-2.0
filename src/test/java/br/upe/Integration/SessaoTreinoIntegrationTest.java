@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,6 +23,10 @@ public class SessaoTreinoIntegrationTest {
     private static int exercicioId;
     private static int sessaoId;
 
+    private static String gerarEmailUnico() {
+        return "sessao_" + UUID.randomUUID().toString().substring(0, 8) + "@email.com";
+    }
+
     @BeforeAll
     static void setup() {
         IntegrationTestHelper.initEntityManagerFactory();
@@ -30,7 +35,7 @@ public class SessaoTreinoIntegrationTest {
         // Criar dados necessarios para os testes
         em.getTransaction().begin();
         
-        Usuario usuario = new Usuario("Teste Sessao", "testesessao@email.com", "senha", TipoUsuario.COMUM);
+        Usuario usuario = new Usuario("Teste Sessao", gerarEmailUnico(), "senha", TipoUsuario.COMUM);
         em.persist(usuario);
         usuarioId = usuario.getId();
 
