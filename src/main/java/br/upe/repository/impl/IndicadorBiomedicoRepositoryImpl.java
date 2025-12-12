@@ -22,7 +22,7 @@ import br.upe.repository.IIndicadorBiomedicoRepository;
 public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepository {
 
     private static final Logger logger = Logger.getLogger(IndicadorBiomedicoRepositoryImpl.class.getName());
-    private static final Path CAMINHO_ARQUIVO = Paths.get("src/main/resources/data/indicadores.csv");
+    private static Path CAMINHO_ARQUIVO = Paths.get("src/main/resources/data/indicadores.csv");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     private final List<IndicadorBiomedico> indicadores;
@@ -216,4 +216,7 @@ public class IndicadorBiomedicoRepositoryImpl implements IIndicadorBiomedicoRepo
         }
     }
 
+    public static void setCaminhoArquivo(java.nio.file.Path novoCaminho) {
+        CAMINHO_ARQUIVO = novoCaminho;
+    }
 }

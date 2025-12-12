@@ -67,4 +67,9 @@ public class ItemPlanoTreino {
     public void setPlanoTreino(PlanoTreino planoTreino) {
         this.planoTreino = planoTreino;
     }
+
+    public void setExercicio(Exercicio exercicio) {
+        this.exercicio = exercicio;
+    }
+
 }
