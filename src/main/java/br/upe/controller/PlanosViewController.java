@@ -14,6 +14,7 @@ import br.upe.service.IExercicioService;
 import br.upe.service.IPlanoTreinoService;
 import br.upe.service.PlanoTreinoService;
 import br.upe.ui.util.StyledAlert;
+import br.upe.ui.util.TableViewStyler;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -276,33 +277,7 @@ public class PlanosViewController {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private void aplicarEstiloTableView(TableView<?> tableView) {
-        // Reaproveita estilo simples usado no ExerciciosViewController
-        tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
-        tableView.setRowFactory(tv -> new javafx.scene.control.TableRow() {
-            {
-                // forçar prefHeight por linha (combinado com fixedCellSize)
-                setPrefHeight(56);
-                setMinHeight(56);
-            }
-
-            @Override
-            protected void updateItem(Object item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setStyle("");
-                } else {
-                    // fundo escuro + borda inferior para demarcar separação de linhas
-                    setStyle(
-                        "-fx-background-color: #2c2c2c; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: transparent transparent #e6e6e6 transparent; " +
-                        "-fx-border-width: 0 0 1 0; " +
-                        "-fx-border-style: solid; " +
-                        "-fx-border-insets: 0;"
-                    );
-                }
-            }
-        });
+        TableViewStyler.aplicarEstilo(tableView);
     }
 
     private void showInfo(String title, String content) {
