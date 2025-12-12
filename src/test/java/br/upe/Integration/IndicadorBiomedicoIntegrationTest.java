@@ -12,6 +12,7 @@ import java.util.Optional;
 public class IndicadorBiomedicoIntegrationTest {
 
     private static IIndicadorBiomedicoRepository repository;
+    private static int indicadorIdSalvo;
 
     @BeforeAll
     static void setup() {
@@ -32,6 +33,7 @@ public class IndicadorBiomedicoIntegrationTest {
                 .build();
 
         IndicadorBiomedico salvo = repository.salvar(indicador);
+        indicadorIdSalvo = salvo.getId();
 
         Assertions.assertTrue(salvo.getId() > 0);
     }
@@ -39,10 +41,10 @@ public class IndicadorBiomedicoIntegrationTest {
     @Test
     @Order(2)
     void deveBuscarPorId() {
-        Optional<IndicadorBiomedico> encontrado = repository.buscarPorId(1);
+        Optional<IndicadorBiomedico> encontrado = repository.buscarPorId(indicadorIdSalvo);
 
         Assertions.assertTrue(encontrado.isPresent());
-        Assertions.assertEquals(1, encontrado.get().getId());
+        Assertions.assertEquals(indicadorIdSalvo, encontrado.get().getId());
     }
 
     @Test
@@ -69,7 +71,7 @@ public class IndicadorBiomedicoIntegrationTest {
     @Test
     @Order(5)
     void deveEditarIndicador() {
-        Optional<IndicadorBiomedico> opt = repository.buscarPorId(1);
+        Optional<IndicadorBiomedico> opt = repository.buscarPorId(indicadorIdSalvo);
         Assertions.assertTrue(opt.isPresent());
 
         IndicadorBiomedico indicador = opt.get();
@@ -77,7 +79,7 @@ public class IndicadorBiomedicoIntegrationTest {
 
         repository.editar(indicador);
 
-        Optional<IndicadorBiomedico> atualizado = repository.buscarPorId(1);
+        Optional<IndicadorBiomedico> atualizado = repository.buscarPorId(indicadorIdSalvo);
         Assertions.assertEquals(90, atualizado.get().getPesoKg());
     }
 
@@ -93,9 +95,9 @@ public class IndicadorBiomedicoIntegrationTest {
     @Test
     @Order(7)
     void deveDeletar() {
-        repository.deletar(1);
+        repository.deletar(indicadorIdSalvo);
 
-        Optional<IndicadorBiomedico> resultado = repository.buscarPorId(1);
+        Optional<IndicadorBiomedico> resultado = repository.buscarPorId(indicadorIdSalvo);
         Assertions.assertTrue(resultado.isEmpty());
     }
 }

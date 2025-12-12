@@ -30,6 +30,17 @@ public class PlanoTreinoIntegrationTest {
         emf.close();
     }
 
+    @BeforeEach
+    void limparDados() {
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM ItemSessaoTreino").executeUpdate();
+        em.createQuery("DELETE FROM SessaoTreino").executeUpdate();
+        em.createQuery("DELETE FROM ItemPlanoTreino").executeUpdate();
+        em.createQuery("DELETE FROM PlanoTreino").executeUpdate();
+        em.createQuery("DELETE FROM Exercicio WHERE nome = 'Supino Reto'").executeUpdate();
+        em.getTransaction().commit();
+    }
+
     @Test
     void devePersistirPlanoTreinoComItem() {
 

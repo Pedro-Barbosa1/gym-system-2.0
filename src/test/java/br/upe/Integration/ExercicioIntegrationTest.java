@@ -68,12 +68,18 @@ public class ExercicioIntegrationTest {
     @Test
     @Order(4)
     void testDeletarExercicio() {
-        Optional<Exercicio> opt = repository.buscarPorNome("Supino");
-        assertTrue(opt.isPresent());
+        // Criar um novo exercício sem dependências para garantir que pode ser deletado
+        Usuario user = criarUsuario(1);
+        Exercicio novoExercicio = new Exercicio(user, "Exercicio Teste Delete", "Teste", "teste.gif");
+        Exercicio salvo = repository.salvar(novoExercicio);
+        
+        int idParaDeletar = salvo.getIdExercicio();
+        
+        // Tentar deletar
+        repository.deletar(idParaDeletar);
 
-        repository.deletar(opt.get().getIdExercicio());
-
-        Optional<Exercicio> deleted = repository.buscarPorId(opt.get().getIdExercicio());
+        // Verificar que foi deletado
+        Optional<Exercicio> deleted = repository.buscarPorId(idParaDeletar);
         assertTrue(deleted.isEmpty());
     }
 }
