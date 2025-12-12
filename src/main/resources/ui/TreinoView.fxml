@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<VBox prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.TreinoViewController">
-
-      <AnchorPane style="-fx-background-color: #2c2c2c;" VBox.vgrow="ALWAYS">
-
-            <!-- Cabeçalho: total e botão adicionar -->
-            <Label fx:id="totalLabel" layoutX="20.0" layoutY="18.0" textFill="#e5a000" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
-
-            <Button fx:id="BAdicionarSessao" mnemonicParsing="false" onAction="#handleAdicionarSessao" prefHeight="36.0" prefWidth="180.0" style="-fx-background-color: #1e1e1e;" text="Nova Sessão de Treino" textFill="#e5a000" AnchorPane.topAnchor="12.0" AnchorPane.rightAnchor="20.0">
-                  <font>
-                        <Font size="13.0" />
-                  </font>
-            </Button>
-
-            <!-- Tabela ocupa a maior parte da área -->
-            <TableView fx:id="tableSessoes" prefHeight="620.0" prefWidth="860.0" AnchorPane.topAnchor="60.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.bottomAnchor="80.0">
-                  <columns>
-                        <TableColumn fx:id="colData" text="Data" prefWidth="120.0" />
-                        <TableColumn fx:id="colPlano" text="Plano ID" prefWidth="100.0" />
-                        <TableColumn fx:id="colExercicios" text="Exercícios Realizados" prefWidth="380.0" />
-                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="260.0" />
-                  </columns>
-            </TableView>
-            
-            <Button fx:id="BVoltar" mnemonicParsing="false" onAction="#handleVoltar" prefHeight="36.0" prefWidth="140.0" style="-fx-background-color: #1e1e1e;" text="Voltar" textFill="#e5a000" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="20.0">
-                  <font>
-                        <Font size="13.0" />
-                  </font>
-            </Button>
+<AnchorPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.TreinoViewController">
+      <AnchorPane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #2C2C2C;">
+            <AnchorPane prefHeight="700.0" prefWidth="317.0">
+                  <Button fx:id="BListarTR" alignment="CENTER" contentDisplay="CENTER" layoutX="62.0" layoutY="192.0" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" onAction="#iniciarNovaSessao" style="-fx-background-color: #1E1E1E;" text="Nova Sessão de Treino" textFill="#e5a000">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="BEditarTR" alignment="CENTER" contentDisplay="CENTER" layoutX="62.0" layoutY="267.0" maxHeight="-Infinity" minHeight="40.0" minWidth="240.0" mnemonicParsing="false" onAction="#verHistoricoSessoes" style="-fx-background-color: #1E1E1E;" text="Ver Histórico de Sessões" textFill="#e5a000">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <ImageView fx:id="ITreino" fitHeight="80.0" fitWidth="100.0" layoutX="15.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@images/muque.png" />
+                  </ImageView>
+                  <Separator layoutX="314.0" layoutY="1.0" orientation="VERTICAL" prefHeight="700.0" prefWidth="6.0" />
+                  <Separator layoutY="109.0" prefHeight="8.0" prefWidth="314.0" />
+                  <ImageView fitHeight="50.0" fitWidth="32.0" layoutX="15.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@images/ver.png" />
+                  </ImageView>
+                  <ImageView fitHeight="50.0" fitWidth="28.0" layoutX="17.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@images/ferramenta-lapis.png" />
+                  </ImageView>
+                  <Text fill="#9c27b0" layoutX="108.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Treinos">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Text>
+            </AnchorPane>
+            <AnchorPane layoutX="800.0" layoutY="-11.0" prefHeight="80.0" prefWidth="100.0">
+                  <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="10.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="23.0">
+                        <Image url="@images/sair.png" />
+                  </ImageView>
+                  <Button fx:id="IFechar" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" onAction="#fecharTela" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: transparent;" />
+            </AnchorPane>
       </AnchorPane>
-
-</VBox>
+</AnchorPane>
