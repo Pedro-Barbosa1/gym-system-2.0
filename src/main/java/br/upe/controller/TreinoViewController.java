@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import br.upe.model.Exercicio;
 import br.upe.model.ItemPlanoTreino;
@@ -22,9 +23,12 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -33,11 +37,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -51,25 +56,310 @@ public class TreinoViewController {
     
     private int idUsuarioLogado = 1; 
 
-    @FXML
-    private ImageView ITreino;
-
-    @FXML
-    private Button IFechar;
-
-    @FXML
-    private javafx.scene.control.ButtonBar exitB;
-
-    @FXML
-    private Button BListarTR;
-
-    @FXML
-    private Button BEditarTR;
+    @FXML private TableView<SessaoTreino> tableSessoes;
+    @FXML private TableColumn<SessaoTreino, String> colData;
+    @FXML private TableColumn<SessaoTreino, String> colPlano;
+    @FXML private TableColumn<SessaoTreino, String> colExercicios;
+    @FXML private TableColumn<SessaoTreino, Void> colAcoes;
+    @FXML private Button BAdicionarSessao;
+    @FXML private Button BVoltar;
+    @FXML private Label totalLabel;
 
     public TreinoViewController() {
         this.sessaoTreinoService = new SessaoTreinoService();
         this.planoTreinoService = new PlanoTreinoService();
         this.exercicioService = new ExercicioService();
+    }
+
+    @FXML
+    private void initialize() {
+        // configurar colunas
+        colData.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDataSessao().toString()));
+        
+        colPlano.setCellValueFactory(data -> {
+            int idPlano = data.getValue().getIdPlanoTreino();
+            return new SimpleStringProperty(String.valueOf(idPlano));
+        });
+        
+        colExercicios.setCellValueFactory(data -> {
+            List<ItemSessaoTreino> itens = data.getValue().getItensExecutados();
+            String exercicios = itens.stream()
+                .map(item -> {
+                    Optional<Exercicio> ex = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio());
+                    return ex.isPresent() ? ex.get().getNome() : "Ex. " + item.getIdExercicio();
+                })
+                .collect(Collectors.joining(", "));
+            return new SimpleStringProperty(exercicios.isEmpty() ? "Nenhum exercício" : exercicios);
+        });
+
+        // ações (visualizar / editar / remover)
+        adicionarColunaAcoes();
+
+        // forçar ajuste das colunas à largura da tabela
+        tableSessoes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableSessoes.setFixedCellSize(56);
+
+        // carregar dados
+        loadSessoes();
+        setupResizeListeners();
+    }
+
+    private void adicionarColunaAcoes() {
+        colAcoes.setCellFactory(col -> new TableCell<SessaoTreino, Void>() {
+            private final Button btnVisualizar = new Button("Visualizar");
+            private final Button btnEditar = new Button("Editar");
+            private final Button btnRemover = new Button("Remover");
+            private final HBox container = new HBox(8, btnVisualizar, btnEditar, btnRemover);
+
+            {
+                btnVisualizar.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+                btnEditar.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+                btnRemover.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+
+                btnVisualizar.setPrefWidth(90);
+                btnEditar.setPrefWidth(70);
+                btnRemover.setPrefWidth(70);
+
+                container.setAlignment(Pos.CENTER);
+                container.setPadding(new Insets(6, 4, 6, 4));
+                container.setPrefHeight(48);
+                container.setMinHeight(48);
+
+                btnVisualizar.setPrefHeight(28);
+                btnEditar.setPrefHeight(28);
+                btnRemover.setPrefHeight(28);
+
+                btnVisualizar.setOnAction(e -> {
+                    SessaoTreino sessao = getTableView().getItems().get(getIndex());
+                    visualizarSessao(sessao);
+                });
+
+                btnEditar.setOnAction(e -> {
+                    SessaoTreino sessao = getTableView().getItems().get(getIndex());
+                    editarSessao(sessao);
+                });
+
+                btnRemover.setOnAction(e -> {
+                    SessaoTreino sessao = getTableView().getItems().get(getIndex());
+                    removerSessao(sessao);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(container);
+                }
+            }
+        });
+    }
+
+    private void loadSessoes() {
+        List<SessaoTreino> sessoes = sessaoTreinoService.listarSessoesPorUsuario(idUsuarioLogado);
+        tableSessoes.setItems(FXCollections.observableArrayList(sessoes));
+        if (totalLabel != null) {
+            totalLabel.setText(String.format("Total de %d sessão(ões) de treino", sessoes.size()));
+        }
+        
+        double fixed = tableSessoes.getFixedCellSize();
+        if (fixed <= 0) fixed = 56;
+        int rowsToShow = Math.max(6, sessoes.size());
+        double header = 30;
+        tableSessoes.setPrefHeight(fixed * rowsToShow + header);
+        aplicarEstiloTableViewSessao(tableSessoes);
+    }
+
+    @FXML
+    private void handleAdicionarSessao(ActionEvent event) {
+        iniciarNovaSessao(event);
+    }
+
+    @FXML
+    private void handleVoltar(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MenuUsuarioLogado.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) BAdicionarSessao.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Gym System - Menu do Usuário");
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível voltar para a tela anterior.");
+            logger.log(Level.SEVERE, "Erro ao voltar para MenuUsuarioLogado", e);
+        }
+    }
+
+    private void visualizarSessao(SessaoTreino sessao) {
+        Dialog<ButtonType> dialog = criarDialogPadrao("Visualizar Sessão", "Sessão de " + sessao.getDataSessao().toString());
+        
+        Optional<PlanoTreino> planoOpt = planoTreinoService.buscarPlanoPorId(sessao.getIdPlanoTreino());
+        PlanoTreino plano = planoOpt.orElse(null);
+        String nomePlano = plano != null ? plano.getNome() : "Plano ID: " + sessao.getIdPlanoTreino();
+        
+        // Criar TableView com os exercícios executados
+        TableView<ItemSessaoTreino> tableView = new TableView<>();
+        tableView.setItems(FXCollections.observableArrayList(sessao.getItensExecutados()));
+        tableView.setPrefWidth(600);
+        tableView.setPrefHeight(300);
+
+        TableColumn<ItemSessaoTreino, String> colExercicio = new TableColumn<>("Exercício");
+        colExercicio.setCellValueFactory(data -> {
+            Optional<Exercicio> ex = exercicioService.buscarExercicioPorIdGlobal(data.getValue().getIdExercicio());
+            String nome = ex.isPresent() ? ex.get().getNome() : "Ex. " + data.getValue().getIdExercicio();
+            return new SimpleStringProperty(nome);
+        });
+        colExercicio.setPrefWidth(300);
+
+        TableColumn<ItemSessaoTreino, Integer> colRepeticoes = new TableColumn<>("Repetições");
+        colRepeticoes.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRepeticoesRealizadas()).asObject());
+        colRepeticoes.setPrefWidth(150);
+        colRepeticoes.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<ItemSessaoTreino, String> colCarga = new TableColumn<>("Carga (kg)");
+        colCarga.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getCargaRealizada())));
+        colCarga.setPrefWidth(150);
+        colCarga.setStyle("-fx-alignment: CENTER;");
+
+        tableView.getColumns().addAll(colExercicio, colRepeticoes, colCarga);
+        aplicarEstiloTableView(tableView);
+
+        VBox content = new VBox(10);
+        content.setStyle("-fx-background-color: #2c2c2c;");
+        content.setPadding(new Insets(10));
+        
+        Label planoLabel = criarLabel("Plano: " + nomePlano);
+        Label dataLabel = criarLabel("Data: " + sessao.getDataSessao());
+        
+        content.getChildren().addAll(planoLabel, dataLabel, tableView);
+
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.showAndWait();
+    }
+
+    private void editarSessao(SessaoTreino sessao) {
+        Dialog<ButtonType> dialog = criarDialogPadrao("Editar Sessão", "Editar sessão de " + sessao.getDataSessao().toString());
+        
+        // Criar TableView editável com os exercícios
+        TableView<ItemSessaoTreino> tableView = new TableView<>();
+        tableView.setItems(FXCollections.observableArrayList(sessao.getItensExecutados()));
+        tableView.setEditable(true);
+        tableView.setPrefWidth(600);
+        tableView.setPrefHeight(300);
+
+        TableColumn<ItemSessaoTreino, String> colExercicio = new TableColumn<>("Exercício");
+        colExercicio.setCellValueFactory(data -> {
+            Optional<Exercicio> ex = exercicioService.buscarExercicioPorIdGlobal(data.getValue().getIdExercicio());
+            String nome = ex.isPresent() ? ex.get().getNome() : "Ex. " + data.getValue().getIdExercicio();
+            return new SimpleStringProperty(nome);
+        });
+        colExercicio.setPrefWidth(250);
+
+        TableColumn<ItemSessaoTreino, String> colRepeticoes = new TableColumn<>("Repetições");
+        colRepeticoes.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getRepeticoesRealizadas())));
+        colRepeticoes.setPrefWidth(150);
+        colRepeticoes.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<ItemSessaoTreino, String> colCarga = new TableColumn<>("Carga (kg)");
+        colCarga.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.1f", data.getValue().getCargaRealizada())));
+        colCarga.setPrefWidth(150);
+        colCarga.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<ItemSessaoTreino, Void> colAcaoEditar = new TableColumn<>("Ação");
+        colAcaoEditar.setCellFactory(col -> new TableCell<ItemSessaoTreino, Void>() {
+            private final Button btnEditar = new Button("Editar");
+            {
+                btnEditar.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+                btnEditar.setOnAction(e -> {
+                    ItemSessaoTreino item = getTableView().getItems().get(getIndex());
+                    editarItemSessao(item, sessao);
+                });
+            }
+            @Override
+            protected void updateItem(Void voidItem, boolean empty) {
+                super.updateItem(voidItem, empty);
+                setGraphic(empty ? null : btnEditar);
+            }
+        });
+        colAcaoEditar.setPrefWidth(100);
+
+        tableView.getColumns().addAll(colExercicio, colRepeticoes, colCarga, colAcaoEditar);
+        aplicarEstiloTableView(tableView);
+
+        VBox content = new VBox(10);
+        content.setStyle("-fx-background-color: #2c2c2c;");
+        content.setPadding(new Insets(10));
+        content.getChildren().add(tableView);
+
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        dialog.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                sessaoTreinoService.salvarSessao(sessao);
+                loadSessoes();
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Sessão atualizada com sucesso!");
+            }
+        });
+    }
+
+    private void editarItemSessao(ItemSessaoTreino item, SessaoTreino sessao) {
+        Dialog<ButtonType> dialog = criarDialogPadrao("Editar Item", "Modificar exercício da sessão");
+        GridPane grid = criarGridPadrao();
+
+        Optional<Exercicio> exercicioOpt = exercicioService.buscarExercicioPorIdGlobal(item.getIdExercicio());
+        String nomeExercicio = exercicioOpt.isPresent() ? exercicioOpt.get().getNome() : "Ex. " + item.getIdExercicio();
+
+        TextField repeticoesField = criarCampoTexto(String.valueOf(item.getRepeticoesRealizadas()));
+        TextField cargaField = criarCampoTexto(String.format("%.1f", item.getCargaRealizada()));
+
+        grid.add(criarLabel("Exercício: " + nomeExercicio), 0, 0, 2, 1);
+        grid.add(criarLabel("Repetições:"), 0, 1);
+        grid.add(repeticoesField, 1, 1);
+        grid.add(criarLabel("Carga (kg):"), 0, 2);
+        grid.add(cargaField, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    int novasRepeticoes = Integer.parseInt(repeticoesField.getText().trim());
+                    double novaCarga = Double.parseDouble(cargaField.getText().trim());
+                    
+                    item.setRepeticoesRealizadas(novasRepeticoes);
+                    item.setCargaRealizada(novaCarga);
+                    
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Item atualizado! Clique em OK na janela anterior para salvar.");
+                } catch (NumberFormatException e) {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Valores inválidos. Digite números válidos.");
+                }
+            }
+        });
+    }
+
+    private void removerSessao(SessaoTreino sessao) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmar Exclusão");
+        confirm.setHeaderText("Excluir sessão de " + sessao.getDataSessao().toString());
+        confirm.setContentText("Tem certeza que deseja excluir esta sessão de treino?");
+        
+        confirm.showAndWait().ifPresent(resp -> {
+            if (resp == ButtonType.OK) {
+                try {
+                    sessaoTreinoService.removerSessao(sessao.getIdSessao());
+                    loadSessoes();
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Sessão removida com sucesso!");
+                } catch (Exception e) {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível remover a sessão: " + e.getMessage());
+                    logger.log(Level.SEVERE, "Erro ao remover sessão", e);
+                }
+            }
+        });
     }
 
 
@@ -115,6 +405,7 @@ public class TreinoViewController {
                 sessaoTreinoService.verificarAlteracoesEGerarSugestoes(sessaoAtual);
             tratarSugestoesComDialog(sugestoes, planoEscolhido);
 
+            loadSessoes();
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sessão Concluída", 
                 "Sessão de treino registrada com sucesso!");
 
@@ -200,7 +491,7 @@ public class TreinoViewController {
         tableView.getColumns().addAll(colData, colPlano, colExercicio, colRepeticoes, colCarga);
 
         // Aplicar estilo
-        aplicarEstiloTableView(tableView);
+        aplicarEstiloTableViewGenerico(tableView);
 
         VBox box = new VBox(tableView);
         box.setStyle("-fx-background-color: #2c2c2c;");
@@ -410,7 +701,7 @@ public class TreinoViewController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
-            Stage stage = (Stage) BListarTR.getScene().getWindow();
+            Stage stage = (Stage) BAdicionarSessao.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle(titulo);
             stage.show();
@@ -420,6 +711,59 @@ public class TreinoViewController {
         } catch (IOException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela solicitada.");
             logger.log(Level.SEVERE, "Erro ao carregar tela: " + fxmlFile, e);
+        }
+    }
+
+    private Dialog<ButtonType> criarDialogPadrao(String titulo, String cabecalho) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle(titulo);
+        dialog.setHeaderText(cabecalho);
+        dialog.getDialogPane().setStyle("-fx-background-color: #1e1e1e;");
+        dialog.setOnShown(e -> {
+            Node header = dialog.getDialogPane().lookup(".header-panel");
+            if (header != null) header.setStyle("-fx-background-color: #1e1e1e;");
+            Node label = dialog.getDialogPane().lookup(".header-panel .label");
+            if (label != null) label.setStyle("-fx-text-fill: #ffb300; -fx-font-weight: bold;");
+        });
+        return dialog;
+    }
+
+    private GridPane criarGridPadrao() {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setStyle("-fx-background-color: #2c2c2c;");
+        return grid;
+    }
+
+    private Label criarLabel(String texto) {
+        Label label = new Label(texto);
+        label.setStyle("-fx-font-weight: bold; -fx-text-fill: #ffb300;");
+        return label;
+    }
+
+    private TextField criarCampoTexto(String placeholder) {
+        TextField field = new TextField();
+        field.setPromptText(placeholder);
+        field.setStyle("-fx-text-fill: #ffb300; -fx-background-color: #333; -fx-border-color: #1e1e1e;");
+        return field;
+    }
+
+    private void setupResizeListeners() {
+        Runnable recompute = () -> Platform.runLater(() -> {
+            double fixed = tableSessoes.getFixedCellSize();
+            if (fixed <= 0) fixed = 56;
+            int rowsToShow = Math.max(6, tableSessoes.getItems() == null ? 0 : tableSessoes.getItems().size());
+            double header = 30;
+            tableSessoes.setPrefHeight(fixed * rowsToShow + header);
+            tableSessoes.refresh();
+        });
+
+        tableSessoes.widthProperty().addListener((obs, old, nw) -> recompute.run());
+        tableSessoes.sceneProperty().addListener((obs, old, nw) -> { if (nw != null) recompute.run(); });
+        for (TableColumn<SessaoTreino, ?> c : tableSessoes.getColumns()) {
+            c.widthProperty().addListener((obs, old, nw) -> recompute.run());
         }
     }
 
@@ -435,88 +779,95 @@ public class TreinoViewController {
         }
     }
 
-    private void aplicarEstiloTableView(TableView<?> tableView) {
-        aplicarEstiloTableViewGenerico(tableView);
+    private void aplicarEstiloTableView(TableView<ItemSessaoTreino> tableView) {
+        // Estilo simples e limpo, igual à tela de exercícios
+        tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
+        tableView.setRowFactory(tv -> new javafx.scene.control.TableRow<ItemSessaoTreino>() {
+            {
+                // Forçar prefHeight por linha (combinado com fixedCellSize)
+                setPrefHeight(56);
+                setMinHeight(56);
+            }
+
+            @Override
+            protected void updateItem(ItemSessaoTreino item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("-fx-background-color: #2c2c2c; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
+                } else {
+                    setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: white; -fx-border-width: 0 0 1 0;"
+                    );
+                }
+
+                // Estilo ao selecionar
+                if (isSelected()) {
+                    setStyle("-fx-background-color: #5A189A; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
+                }
+            }
+        });
     }
     
-    @SuppressWarnings("unchecked")
-    private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
-        // Aplicar estilo inline diretamente no TableView
-        tableView.setStyle(
-            "-fx-background-color: #2c2c2c; " +
-            "-fx-control-inner-background: #2c2c2c; " +
-            "-fx-background-insets: 0; " +
-            "-fx-padding: 0; " +
-            "-fx-table-cell-border-color: #333;"
-        );
-        
-        // Aplicar estilo usando setRowFactory para garantir fundo escuro
-        tableView.setRowFactory(tv -> {
-            javafx.scene.control.TableRow<T> row = new javafx.scene.control.TableRow<>();
-            row.setStyle(
-                "-fx-background-color: #2c2c2c; " +
-                "-fx-text-fill: #ffb300; " +
-                "-fx-border-color: #333;"
-            );
-            
-            // Atualizar estilo quando o item mudar
-            row.itemProperty().addListener((obs, oldItem, newItem) -> {
-                if (newItem != null) {
-                    row.setStyle(
-                        "-fx-background-color: #2c2c2c; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: #333;"
-                    );
-                }
-            });
-            
-            // Estilo de seleção
-            row.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-                if (isSelected) {
-                    row.setStyle(
-                        "-fx-background-color: #5A189A; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-border-color: #333;"
-                    );
+    private void aplicarEstiloTableViewSessao(TableView<SessaoTreino> tableView) {
+        // Estilo simples e limpo, igual à tela de exercícios
+        tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
+        tableView.setRowFactory(tv -> new javafx.scene.control.TableRow<SessaoTreino>() {
+            {
+                // Forçar prefHeight por linha (combinado com fixedCellSize)
+                setPrefHeight(56);
+                setMinHeight(56);
+            }
+
+            @Override
+            protected void updateItem(SessaoTreino item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("-fx-background-color: #2c2c2c; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
                 } else {
-                    row.setStyle(
+                    setStyle(
                         "-fx-background-color: #2c2c2c; " +
                         "-fx-text-fill: #ffb300; " +
-                        "-fx-border-color: #333;"
+                        "-fx-border-color: white; -fx-border-width: 0 0 1 0;"
                     );
                 }
-            });
-            
-            return row;
+
+                // Estilo ao selecionar
+                if (isSelected()) {
+                    setStyle("-fx-background-color: #5A189A; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
+                }
+            }
         });
-        
-        // Estilizar headers após a tabela ser exibida
-        tableView.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                tableView.applyCss();
-                tableView.layout();
-                
-                // Estilizar headers
-                javafx.scene.Node headerRow = tableView.lookup(".column-header-background");
-                if (headerRow != null) {
-                    headerRow.setStyle("-fx-background-color: #1e1e1e;");
+    }
+    
+    private <T> void aplicarEstiloTableViewGenerico(TableView<T> tableView) {
+        // Estilo simples e limpo, igual à tela de exercícios
+        tableView.setStyle("-fx-background-color: #2c2c2c; -fx-control-inner-background: #2c2c2c;");
+        tableView.setRowFactory(tv -> new javafx.scene.control.TableRow<T>() {
+            {
+                // Forçar prefHeight por linha (combinado com fixedCellSize)
+                setPrefHeight(56);
+                setMinHeight(56);
+            }
+
+            @Override
+            protected void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("-fx-background-color: #2c2c2c; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
+                } else {
+                    setStyle(
+                        "-fx-background-color: #2c2c2c; " +
+                        "-fx-text-fill: #ffb300; " +
+                        "-fx-border-color: white; -fx-border-width: 0 0 1 0;"
+                    );
                 }
-                
-                tableView.lookupAll(".column-header").forEach(node -> {
-                    node.setStyle(
-                        "-fx-background-color: #1e1e1e; " +
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-border-color: #333;"
-                    );
-                });
-                
-                tableView.lookupAll(".column-header .label").forEach(node -> {
-                    ((javafx.scene.control.Labeled) node).setStyle(
-                        "-fx-text-fill: #ffb300; " +
-                        "-fx-font-weight: bold;"
-                    );
-                });
+
+                // Estilo ao selecionar
+                if (isSelected()) {
+                    setStyle("-fx-background-color: #5A189A; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
+                }
             }
         });
     }
