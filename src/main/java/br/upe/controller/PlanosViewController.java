@@ -380,25 +380,25 @@ public class PlanosViewController {
 
         TableColumn<ExercicioPlanoData, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdExercicio()).asObject());
-        colId.setPrefWidth(80);
+        colId.setPrefWidth(60);
         colId.setStyle("-fx-alignment: TOP_LEFT;");
 
         TableColumn<ExercicioPlanoData, String> colNome = new TableColumn<>("Exercício");
         colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
-        colNome.setPrefWidth(300);
+        colNome.setPrefWidth(240);
 
         TableColumn<ExercicioPlanoData, Integer> colCarga = new TableColumn<>("Carga (kg)");
         colCarga.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaKg()).asObject());
-        colCarga.setPrefWidth(120);
+        colCarga.setPrefWidth(95);
         colCarga.setStyle("-fx-alignment: TOP_LEFT;");
 
         TableColumn<ExercicioPlanoData, Integer> colRepeticoes = new TableColumn<>("Repetições");
         colRepeticoes.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getRepeticoes()).asObject());
-        colRepeticoes.setPrefWidth(120);
+        colRepeticoes.setPrefWidth(95);
         colRepeticoes.setStyle("-fx-alignment: TOP_LEFT;");
 
         TableColumn<ExercicioPlanoData, Void> colAcoes = new TableColumn<>("Ações");
-        colAcoes.setPrefWidth(130);
+        colAcoes.setPrefWidth(160);
         colAcoes.setCellFactory(tc -> new javafx.scene.control.TableCell<ExercicioPlanoData, Void>() {
             private final Button btnVisualizar = new Button("Visualizar");
             private final Button btnRemover = new Button("Remover");
@@ -490,6 +490,13 @@ public class PlanosViewController {
         btnAdicionar.setPrefWidth(140);
         btnAdicionar.setStyle("-fx-background-color: #1e1e1e;");
         btnAdicionar.setTextFill(Color.web("#e5a000"));
+        
+        // HBox para alinhar botão à direita com margem vertical
+        javafx.scene.layout.HBox topButtonBox = new javafx.scene.layout.HBox();
+        topButtonBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+        topButtonBox.setPadding(new Insets(8, 0, 8, 0));
+        topButtonBox.getChildren().add(btnAdicionar);
+        
         btnAdicionar.setOnAction(e -> {
             // Selecionar exercício do usuário
             List<Exercicio> meusEx = exercicioService.listarExerciciosDoUsuario(idUsuarioLogado);
@@ -552,12 +559,29 @@ public class PlanosViewController {
             Stage st = (Stage) dialog.getDialogPane().getScene().getWindow();
             st.close();
         });
+        
+        // HBox para alinhar botão à direita com margem vertical
+        javafx.scene.layout.HBox bottomButtonBox = new javafx.scene.layout.HBox();
+        bottomButtonBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+        bottomButtonBox.setPadding(new Insets(8, 0, 8, 0));
+        bottomButtonBox.getChildren().add(btnFechar);
 
         javafx.scene.layout.VBox container = new javafx.scene.layout.VBox(8);
         container.setPadding(new Insets(10));
-        container.getChildren().addAll(btnAdicionar, tableView, btnFechar);
+        container.setStyle("-fx-background-color: #2c2c2c;");
+        container.getChildren().addAll(topButtonBox, tableView, bottomButtonBox);
 
         dialog.getDialogPane().setContent(container);
+        dialog.getDialogPane().setStyle("-fx-background-color: #2c2c2c;");
+        
+        // Atualizar o header para usar o mesmo background e cor de texto #e5a000
+        dialog.setOnShown(ev -> {
+            Node header = dialog.getDialogPane().lookup(".header-panel");
+            if (header != null) header.setStyle("-fx-background-color: #2c2c2c;");
+            Node label = dialog.getDialogPane().lookup(".header-panel .label");
+            if (label != null) label.setStyle("-fx-text-fill: #e5a000; -fx-font-size: 16px; -fx-font-weight: bold;");
+        });
+        
         dialog.showAndWait();
     }
 
