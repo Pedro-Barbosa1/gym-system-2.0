@@ -92,6 +92,9 @@ public class PlanosViewController {
         colExercicios.setStyle("-fx-alignment: CENTER;");
 
         adicionarColunaAcoes();
+        // make columns fit the table width to avoid horizontal scrollbar
+        tablePlanos.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
+        tablePlanos.setFixedCellSize(56);
         aplicarEstiloTableView(tablePlanos);
     }
 
@@ -99,9 +102,24 @@ public class PlanosViewController {
         colAcoes.setCellFactory(tc -> new javafx.scene.control.TableCell<PlanoTreino, Void>() {
             private final Button btnDetalhes = new Button("Detalhes");
             private final Button btnExcluir = new Button("Excluir");
-            private final javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(8, btnDetalhes, btnExcluir);
+            private final javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(6, btnDetalhes, btnExcluir);
 
             {
+                // style buttons similar to ExerciciosViewController
+                btnDetalhes.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+                btnExcluir.setStyle("-fx-background-color: #1e1e1e; -fx-text-fill: #e5a000;");
+
+                btnDetalhes.setPrefWidth(80);
+                btnExcluir.setPrefWidth(70);
+
+                // vertical alignment and padding to match row fixed size
+                box.setAlignment(javafx.geometry.Pos.CENTER);
+                box.setPadding(new Insets(6, 4, 6, 4));
+                box.setPrefHeight(48);
+
+                btnDetalhes.setPrefHeight(28);
+                btnExcluir.setPrefHeight(28);
+
                 btnDetalhes.setOnAction(e -> {
                     PlanoTreino plano = getTableView().getItems().get(getIndex());
                     showDetalhesPlano(plano);
@@ -116,7 +134,7 @@ public class PlanosViewController {
                     confirmacao.showAndWait().ifPresent(resp -> {
                         if (resp == ButtonType.OK) {
                             try {
-                                boolean deletado = planoTreinoService.deletarPlano(1, plano.getNome());
+                                boolean deletado = planoTreinoService.deletarPlano(idUsuarioLogado, plano.getNome());
                                 if (deletado) {
                                     getTableView().getItems().remove(plano);
                                     showInfo("Sucesso", "Plano '" + plano.getNome() + "' deletado com sucesso!");
@@ -129,7 +147,6 @@ public class PlanosViewController {
                         }
                     });
                 });
-                box.setStyle("-fx-alignment: CENTER_LEFT; -fx-padding: 4;");
             }
 
             @Override
@@ -139,6 +156,7 @@ public class PlanosViewController {
                     setGraphic(null);
                 } else {
                     setGraphic(box);
+                    setAlignment(javafx.geometry.Pos.CENTER);
                 }
             }
         });
@@ -148,6 +166,13 @@ public class PlanosViewController {
         List<PlanoTreino> planos = planoTreinoService.listarMeusPlanos(1);
         tablePlanos.setItems(FXCollections.observableArrayList(planos));
         totalLabel.setText(String.format("Total: %d plano(s)", planos.size()));
+        // ajustar altura preferencial da tabela para evitar rolagem vertical desnecessária e manter linhas visíveis
+        double fixed = tablePlanos.getFixedCellSize();
+        if (fixed <= 0) fixed = 56;
+        int rowsToShow = Math.max(6, planos.size());
+        double header = 30; // estimativa para a altura do cabeçalho
+        tablePlanos.setPrefHeight(fixed * rowsToShow + header);
+        aplicarEstiloTableView(tablePlanos);
     }
 
     @FXML

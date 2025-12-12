@@ -25,7 +25,7 @@
                         <TableColumn fx:id="colId" text="ID" prefWidth="80.0" />
                         <TableColumn fx:id="colNome" text="Nome do Plano" prefWidth="400.0" />
                         <TableColumn fx:id="colExercicios" text="Exercícios" prefWidth="220.0" />
-                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="260.0" />
+                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="160.0" />
                   </columns>
             </TableView>
             
