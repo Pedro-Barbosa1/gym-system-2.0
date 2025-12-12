@@ -80,7 +80,7 @@ public class LoginController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Erro ao tentar fazer login", e);
             mostrarAlerta(Alert.AlertType.ERROR, "Erro inesperado", "Erro ao tentar fazer login.");
         }
     }

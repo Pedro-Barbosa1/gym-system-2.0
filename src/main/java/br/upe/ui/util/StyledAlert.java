@@ -1,6 +1,8 @@
 package br.upe.ui.util;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -15,6 +17,8 @@ import javafx.scene.control.DialogPane;
  * - Branco: #FFFFFF
  */
 public class StyledAlert {
+    
+    private static final Logger logger = Logger.getLogger(StyledAlert.class.getName());
     
     // Cores do sistema
     private static final String COR_ROXA = "#5A189A";
@@ -154,8 +158,7 @@ public class StyledAlert {
                     });
                     
                 } catch (Exception e) {
-                    System.err.println("Erro ao estilizar Alert: " + e.getMessage());
-                    e.printStackTrace();
+                    logger.log(Level.WARNING, "Erro ao estilizar Alert", e);
                 }
             });
         });

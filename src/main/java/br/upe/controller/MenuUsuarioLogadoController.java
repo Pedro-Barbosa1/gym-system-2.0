@@ -145,7 +145,7 @@ public class MenuUsuarioLogadoController {
             } catch (NoSuchMethodException ignored) {
                 // Controller não precisa do ID
             } catch (IllegalAccessException | InvocationTargetException ex) {
-                ex.printStackTrace();  // mostra qual controller está quebrando
+                logger.log(Level.WARNING, "Erro ao invocar setIdUsuarioLogado no controller", ex);
             }
 
             br.upe.util.NavigationUtil.navigateTo(sairB, root, titulo);

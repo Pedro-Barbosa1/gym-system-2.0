@@ -7,8 +7,12 @@ import jakarta.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ExercicioRepositoryImpl implements IExercicioRepository {
+
+    private static final Logger logger = Logger.getLogger(ExercicioRepositoryImpl.class.getName());
 
     private EntityManager em() {
         return JPAUtil.getEntityManager();
@@ -118,9 +122,8 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
                 .getSingleResult();
             
             // Log para debug
-            System.out.println("DEBUG - Exercício " + idExercicio + 
-                             ": countPlano=" + countPlano + 
-                             ", countSessao=" + countSessao);
+            logger.log(Level.FINE, "Exercício {0}: countPlano={1}, countSessao={2}", 
+                new Object[]{idExercicio, countPlano, countSessao});
                 
             return (countPlano + countSessao) > 0;
         } finally {
@@ -191,9 +194,8 @@ public class ExercicioRepositoryImpl implements IExercicioRepository {
             
             em.getTransaction().commit();
             
-            System.out.println("Exercício " + idExercicio + " excluído forçadamente:");
-            System.out.println("  - " + deletedSessoes + " referência(s) removida(s) de sessões de treino");
-            System.out.println("  - " + deletedPlanos + " referência(s) removida(s) de planos de treino");
+            logger.log(Level.INFO, "Exercício {0} excluído forçadamente: {1} ref de sessões, {2} ref de planos", 
+                new Object[]{idExercicio, deletedSessoes, deletedPlanos});
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();

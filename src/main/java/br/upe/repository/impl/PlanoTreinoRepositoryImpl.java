@@ -7,8 +7,12 @@ import jakarta.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
+
+    private static final Logger logger = Logger.getLogger(PlanoTreinoRepositoryImpl.class.getName());
 
     private EntityManager em() {
         return JPAUtil.getEntityManager();
@@ -68,7 +72,7 @@ public class PlanoTreinoRepositoryImpl implements IPlanoTreinoRepository {
     public List<PlanoTreino> buscarTodosDoUsuario(int idUsuario) {
         EntityManager em = em();
         try {
-            System.out.println("id usuario:  " + idUsuario);
+            logger.log(Level.FINE, "Buscando planos do usuário: {0}", idUsuario);
             return em.createQuery(
                             """
                                 SELECT p FROM PlanoTreino p
