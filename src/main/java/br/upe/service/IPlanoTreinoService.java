@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface IPlanoTreinoService {
     PlanoTreino criarPlano(int id_usuario, String nome);
-    void adicionarExercicioAoPlano(int idUsuario, String nomePlano, int idExercicio, int cargaKg, int repeticoes);
+    void adicionarExercicioAoPlano(int idUsuario, String nomePlano, int idExercicio);
     void removerExercicioDoPlano(int idUsuario, String nomePlano, int idExercicio);
     List<PlanoTreino> listarMeusPlanos(int idUsuario);
     void editarPlano(int idUsuario, String nomeAtualPlano, String novoNome);

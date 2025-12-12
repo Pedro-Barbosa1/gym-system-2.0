@@ -394,10 +394,6 @@ public class TreinoViewController {
             sessaoTreinoService.salvarSessao(sessaoAtual);
             logger.info("===== FIM DA SESSÃO =====");
 
-            List<SessaoTreinoService.SugestaoAtualizacaoPlano> sugestoes = 
-                sessaoTreinoService.verificarAlteracoesEGerarSugestoes(sessaoAtual);
-            tratarSugestoesComDialog(sugestoes, planoEscolhido);
-
             loadSessoes();
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sessão Concluída", 
                 "Sessão de treino registrada com sucesso!");

@@ -497,27 +497,11 @@ public class PlanosViewController {
 
             int idEx = Integer.parseInt(combo.getValue().split(" - ")[0]);
 
-            // Pedir carga e repetições
-            Dialog<ButtonType> cfg = criarDialogPadrao("Adicionar Exercício ao Plano", "Configure o exercício no plano:");
-            GridPane gg = criarGridPadrao();
-            TextField cargaF = criarCampoTexto("Carga em kg");
-            TextField repsF = criarCampoTexto("Número de repetições");
-            gg.add(criarLabel("Carga (kg):"), 0, 0);
-            gg.add(cargaF, 1, 0);
-            gg.add(criarLabel("Repetições:"), 0, 1);
-            gg.add(repsF, 1, 1);
-            cfg.getDialogPane().setContent(gg);
-            cfg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-            Optional<ButtonType> r2 = cfg.showAndWait();
-            if (!r2.isPresent() || r2.get() != ButtonType.OK) return;
+            // Adicionar exercício diretamente sem solicitar carga e repetições
             try {
-                int carga = Integer.parseInt(cargaF.getText().trim());
-                int reps = Integer.parseInt(repsF.getText().trim());
-                planoTreinoService.adicionarExercicioAoPlano(idUsuarioLogado, planoSelecionado.getNome(), idEx, carga, reps);
-                showInfo("Sucesso", "Exercício adicionado ao plano com sucesso!");
+                planoTreinoService.adicionarExercicioAoPlano(idUsuarioLogado, planoSelecionado.getNome(), idEx);
+                showInfo("Sucesso", "Exercício adicionado ao plano com sucesso!\n\nCarga e repetições serão definidas durante a sessão de treino.");
                 refresh.accept(tableView);
-            } catch (NumberFormatException ex) {
-                showError("Erro", "Carga e repetições devem ser números válidos.");
             } catch (IllegalArgumentException ex) {
                 showError("Erro", "Erro ao adicionar exercício: " + ex.getMessage());
             }

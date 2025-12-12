@@ -386,45 +386,17 @@ public class MenuPlanoTreinosController {
 
         int idExercicio = Integer.parseInt(comboBoxExercicio.getValue().split(" - ")[0]);
 
-        // Criar o diálogo final para carga e repetições
-        Dialog<ButtonType> dialog = criarDialogPadrao("Adicionar Exercício ao Plano", 
-            "Configure o exercício no plano:");
+        // Adicionar exercício diretamente sem solicitar carga e repetições
+        try {
+            planoTreinoService.adicionarExercicioAoPlano(
+                UserSession.getInstance().getIdUsuarioLogado(),
+                planoSelecionado.getNome(),
+                idExercicio
+            );
 
-        // GridPane padronizado
-        GridPane grid = criarGridPadrao();
-
-        TextField cargaField = criarCampoTexto("Carga em kg");
-        TextField repeticoesField = criarCampoTexto("Número de repetições");
-
-        grid.add(criarLabel("Carga (kg):"), 0, 0);
-        grid.add(cargaField, 1, 0);
-        grid.add(criarLabel("Repetições:"), 0, 1);
-        grid.add(repeticoesField, 1, 1);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        Optional<ButtonType> resultado = dialog.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            try {
-                int carga = Integer.parseInt(cargaField.getText().trim());
-                int repeticoes = Integer.parseInt(repeticoesField.getText().trim());
-
-                planoTreinoService.adicionarExercicioAoPlano(
-                    UserSession.getInstance().getIdUsuarioLogado(),
-                    planoSelecionado.getNome(),
-                    idExercicio,
-                    carga,
-                    repeticoes
-                );
-
-                showInfo("Sucesso", "Exercício adicionado ao plano '" + planoSelecionado.getNome() + "' com sucesso!");
-            } catch (NumberFormatException e) {
-                showError("Erro", "Carga e repetições devem ser números válidos.");
-            } catch (IllegalArgumentException e) {
-                showError("Erro", "Erro ao adicionar exercício: " + e.getMessage());
-            }
+            showInfo("Sucesso", "Exercício adicionado ao plano '" + planoSelecionado.getNome() + "' com sucesso!\n\nCarga e repetições serão definidas durante a sessão de treino.");
+        } catch (IllegalArgumentException e) {
+            showError("Erro", "Erro ao adicionar exercício: " + e.getMessage());
         }
     }
 

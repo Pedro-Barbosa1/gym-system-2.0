@@ -51,8 +51,7 @@ public class PlanoTreinoService implements IPlanoTreinoService {
 
     // ------------------ ADICIONAR EXERCICIO ------------------
     @Override
-    public void adicionarExercicioAoPlano(int idUsuario, String nomePlano,
-                                          int idExercicio, int cargaKg, int repeticoes) {
+    public void adicionarExercicioAoPlano(int idUsuario, String nomePlano, int idExercicio) {
 
         Optional<PlanoTreino> planoOpt =
                 planoTreinoRepository.buscarPorNome(nomePlano.trim(), idUsuario);
@@ -80,7 +79,8 @@ public class PlanoTreinoService implements IPlanoTreinoService {
                     "Exercício já adicionado a este plano. Considere editá-lo.");
         }
 
-        ItemPlanoTreino newItem = new ItemPlanoTreino(plano.getIdPlano(), idExercicio, cargaKg, repeticoes);
+        // Valores padrão de 0 - serão definidos durante a sessão de treino
+        ItemPlanoTreino newItem = new ItemPlanoTreino(plano.getIdPlano(), idExercicio, 0, 0);
         plano.adicionarItem(newItem);
 
         planoTreinoRepository.editar(plano);
