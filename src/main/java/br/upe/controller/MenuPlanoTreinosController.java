@@ -84,8 +84,6 @@ public class MenuPlanoTreinosController {
         
         logger.info("Menu Plano Treinos inicializado com sucesso!");
         configurarAcoes(); // Associa métodos aos botões
-        // Ao abrir a tela, já listar os planos automaticamente (comportamento solicitado)
-        Platform.runLater(() -> handleListarPlanos());
     }
 
     // --- MÉTODO AUXILIAR PARA CONFIGURAR BOTÕES ---

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.PlanosViewController">
+
+      <AnchorPane style="-fx-background-color: #2c2c2c;" VBox.vgrow="ALWAYS">
+
+            <Label fx:id="totalLabel" layoutX="20.0" layoutY="18.0" textFill="#e5a000" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+            <Button fx:id="BAddPlano" mnemonicParsing="false" onAction="#handleAdicionarPlano" prefHeight="36.0" prefWidth="140.0" style="-fx-background-color: #1e1e1e;" text="Adicionar" textFill="#e5a000" AnchorPane.topAnchor="12.0" AnchorPane.rightAnchor="20.0">
+                  <font>
+                        <Font size="13.0" />
+                  </font>
+            </Button>
+
+            <TableView fx:id="tablePlanos" prefHeight="620.0" prefWidth="860.0" AnchorPane.topAnchor="60.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.bottomAnchor="80.0">
+                  <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="80.0" />
+                        <TableColumn fx:id="colNome" text="Nome do Plano" prefWidth="400.0" />
+                        <TableColumn fx:id="colExercicios" text="Exercícios" prefWidth="220.0" />
+                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="260.0" />
+                  </columns>
+            </TableView>
+            
+            <Button fx:id="BVoltar" mnemonicParsing="false" onAction="#handleVoltar" prefHeight="36.0" prefWidth="140.0" style="-fx-background-color: #1e1e1e;" text="Voltar" textFill="#e5a000" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="20.0">
+                  <font>
+                        <Font size="13.0" />
+                  </font>
+            </Button>
+      </AnchorPane>
+
+</VBox>
