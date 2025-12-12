@@ -55,7 +55,7 @@
                     </Button>
                     
                     <HBox alignment="CENTER" spacing="10">
-                        <Label text="Já tem cadastro?">
+                        <Label text="Não tem cadastro?">
                             <font>
                                 <Font size="14.0" />
                             </font>
