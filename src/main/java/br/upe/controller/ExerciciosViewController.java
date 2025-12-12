@@ -503,14 +503,6 @@ public class ExerciciosViewController {
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
-        if (tipo == Alert.AlertType.ERROR) {
-            StyledAlert.showErrorAndWait(titulo, mensagem);
-        } else if (tipo == Alert.AlertType.INFORMATION) {
-            StyledAlert.showInformationAndWait(titulo, mensagem);
-        } else if (tipo == Alert.AlertType.WARNING) {
-            StyledAlert.showWarningAndWait(titulo, mensagem);
-        } else if (tipo == Alert.AlertType.CONFIRMATION) {
-            StyledAlert.showConfirmationAndWait(titulo, mensagem);
-        }
+        StyledAlert.mostrarAlerta(tipo, titulo, mensagem);
     }
 }
